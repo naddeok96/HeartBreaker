@@ -1,134 +1,52 @@
 '''
-This class will break a ECG signal into heartbeats
+This class will munipulate heart signals
 '''
 # Imports
-from nptdms import TdmsFile as tdms
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.signal import find_peaks
+from scipy.signal import find_peaks, argrelmin
+from scipy import signal as scisig
 import csv
-import os
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 import obspy.signal.filter
+from scipy.signal import filtfilt, butter
 
 # Heartbreaker
 class HeartBreak:
-
-    def __init__(self, working_directory,
-                       file_name):
-        
+    '''
+    Holds many functions to munipulate heart signals
+    '''
+    def __init__(self):
         super(HeartBreak, self).__init__
 
-        os.chdir(working_directory)
-        self.patient_name = file_name
-        self.tdms_file = tdms(file_name + ".tdms")
-        os.chdir("../Derived")
-
-        self.times  = self.tdms_file.object('Data','Time(S)').data
-        self.seis1  = self.tdms_file.object('Data','Seismocardiogram I').data
-        self.seis2  = self.tdms_file.object('Data',' Seismocardiogram II').data
-        self.phono1 = self.tdms_file.object('Data',' Precordial Phonocardiogram-I').data
-        self.phono2 = self.tdms_file.object('Data',' Precordial Phonocardiogram-II').data
-        self.ecg    = self.tdms_file.object('Data',' Direct ECG').data
-
-        self.num_data_points = len(self.times)
-        self.frequency = 2000
-
-    def plot_seis1(self, interval = None):
-        interval = range(len(self.times)) if interval == None else interval
-
-        plt.plot(self.times[interval], self.seis1[interval])
-        plt.title('Seismocardiogram I')
-        plt.xlabel('Time (s)')
-        plt.ylabel('Acceleration')
-        plt.show()
-
-    def plot_seis2(self, interval = None):
-        interval = range(len(self.times)) if interval == None else interval
-
-        plt.plot(self.times[interval], self.seis2[interval])
-        plt.title('Seismocardiogram II')
-        plt.xlabel('Time (s)')
-        plt.ylabel('Acceleration')
-        plt.show()
-
-    def plot_phono1(self, interval = None):
-        interval = range(len(self.times)) if interval == None else interval
-
-        plt.plot(self.times[interval], self.phono1[interval])
-        plt.title('Precordial Phonocardiogram-I')
-        plt.xlabel('Time (s)')
-        plt.ylabel('Displacement')
-        plt.show()
-
-    def plot_phono2(self, interval = None):
-        interval = range(len(self.times)) if interval == None else interval
-
-        plt.plot(self.times[interval], self.phono2[interval])
-        plt.title('Precordial Phonocardiogram-II')
-        plt.xlabel('Time (s)')
-        plt.ylabel('Displacement')
-        plt.show()
-
-    def plot_ecg(self, interval = None):
-        interval = range(len(self.times)) if interval == None else interval
-
-        plt.plot(self.times[interval], self.ecg[interval])
-        plt.title('Electrocardiogram')
-        plt.xlabel('Time (s)')
-        plt.ylabel('Potential')
-        plt.show()
-
-    def plot_all(self, interval = None):
+    def plot_signal(self, time, 
+                          signal, 
+                          title = "", 
+                          xlabel = 'Time (s)', 
+                          ylabel = ""):
         '''
-        Plots all signals within a given interval.
+        Plot a signal
         '''
-        interval = range(len(self.times)) if interval == None else interval
-
-        plt.figure(figsize = (10, 10))
-
-        plt.subplot(321)
-        f1 = plt.plot(self.times[interval], self.seis1[interval])
-        plt.title('Seismocardiogram I')
-        plt.ylabel('Acceleration')
-        plt.axis('off')
-
-        plt.subplot(322)
-        plt.plot(self.times[interval], self.seis2[interval])
-        plt.title('Seismocardiogram II')
-        plt.axis('off')
-
-        plt.subplot(323)
-        plt.plot(self.times[interval], self.phono1[interval])
-        plt.title('Precordial Phonocardiogram-I')
-        plt.ylabel('Displacement')
-        plt.axis('off')
-
-        plt.subplot(324)
-        plt.plot(self.times[interval], self.phono2[interval])
-        plt.title('Precordial Phonocardiogram-II')
-        plt.axis('off')
-
-        plt.subplot(313)
-        plt.plot(self.times[interval], self.ecg[interval])
-        plt.title('Electrocardiogram')
-        plt.xlabel('Time (s)')
-        plt.ylabel('Potential')
-        plt.axis('off')
-
+        plt.plot(time, signal)
+        plt.title(title)
+        plt.xlabel(xlabel)
+        plt.ylabel(ylabel)
         plt.show()
 
-    def ecg_fft(self, interval,
+    def get_fft(self, time, 
+                      signal, 
                       plot = False,
-                      save = True):
-        # Initialize
-        signal = self.ecg[interval]
-        time   = self.times[interval]
+                      save = False):
+        '''
+        Performs the fourier transform on the signal
+        '''
 
         # Frequency Domain
-        freqs = np.fft.fftfreq(len(interval), d = 1/self.frequency)
+        time_step = (np.max(time) - np.min(time))/ (len(time) - 1)
+        freqs = np.fft.fftfreq(len(signal), d = time_step)
         amps  = np.fft.fft(signal)
+
 
         # Save
         if save == True:
@@ -138,12 +56,12 @@ class HeartBreak:
 
         # Display
         if plot == True:    
-            fig, (ax1, ax2) = plt.subplots(1, 2)
+            fig, (ax1, ax2) = plt.subplots(2,1)
             ax1.plot(time, signal)
             ax1.set_xlabel('Time [s]')
             ax1.set_ylabel('Signal amplitude')
             ax1.set_xlim(min(time), max(time))
-            ax1.set_ylim(min(signal) * 1.2, max(signal) * 1.2)
+            ax1.set_ylim(min(signal) - (0.2 * abs(min(signal))), max(signal) * 1.2)
 
             ax2.stem(freqs, np.abs(amps), use_line_collection = True)
             ax2.set_xlabel('Frequency in Hertz [Hz]')
@@ -154,48 +72,292 @@ class HeartBreak:
         
         return freqs, amps
 
-    def ecg_bandpass_filter(self, freqmin, freqmax): 
-        return obspy.signal.filter.bandstop(self.ecg, 
+    def get_spectrum(self, time,
+                           signal):
+        '''
+        Plot the spectrogram of the signal
+        '''
+        # Calculate the frequency
+        time_step = (np.max(time) - np.min(time))/ (len(time) - 1)
+        frequency = 1 / time_step
+
+        # Define figure plots
+        fig, (ax1, ax2) = plt.subplots(2, 1)
+
+        # Plot signal
+        ax1.plot(signal)
+        ax1.set_ylabel('ECG')
+
+        # Plot spectrogram
+        NFFT     = 2**10
+        noverlap = 2**6
+        Pxx, freqs, bins, im = ax2.specgram(x = signal,
+                                            Fs=frequency,
+                                            NFFT=NFFT,
+                                            noverlap = noverlap)
+        ax2.set_ylim((0,100))
+        
+        plt.show()
+        
+
+    def bandpass_filter(self, time, 
+                              signal, 
+                              freqmin, 
+                              freqmax): 
+        '''
+        Removes frequencies in an interval of frequencies
+        '''
+        time_step = (np.max(time) - np.min(time))/ (len(time) - 1)
+        frequency = 1 / time_step
+        return obspy.signal.filter.bandstop(signal, 
                                             freqmin, 
                                             freqmax, 
-                                            self.frequency)
+                                            frequency)
 
-    def ecg_derivatives(self, interval,
+    def lowpass_filter(self, time, signal, cutoff_freq):
+        time_step = (np.max(time) - np.min(time))/ (len(time) - 1)
+        frequency = 1 / time_step
+
+        nyq = 0.5 * frequency
+        normal_cutoff = cutoff_freq / nyq
+        b, a = butter(5 , normal_cutoff, btype='low', analog=False)
+        
+        return filtfilt(b, a, signal)
+
+    def moving_average(self, signal, pt) :
+        return np.convolve(signal, np.ones((pt,))/pt, mode='valid')
+
+    def normalize(self, signal):
+        '''
+        Normalize a signal 
+        '''
+        mean = np.mean(signal)
+        std = np.std(signal)
+        return (signal - mean) / std
+
+    def get_derivatives(self, signal,
                               plot = False): 
-
-        first = np.gradient(self.ecg[interval])
-        second = np.gradient(first)
+        '''
+        Finds the first and second derivative of a signal
+        '''
+        # Calculate derivatives
+        first = self.normalize(np.gradient(signal))
+        second = self.normalize(np.gradient(first))
 
         # Display
         if plot == True:    
             fig, (ax1, ax2, ax3) = plt.subplots(3, 1)
 
-            ax1.plot(interval, self.ecg[interval])
+            ax1.plot(signal)
             ax1.set_ylabel('ECG')
 
-            ax2.plot(interval, first)
+            ax2.plot(first)
             ax2.set_ylabel('First Derivative')
 
-            ax3.plot(interval, second)
+            ax3.plot(second)
             ax3.set_ylabel('Second Derivative')
             
             plt.show()
 
         return first, second
 
-    def ecg_peaks(self, interval, 
-                        plot = False):
-        peaks = find_peaks(self.ecg[interval], 
-                           height = 0.5,
-                           distance = 0.4 * self.frequency)
-
-        print(peaks)
+    def get_ecg_peaks(self, time,
+                            signal,
+                            q_window_ratio = 0.15, # Declare ratio to last or next R peak
+                            s_window_ratio = 0.15, ## 0.0 -> R peak
+                            p_window_ratio = 0.3,  ## 1.0 -> last or next R peak
+                            t_window_ratio = 0.4 ,
+                            r_max_to_mean_ratio = 0.5, # 0.0 -> mean // 1.0 -> max
+                            plot = False,
+                            plot_windows = False,
+                            plot_derivatives = False,
+                            plot_st_segments = False):
         
+
+        # Calculate frequency
+        time_step = (np.max(time) - np.min(time))/ (len(time) - 1)
+        frequency = 1 / time_step
+
+        # Define Signal and Time range
+        signal_mean = np.mean(signal)
+        signal_max = np.max(signal)
+        signal_min = np.min(signal)
+        signal_max_to_mean = signal_max - signal_mean
+
+        # Find R Peaks in Interval
+        r_peaks = find_peaks(signal,
+                             height = (r_max_to_mean_ratio * signal_max_to_mean) + signal_mean,
+                             distance = 0.3 * frequency)[0] # error would occur after 150 beats per min 
+
+        # Determine what cutoff freq to use
+        if np.mean(np.diff(r_peaks)) > 2500:
+            cutoff_freq = 15
+        else:
+            cutoff_freq = 10
+
+        # Pass through a 10Hz low pass
+        smoothed_signal = self.lowpass_filter(time = time, 
+                                                signal = signal,
+                                                cutoff_freq = 15)
+
+        # Calculate second derivative
+        _, smoothed_second = self.get_derivatives(smoothed_signal)
+
+        # Initalize other peaks to be the size of R_peaks
+        def fill_w_zeros():
+            return np.zeros(len(r_peaks)).astype(int)
+
+        q_peaks = fill_w_zeros()
+        s_peaks = fill_w_zeros()
+        p_peaks = fill_w_zeros()
+        t_peaks = fill_w_zeros()
+        s_ddot = []
+        t_ddot = []
+
+        # Initalize boundaries
+        q_windows = {} 
+        s_windows = {}
+        p_windows = {}
+        t_windows = {}
+        
+        # Use R peak to find other peaks
+        for i in range(len(r_peaks)):
+            # Do not calculate Q or P peaks if there is no previous R peak
+            if i != 0:
+                # Find distance between this r peak and the last
+                last_r_peak_distance = abs(r_peaks[i] - r_peaks[i - 1])
+
+                # Find lower bound of q and p windows and define windows
+                q_lower_bound = r_peaks[i] - int(q_window_ratio * last_r_peak_distance)
+                q_windows[i] = list(range(q_lower_bound, r_peaks[i]))
+                q_peaks[i] = r_peaks[i] - len(q_windows[i]) + np.argmin(signal[q_windows[i]])
+                
+                p_lower_bound = q_peaks[i] - int(p_window_ratio * last_r_peak_distance)
+                p_windows[i] = list(range(p_lower_bound, q_peaks[i])) 
+                p_peaks[i] = int(q_peaks[i] - len(p_windows[i]) + np.argmax(signal[p_windows[i]]))
+
+            # Do not calculate S or T peaks if there is no next R peak
+            if i != (len(r_peaks) - 1):
+                # Find distance between this r peak and the next r peak
+                next_r_peak_distance = abs(r_peaks[i + 1] - r_peaks[i])
+
+                # Find upper bound of s and t peaks and define windows
+                s_upper_bound = r_peaks[i] + int(s_window_ratio * next_r_peak_distance)
+                s_windows[i] = list(range(r_peaks[i], s_upper_bound))
+                s_peaks[i] = int(np.argmin(signal[s_windows[i]]) + r_peaks[i])
+
+                t_upper_bound = s_peaks[i] + int(t_window_ratio * next_r_peak_distance)
+                t_windows[i] = list(range(s_peaks[i], t_upper_bound))
+                t_peaks[i] = int(np.argmax(signal[t_windows[i]]) + s_peaks[i])
+
+                # Find S-T segment
+
+                # Look at interval between s and t peak
+                interval = range(s_peaks[i],t_peaks[i])
+
+                # Find s''max and t''max peaks
+                st_peaks = find_peaks(smoothed_second[interval],distance = len(interval)/3)[0]
+
+                # Calculate the values
+                values = smoothed_second[st_peaks]
+
+                # If there are more than two pick the two largest
+                if len(values) > 2:
+                    idx_peaks = np.argpartition(values, 2)
+                    lower = values[idx_peaks[-2:]][0]
+                    upper = values[idx_peaks[-2:]][1]
+                # Else the biggest is s''max
+                else:
+                    lower = np.max(values)
+                    upper = np.min(values)
+
+                # Reindex to entire signal not just interval
+                s_ddot.append(int(np.where(smoothed_second == lower)[0] + s_peaks[i]))
+                t_ddot.append(int(np.where(smoothed_second == upper)[0] + s_peaks[i]))
+
+                # Add a zero at the end
+                if i == (len(r_peaks) - 2):
+                    s_ddot.append(0)
+                    t_ddot.append(0)
+
+        # Display Results
         if plot == True:
-            plt.scatter(self.times[interval][peaks[0]], self.ecg[interval][peaks[0]], c='green')
-            plt.plot(self.times[interval], self.ecg[interval])
+            # Declare figure dimensions
+            if plot_derivatives == True:
+                fig, (ax1, ax2, ax3) = plt.subplots(3, 1)
+            else:
+                fig, ax1 = plt.subplots()
+
+            # Plot Peaks
+            for i in range(len(r_peaks)):
+                # Plot Signal
+                ax1.plot(time, signal)
+                ax1.plot()
+
+                # R Peaks
+                ax1.scatter(time[r_peaks[i]], signal[r_peaks[i]], c='red', marker = "D")
+                ax1.text(time[r_peaks[i]], 0.02 + signal[r_peaks[i]], "R", fontsize=9)
+
+                if i != 0:
+                    # Q Peaks
+                    ax1.scatter(time[q_peaks[i]], signal[q_peaks[i]], c='green', marker = "D")
+                    ax1.text(time[q_peaks[i]], 0.02 + signal[q_peaks[i]], "Q", fontsize=9)
+
+                    # P Peaks
+                    ax1.scatter(time[p_peaks[i]], signal[p_peaks[i]], c='blue', marker = "D")
+                    ax1.text(time[p_peaks[i]], 0.02 + signal[p_peaks[i]], "P", fontsize=9)
+
+                    # Plot Windows
+                    if plot_windows == True:
+                        ax1.axvspan(time[np.min(q_windows[i])], time[np.max(q_windows[i])], facecolor='g', alpha=0.25)
+                        ax1.axvspan(time[np.min(p_windows[i])], time[np.max(p_windows[i])], facecolor='b', alpha=0.25)
+
+                if i != (len(r_peaks) - 1):
+                    # S Peaks
+                    ax1.scatter(time[s_peaks[i]], signal[s_peaks[i]], c='green', marker = "D")
+                    ax1.text(time[s_peaks[i]],  0.02 + signal[s_peaks[i]], "S", fontsize=9)
+
+                    # T Peaks
+                    ax1.scatter(time[t_peaks[i]], signal[t_peaks[i]], c='blue', marker = "D")
+                    ax1.text(time[t_peaks[i]], 0.02 + signal[t_peaks[i]], "T", fontsize=9)
+
+                    # Plot ST Segments
+                    if plot_st_segments == True:
+                        ax1.axvspan(time[s_ddot[i]], time[t_ddot[i]], facecolor='r', alpha=0.25)
+                        ax1.text(time[s_ddot[i]],  1.1 * signal_max_to_mean, "S-T Segment", fontsize=9)
+                        ax1.text(time[s_ddot[i]],  0.5 * signal_max_to_mean, str((abs(t_ddot[i] - s_ddot[i]))/frequency) + "s", fontsize=9)
+                    
+                    # Plot Windows
+                    if plot_windows == True:
+                        ax1.axvspan(time[np.min(s_windows[i])], time[np.max(s_windows[i])], facecolor='g', alpha=0.25)
+                        ax1.axvspan(time[np.min(t_windows[i])], time[np.max(t_windows[i])], facecolor='b', alpha=0.25)
+
+            # Plot Derivatives
+            if plot_derivatives == True:
+                first, second = self.get_derivatives(signal)
+
+                ax1.set_ylabel('ECG')
+
+                ax2.plot(time, first)
+                ax2.set_ylabel('First Derivative')
+
+                ax3.plot(time, second)
+                ax3.set_ylabel('Second Derivative')
+                
             plt.show()
 
-        return peaks
+        # Store peak data in a dictionary
+        peaks = {"P" : p_peaks,
+                 "Q" : q_peaks,
+                 "R" : r_peaks,
+                 "S" : s_peaks,
+                 "T" : t_peaks,
+                 "S''max": s_ddot,
+                 "T''max": t_ddot}
 
+        return peaks
         
+
+
+
+
