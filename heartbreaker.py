@@ -144,6 +144,7 @@ class HeartBreak:
         Finds the first and second derivative of a signal
         '''
         # Calculate derivatives
+        signal = self.normalize(signal)
         first  = self.normalize(np.gradient(signal))
         second = self.normalize(np.gradient(first))
 
@@ -163,6 +164,34 @@ class HeartBreak:
             plt.show()
 
         return first, second
+        
+    def get_segments(self, time, signal, max_time_segment):
+    '''
+    Takes large signal and breaks it into segments
+    '''
+    # Calculate signal propertys
+    initial_time = np.min(time)
+    final_time = np.max(time)
+    total_time = final_time - initial_time
+
+    # Calculate number of segments
+    num_segments = np.ceil(total_time / max_time_segment)
+
+    # Find segments
+    time_segments = []
+    signal_segments = []
+    for i in range(num_segments):
+        # Determine start and end time of segment
+        start_time = i * max_time_segment
+        end_time   = (i + 1) * max_time_segment if i != num_segments - 1 else len(time)
+        
+        time_segments.append(time[range(start_time, end_time)])
+        signal_segments.append(signal[range(start_time, end_time)])
+
+    return time_segments, signal_segments
+
+
+
 
     def get_ecg_peaks(self, time,
                             signal,
@@ -179,11 +208,20 @@ class HeartBreak:
                             plot_windows     = False,
                             plot_derivatives = False,
                             plot_st_segments = False):
-        
+        '''
+        Finds the P, Q, R, S, T and S-T segments of each beat in a signal
+        '''
+        # Normalize
+        signal = self.normalize(signal)
 
         # Calculate frequency
-        time_step = (np.max(time) - np.min(time))/ (len(time) - 1)
-        frequency = 1 / time_step
+        initial_time = np.min(time)
+        final_time = np.max(time)
+        total_time = final_time - initial_time
+        data_points = len(time) - 1
+        
+        time_step = total_time / data_points
+        frequency = 1 / time_step    
 
         # Define Signal and Time range
         signal_mean = np.mean(signal)
