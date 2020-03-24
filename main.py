@@ -12,18 +12,18 @@ from xlwt import Workbook
 #---------------------#
 # Patient Information
 folder_name = "1 9 2020 AH TDMS ESSENTIAL"
-dosage      = 40 # [mcg/kg/min]
+dosage      = 10 # [mcg/kg/min]
 
 # Signal Settings
-preloaded_signal = False
-save_signal      = True
+preloaded_signal = True
+save_signal      = False
 peaks_to_excel   = False
-max_time         = 5
+max_time_segment = 5
 use_intervals    = True
 
 # Optional if not using intervals
-start_time       = 10
-end_time         = 30
+start_time       = 0
+end_time         = 50
 
 # Display Settings
 show_signal      = False
@@ -115,8 +115,15 @@ if show_peaks == True:
                                 signal = lowpass_signal,
                                 cutoff_freq = 50)
 
+    time_segments, signal_segments = hb.get_segments(time, lowpass_signal, max_time_segment)
+    for time, signal in zip(time_segments, signal_segments):
+        hb.plot_signal(time, signal)
+
+    exit()
+    
+
     peaks = hb.get_ecg_peaks(time = time, 
-                             signal = lowpass_signal,
+                             signal = lowpass_signal,\
                              plot  = True,
                              plot_st_segments = True)
    
