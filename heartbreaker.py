@@ -125,6 +125,9 @@ class HeartBreak:
         return filtfilt(b, a, signal)
 
     def moving_average(self, signal, pt) :
+        '''
+        Calculate moving average of signal
+        '''
         return np.convolve(signal, np.ones((pt,))/pt, mode='valid')
 
     def normalize(self, signal):
@@ -141,7 +144,7 @@ class HeartBreak:
         Finds the first and second derivative of a signal
         '''
         # Calculate derivatives
-        first = self.normalize(np.gradient(signal))
+        first  = self.normalize(np.gradient(signal))
         second = self.normalize(np.gradient(first))
 
         # Display
@@ -163,13 +166,17 @@ class HeartBreak:
 
     def get_ecg_peaks(self, time,
                             signal,
-                            q_window_ratio = 0.15, # Declare ratio to last or next R peak
-                            s_window_ratio = 0.15, ## 0.0 -> R peak
-                            p_window_ratio = 0.3,  ## 1.0 -> last or next R peak
-                            t_window_ratio = 0.4 ,
-                            r_max_to_mean_ratio = 0.5, # 0.0 -> mean // 1.0 -> max
-                            plot = False,
-                            plot_windows = False,
+
+                            r_max_to_mean_ratio = 0.5,  ## 0.0 -> mean ## 1.0 -> max
+
+                            r_window_ratio = 0.3,       ## 0.0 -> R peak ## 1.0 -> last or next R peak
+                            q_window_ratio = 0.15,      ## 
+                            s_window_ratio = 0.15,      ## 
+                            p_window_ratio = 0.3,       ## 
+                            t_window_ratio = 0.4,       ## 
+
+                            plot             = False,
+                            plot_windows     = False,
                             plot_derivatives = False,
                             plot_st_segments = False):
         
@@ -180,14 +187,15 @@ class HeartBreak:
 
         # Define Signal and Time range
         signal_mean = np.mean(signal)
-        signal_max = np.max(signal)
-        signal_min = np.min(signal)
+        signal_max  = np.max(signal)
+        signal_min  = np.min(signal)
+
         signal_max_to_mean = signal_max - signal_mean
 
         # Find R Peaks in Interval
         r_peaks = find_peaks(signal,
                              height = (r_max_to_mean_ratio * signal_max_to_mean) + signal_mean,
-                             distance = 0.3 * frequency)[0] # error would occur after 150 beats per min 
+                             distance = r_window_ratio * frequency)[0] # 0.3 r_window_ratio == 150 beats per min
 
         # Determine what cutoff freq to use
         if np.mean(np.diff(r_peaks)) > 2500:
