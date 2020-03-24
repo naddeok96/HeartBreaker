@@ -36,4 +36,4 @@ class Patient:
         '''
         Return an interval of the signal
         '''
-        return self.times[interval], self.normalize(self.ecg[interval])
+        return self.times[interval], self.ecg[interval]
