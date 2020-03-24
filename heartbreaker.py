@@ -166,32 +166,35 @@ class HeartBreak:
         return first, second
         
     def get_segments(self, time, signal, max_time_segment):
-    '''
-    Takes large signal and breaks it into segments
-    '''
-    # Calculate signal propertys
-    initial_time = np.min(time)
-    final_time = np.max(time)
-    total_time = final_time - initial_time
-
-    # Calculate number of segments
-    num_segments = np.ceil(total_time / max_time_segment)
-
-    # Find segments
-    time_segments = []
-    signal_segments = []
-    for i in range(num_segments):
-        # Determine start and end time of segment
-        start_time = i * max_time_segment
-        end_time   = (i + 1) * max_time_segment if i != num_segments - 1 else len(time)
+        '''
+        Takes large signal and breaks it into segments
+        '''
+        # Calculate signal propertys
+        initial_time = np.min(time)
+        final_time = np.max(time)
+        total_time = final_time - initial_time
+        data_points = len(time) - 1
         
-        time_segments.append(time[range(start_time, end_time)])
-        signal_segments.append(signal[range(start_time, end_time)])
-
-    return time_segments, signal_segments
+        time_step = total_time / data_points
+        frequency = 1 / time_step    
 
 
+        # Calculate number of segments
+        num_segments = int(np.ceil(total_time / max_time_segment))
 
+        # Find segments
+        time_segments = []
+        signal_segments = []
+        for i in range(num_segments):
+            # Determine start and end time of segment
+            start_time = int((i * max_time_segment) * frequency)
+            end_time   = int((i + 1) * max_time_segment * frequency) if i != num_segments - 1 else len(time)
+            print(start_time, end_time)
+            
+            time_segments.append(time[range(start_time, end_time)])
+            signal_segments.append(signal[range(start_time, end_time)])
+
+        return time_segments, signal_segments
 
     def get_ecg_peaks(self, time,
                             signal,
