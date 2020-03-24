@@ -14,11 +14,16 @@ from xlwt import Workbook
 folder_name = "1 9 2020 AH TDMS ESSENTIAL"
 dosage      = 40 # [mcg/kg/min]
 
-# Settings
-preloaded_signal = True
+# Signal Settings
+preloaded_signal = False
 save_signal      = True
-peaks_to_excel    = False
-use_intervals    = False
+peaks_to_excel   = False
+max_time         = 5
+use_intervals    = True
+
+# Optional if not using intervals
+start_time       = 10
+end_time         = 30
 
 # Display Settings
 show_signal      = False
@@ -27,11 +32,6 @@ show_bandpass    = False
 show_derivatives = False
 show_peaks       = True
 
-# Optinal Intervals
-if use_intervals == True:
-    start_time = 10
-    end_time   = 20
-
 # Known Files
 files = {"1 9 2020 AH TDMS ESSENTIAL": {10: "DAQData_010920140634",
                                         20: "DAQData_010920141106",
@@ -39,12 +39,12 @@ files = {"1 9 2020 AH TDMS ESSENTIAL": {10: "DAQData_010920140634",
                                         40: "DAQData_010920142816"}}
 
 # Pick file
-file_name = files[folder_name]["files_of_interest"][dosage]
+file_name = files[folder_name][dosage]
 
 # Initalize patient and interval
 if preloaded_signal == False:
     # Change directory
-    wd = 'data/' + folder_name
+    wd = 'data/' + folder_name + '/files_of_interest'
 
     # Load TDMS file into Patient object
     patient = Patient(wd, file_name)
@@ -58,7 +58,7 @@ if preloaded_signal == False:
         signal = patient.ecg
     
     # Save signal
-    if save__signal == True:
+    if save_signal == True:
         np.savetxt('time_'+ file_name + '.csv', time, delimiter=',')
         np.savetxt('signal_'+ file_name + '.csv', signal, delimiter=',')
 
@@ -85,7 +85,7 @@ if show_freq_domain == True:
                     signal = signal)
 
 # Bandblock
-if show_bandpass_freq_domain == True:
+if show_bandpass == True:
     bandpass_signal = hb.lowpass_filter(time = time, 
                                 signal = signal,
                                 cutoff_freq = 10)
