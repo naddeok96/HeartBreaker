@@ -20,7 +20,7 @@ class Patient:
         os.chdir(working_directory)
         self.patient_name = file_name
         self.tdms_file = tdms(file_name + ".tdms")
-        os.chdir("../Derived")
+        os.chdir("../../Derived")
 
         self.times  = self.tdms_file.object('Data','Time(S)').data
         self.seis1  = self.tdms_file.object('Data','Seismocardiogram I').data
@@ -31,14 +31,6 @@ class Patient:
 
         self.num_data_points = len(self.times)
         self.frequency = frequency
-
-    def normalize(self, signal):
-        '''
-        Normalize a signal 
-        '''
-        mean = np.mean(signal)
-        std = np.std(signal)
-        return (signal - mean) / std
 
     def get_interval(self, interval):
         '''
