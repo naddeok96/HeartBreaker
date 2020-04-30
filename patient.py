@@ -4,6 +4,7 @@ This class will read a patients tdms file
 # Imports
 from nptdms import TdmsFile as tdms
 import numpy as np
+import math
 import os
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -12,8 +13,7 @@ warnings.simplefilter(action='ignore', category=FutureWarning)
 class Patient:
 
     def __init__(self, working_directory,
-                       file_name,
-                       frequency = 4000):
+                       file_name):
         
         super(Patient, self).__init__
 
@@ -29,8 +29,11 @@ class Patient:
         self.phono2 = self.tdms_file.object('Data',' Precordial Phonocardiogram-II').data
         self.ecg    = self.tdms_file.object('Data',' Direct ECG').data
 
+        self.total_time = math.floor(np.max(self.times)) - math.floor(np.min(self.times))
         self.num_data_points = len(self.times)
-        self.frequency = frequency
+
+        self.time_step = self.total_time/self.num_data_points
+        self.frequency = int(1 / self.time_step)
 
     def get_interval(self, interval):
         '''

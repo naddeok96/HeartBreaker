@@ -1,6 +1,3 @@
-'''
-This class will munipulate heart signals
-'''
 # Imports
 import matplotlib.pyplot as plt
 import numpy as np
@@ -11,6 +8,8 @@ import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 import obspy.signal.filter
 from scipy.signal import filtfilt, butter
+import xlwt 
+from xlwt import Workbook 
 
 # Heartbreaker
 class HeartBreak:
@@ -19,6 +18,25 @@ class HeartBreak:
     '''
     def __init__(self):
         super(HeartBreak, self).__init__
+
+    def save_peaks_to_excel(self, file_name, time, peaks):
+        '''
+        Save PQRST, S''max and T''max peaks in time to excel
+        '''
+        # Excel Workbook Object is created 
+        wb = Workbook() 
+        
+        # Create sheet
+        sheet = wb.add_sheet('Peaks') 
+
+        # Write out each peak and data
+        for i, peak in enumerate(peaks):
+            sheet.write(0, i, peak)
+            for j, value in enumerate(peaks[peak]):
+                time_instant = "N/A" if value == 0 else time[value]
+                sheet.write(j + 1, i, time_instant)
+
+        wb.save(file_name + '.xls') 
 
     def plot_signal(self, time, 
                           signal, 
@@ -247,7 +265,7 @@ class HeartBreak:
         # Pass through a 10Hz low pass
         smoothed_signal = self.lowpass_filter(time = time, 
                                                 signal = signal,
-                                                cutoff_freq = 15)
+                                                cutoff_freq = cutoff_freq)
 
         # Calculate second derivative
         _, smoothed_second = self.get_derivatives(smoothed_signal)
@@ -405,8 +423,6 @@ class HeartBreak:
                  "T''max": t_ddot}
 
         return peaks
-        
-
 
 
 
