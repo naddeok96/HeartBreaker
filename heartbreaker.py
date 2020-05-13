@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.signal import find_peaks, argrelmin
 from scipy import signal as scisig
+import math
 import csv
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -220,10 +221,10 @@ class HeartBreak:
                             r_max_to_mean_ratio = 0.5,  ## 0.0 -> mean ## 1.0 -> max
 
                             r_window_ratio = 0.3,       ## 0.0 -> R peak ## 1.0 -> last or next R peak
-                            q_window_ratio = 0.15,      ## 
-                            s_window_ratio = 0.15,      ## 
-                            p_window_ratio = 0.3,       ## 
-                            t_window_ratio = 0.4,       ## 
+                            q_window_ratio = 0.28,      ## 
+                            s_window_ratio = 0.08,      ## 
+                            p_window_ratio = 0.08,      ## 
+                            t_window_ratio = 0.45,      ## 
 
                             plot             = False,
                             plot_windows     = False,
@@ -381,11 +382,11 @@ class HeartBreak:
 
                 if i != (len(r_peaks) - 1):
                     # S Peaks
-                    ax1.scatter(time[s_peaks[i]], signal[s_peaks[i]], c='green', marker = "D")
+                    ax1.scatter(time[s_peaks[i]], signal[s_peaks[i]], c='yellow', marker = "D")
                     ax1.text(time[s_peaks[i]],  0.02 + signal[s_peaks[i]], "S", fontsize=9)
 
                     # T Peaks
-                    ax1.scatter(time[t_peaks[i]], signal[t_peaks[i]], c='blue', marker = "D")
+                    ax1.scatter(time[t_peaks[i]], signal[t_peaks[i]], c='magenta', marker = "D")
                     ax1.text(time[t_peaks[i]], 0.02 + signal[t_peaks[i]], "T", fontsize=9)
 
                     # Plot ST Segments
@@ -423,6 +424,102 @@ class HeartBreak:
                  "T''max": t_ddot}
 
         return peaks
+
+    def get_ratios_to_RR_intervals(self, p,q,r,s,t):
+        '''
+        Takes the peaks for an interval and finds the average ratios from the r peaks
+
+        For example rp_ratio is:
+        ((time of p peak) - (time of current r peak)) / ((time of next r peak) - (time of current r peak))
+        '''
+        # Calculate peak intervals
+        rp_intervals = p - r
+        rq_intervals = q - r
+        rr_intervals = np.diff(r)
+        rs_intervals = s - r
+        rt_intervals = t - r
+
+        # Caluculate ratios
+        rp_ratios = rp_intervals[1:]  / rr_intervals
+        rq_ratios = rq_intervals[1:]  / rr_intervals
+        rs_ratios = rs_intervals[:-1] / rr_intervals
+        rt_ratios = rt_intervals[:-1] / rr_intervals
+
+        # Calculate mean and std
+        rp_mean, rp_std = np.mean(rp_ratios), np.std(rp_ratios)
+        rq_mean, rq_std = np.mean(rq_ratios), np.std(rq_ratios)
+        rs_mean, rs_std = np.mean(rs_ratios), np.std(rs_ratios)
+        rt_mean, rt_std = np.mean(rt_ratios), np.std(rt_ratios)
+
+        return  rp_mean, rp_std, rq_mean, rq_std, rs_mean, rs_std, rt_mean, rt_std
+
+    
+    def add_stats(self, mean1, std1, weight1, mean2, std2, weight2):
+        '''
+        Takes stats of two sets (assumed to be from the same distribution) and combines them
+        Method from https://www.statstodo.com/CombineMeansSDs_Pgm.php
+        '''
+        # Calculate E[x] and E[x^2] of each
+        sig_x1 = weight1 * mean1
+        sig_x2 = weight2 * mean2
+
+        sig_xx1 = ((std1 ** 2) * (weight1 - 1)) + (((sig_x1 ** 2) / weight1))
+        sig_xx2 = ((std2 ** 2) * (weight2 - 1)) + (((sig_x2 ** 2) / weight2))
+
+        # Calculate sums
+        tn  = weight1 + weight2
+        tx  = sig_x1  + sig_x2
+        txx = sig_xx1 + sig_xx2
+
+        # Calculate combined stats
+        mean = tx / tn
+        std = np.sqrt((txx - (tx**2)/tn) / (tn - 1))
+
+        return mean, std, tn
+
+    def plot_phase_space(self, file_name,
+                            rp_mean, rp_std,
+                            rq_mean, rq_std,
+                            rs_mean, rs_std,
+                            rt_mean, rt_std):
+        '''
+        Plots the phase space of peaks wrt R-R intervals
+        '''
+        # Display Circle
+        fig, ax = plt.subplots(1)
+        plt.title(file_name)
+        ax.axis('off')
+        circle = plt.Circle((0, 0), radius=1, edgecolor='k', facecolor='None')
+        ax.add_patch(circle)
+        ax.set_aspect(1)
+        plt.xlim(-1.25,1.25)
+        plt.ylim(-1.25,1.25)
+
+        # Add points
+        ax.plot([0, 1], [0, 0], c='red')
+        plt.text(1.05, 0, "R", fontsize=12)
+
+        ax.plot([0, math.cos(np.pi * rp_mean)], [0, math.sin(np.pi * rp_mean)], c='blue', linewidth=2)
+        ax.plot([0, math.cos(np.pi * (rp_mean + rp_std))], [0, math.sin(np.pi * (rp_mean + rp_std))], c='blue', linestyle='dashed', linewidth=1)
+        ax.plot([0, math.cos(np.pi * (rp_mean - rp_std))], [0, math.sin(np.pi * (rp_mean - rp_std))], c='blue', linestyle='dashed', linewidth=1)
+        plt.text(1.05 * math.cos(np.pi * rp_mean), 1.2 * math.sin(np.pi * rp_mean), "P: " + str(round(rp_mean,3)) + " +/- " + str(round(rp_std,3)), fontsize=12)
+
+        ax.plot([0, math.cos(np.pi * rq_mean)], [0, math.sin(np.pi * rq_mean)], c='green', linewidth=2)
+        ax.plot([0, math.cos(np.pi * (rq_mean + rq_std))], [0, math.sin(np.pi * (rq_mean + rq_std))], c='green', linestyle='dashed', linewidth=1)
+        ax.plot([0, math.cos(np.pi * (rq_mean - rq_std))], [0, math.sin(np.pi * (rq_mean - rq_std))], c='green', linestyle='dashed', linewidth=1)
+        plt.text(1.05 * math.cos(np.pi * rq_mean), 1.2 * math.sin(np.pi * rq_mean), "Q: " + str(round(rq_mean,3)) + " +/- " + str(round(rq_std,3)), fontsize=12)
+
+        ax.plot([0, math.cos(np.pi * rs_mean)], [0, math.sin(np.pi * rs_mean)], c='yellow', linewidth=2)
+        ax.plot([0, math.cos(np.pi * (rs_mean + rs_std))], [0, math.sin(np.pi * (rs_mean + rs_std))], c='yellow', linestyle='dashed', linewidth=1)
+        ax.plot([0, math.cos(np.pi * (rs_mean - rs_std))], [0, math.sin(np.pi * (rs_mean - rs_std))], c='yellow', linestyle='dashed', linewidth=1)
+        plt.text(1.05 * math.cos(np.pi * rs_mean), 1.2 * math.sin(np.pi * rs_mean), "S: " + str(round(rs_mean,3)) + " +/- " + str(round(rs_std,3)), fontsize=12)
+
+        ax.plot([0, math.cos(np.pi * rt_mean)], [0, math.sin(np.pi * rt_mean)], c='magenta', linewidth=2)
+        ax.plot([0, math.cos(np.pi * (rt_mean + rt_std))], [0, math.sin(np.pi * (rt_mean + rt_std))], c='magenta', linestyle='dashed', linewidth=1)
+        ax.plot([0, math.cos(np.pi * (rt_mean - rt_std))], [0, math.sin(np.pi * (rt_mean - rt_std))], c='magenta', linestyle='dashed', linewidth=1)
+        plt.text(1.05 * math.cos(np.pi * rt_mean), 1.1 * math.sin(np.pi * rt_mean), "T: " + str(round(rt_mean,3)) + " +/- " + str(round(rt_std,3)), fontsize=12)
+
+        plt.show()
 
 
 
