@@ -20,30 +20,12 @@ class HeartBreak:
     def __init__(self):
         super(HeartBreak, self).__init__
 
-    def save_peaks_to_excel(self, file_name, time, peaks):
-        '''
-        Save PQRST, S''max and T''max peaks in time to excel
-        '''
-        # Excel Workbook Object is created 
-        wb = Workbook() 
-        
-        # Create sheet
-        sheet = wb.add_sheet('Peaks') 
-
-        # Write out each peak and data
-        for i, peak in enumerate(peaks):
-            sheet.write(0, i, peak)
-            for j, value in enumerate(peaks[peak]):
-                time_instant = "N/A" if value == 0 else time[value]
-                sheet.write(j + 1, i, time_instant)
-
-        wb.save(file_name + '.xls') 
-
     def plot_signal(self, time, 
-                          signal, 
+                          signal,
                           title = "", 
                           xlabel = 'Time (s)', 
-                          ylabel = ""):
+                          ylabel = "",
+                          show_mean = False,):
         '''
         Plot a signal
         '''
@@ -51,6 +33,9 @@ class HeartBreak:
         plt.title(title)
         plt.xlabel(xlabel)
         plt.ylabel(ylabel)
+
+        if show_mean == True:
+            plt.plot(time, [np.mean(signal)] * len(time))
         plt.show()
 
     def get_fft(self, time, 
@@ -117,8 +102,26 @@ class HeartBreak:
         ax2.set_ylim((0,100))
         
         plt.show()
-        
 
+    def save_peaks_to_excel(self, file_name, time, peaks):
+        '''
+        Save PQRST, S''max and T''max peaks in time to excel
+        '''
+        # Excel Workbook Object is created 
+        wb = Workbook() 
+        
+        # Create sheet
+        sheet = wb.add_sheet('Peaks') 
+
+        # Write out each peak and data
+        for i, peak in enumerate(peaks):
+            sheet.write(0, i, peak)
+            for j, value in enumerate(peaks[peak]):
+                time_instant = "N/A" if value == 0 else time[value]
+                sheet.write(j + 1, i, time_instant)
+
+        wb.save(file_name + '.xls') 
+        
     def bandpass_filter(self, time, 
                               signal, 
                               freqmin, 
@@ -126,26 +129,31 @@ class HeartBreak:
         '''
         Removes frequencies in an interval of frequencies
         '''
+        # Calculate the frequency
         time_step = (np.max(time) - np.min(time))/ (len(time) - 1)
         frequency = 1 / time_step
-        return obspy.signal.filter.bandstop(signal, 
-                                            freqmin, 
-                                            freqmax, 
+        return obspy.signal.filter.bandstop(signal,
+                                            freqmin,
+                                            freqmax,
                                             frequency)
 
     def lowpass_filter(self, time, signal, cutoff_freq):
+        '''
+        Lowpass filter of the signal to remove frequencies above the cutoff frequency
+        '''
+        # Calculate frequency
         time_step = (np.max(time) - np.min(time))/ (len(time) - 1)
         frequency = 1 / time_step
 
+        # Lowpass filter
         nyq = 0.5 * frequency
         normal_cutoff = cutoff_freq / nyq
         b, a = butter(5 , normal_cutoff, btype='low', analog=False)
-        
         return filtfilt(b, a, signal)
 
     def moving_average(self, signal, pt) :
         '''
-        Calculate moving average of signal
+        Calculate moving point average of the signal
         '''
         return np.convolve(signal, np.ones((pt,))/pt, mode='valid')
 
@@ -220,16 +228,17 @@ class HeartBreak:
 
                             r_max_to_mean_ratio = 0.5,  ## 0.0 -> mean ## 1.0 -> max
 
-                            r_window_ratio = 0.3,       ## 0.0 -> R peak ## 1.0 -> last or next R peak
-                            q_window_ratio = 0.28,      ## 
-                            s_window_ratio = 0.08,      ## 
-                            p_window_ratio = 0.08,      ## 
+                            r_window_ratio = 0.3,       ## r_window_ratio == 150 beats per min
+                            q_window_ratio = 0.08,      ## 
+                            s_window_ratio = 0.07,      ## 
+                            p_window_ratio = 0.30,      ## 
                             t_window_ratio = 0.45,      ## 
 
-                            plot             = False,
-                            plot_windows     = False,
-                            plot_derivatives = False,
-                            plot_st_segments = False):
+                            plot                         = False,
+                            plot_windows                 = False,
+                            plot_derivatives             = False,
+                            plot_segmentation_decisons   = False,
+                            plot_st_segments             = False):
         '''
         Finds the P, Q, R, S, T and S-T segments of each beat in a signal
         '''
@@ -253,10 +262,11 @@ class HeartBreak:
         signal_max_to_mean = signal_max - signal_mean
 
         # Find R Peaks in Interval
-        r_peaks = find_peaks(signal,
+        first, second = self.get_derivatives(signal)
+        r_peaks = find_peaks(-second,
                              height = (r_max_to_mean_ratio * signal_max_to_mean) + signal_mean,
                              distance = r_window_ratio * frequency)[0] # 0.3 r_window_ratio == 150 beats per min
-
+        
         # Determine what cutoff freq to use
         if np.mean(np.diff(r_peaks)) > 2500:
             cutoff_freq = 15
@@ -275,19 +285,12 @@ class HeartBreak:
         def fill_w_zeros():
             return np.zeros(len(r_peaks)).astype(int)
 
-        q_peaks = fill_w_zeros()
-        s_peaks = fill_w_zeros()
-        p_peaks = fill_w_zeros()
-        t_peaks = fill_w_zeros()
-        s_ddot = []
-        t_ddot = []
+        q_peaks, s_peaks, p_peaks, t_peaks = fill_w_zeros(), fill_w_zeros(), fill_w_zeros(), fill_w_zeros()
+        s_ddot, t_ddot = [], []
 
         # Initalize boundaries
-        q_windows = {} 
-        s_windows = {}
-        p_windows = {}
-        t_windows = {}
-        
+        q_windows, s_windows, p_windows, t_windows = {}, {}, {}, {}
+
         # Use R peak to find other peaks
         for i in range(len(r_peaks)):
             # Do not calculate Q or P peaks if there is no previous R peak
@@ -312,36 +315,46 @@ class HeartBreak:
                 # Find upper bound of s and t peaks and define windows
                 s_upper_bound = r_peaks[i] + int(s_window_ratio * next_r_peak_distance)
                 s_windows[i] = list(range(r_peaks[i], s_upper_bound))
-                s_peaks[i] = int(np.argmin(signal[s_windows[i]]) + r_peaks[i])
+                s_peaks[i] = int(find_peaks(-signal[s_windows[i]], distance = len(s_windows[i])/2)[0] + r_peaks[i])
 
                 t_upper_bound = s_peaks[i] + int(t_window_ratio * next_r_peak_distance)
                 t_windows[i] = list(range(s_peaks[i], t_upper_bound))
                 t_peaks[i] = int(np.argmax(signal[t_windows[i]]) + s_peaks[i])
 
                 # Find S-T segment
-
                 # Look at interval between s and t peak
-                interval = range(s_peaks[i],t_peaks[i])
+                s_t_interval = range(s_peaks[i], t_peaks[i])
 
-                # Find s''max and t''max peaks
-                st_peaks = find_peaks(smoothed_second[interval],distance = len(interval)/3)[0]
+                # Find s''max
+                sddot_peak = np.argmin(second[s_t_interval])
 
-                # Calculate the values
-                values = smoothed_second[st_peaks]
+                # Look at interval between s''max and t peak
+                sddot_t_interval = range(s_peaks[i] + sddot_peak, t_peaks[i])
 
-                # If there are more than two pick the two largest
-                if len(values) > 2:
-                    idx_peaks = np.argpartition(values, 2)
-                    lower = values[idx_peaks[-2:]][0]
-                    upper = values[idx_peaks[-2:]][1]
-                # Else the biggest is s''max
-                else:
-                    lower = np.max(values)
-                    upper = np.min(values)
+                # Locate t''max
+                tddot_peak = find_peaks(smoothed_second[s_t_interval],
+                                                distance = len(s_t_interval)/3)[0][-1]
+                
 
+                if plot_segmentation_decisons == True:
+                    plt.plot(range(r_peaks[i-1],r_peaks[i+1]),signal[r_peaks[i-1]:r_peaks[i+1]], label='Signal')
+                    plt.plot(range(r_peaks[i-1],r_peaks[i+1]), second[r_peaks[i-1]:r_peaks[i+1]], label="Second Derivative")
+                    plt.plot(range(r_peaks[i-1],r_peaks[i+1]), smoothed_second[r_peaks[i-1]:r_peaks[i+1]], label='Smoothed Second Derivative')
+
+                    plt.axvline(s_peaks[i] + sddot_peak)
+                    plt.scatter(s_peaks[i] + sddot_peak, signal[s_t_interval][sddot_peak], c = "c")
+
+                    plt.axvline(s_peaks[i] + tddot_peak)
+                    plt.scatter(s_peaks[i] + tddot_peak, signal[s_t_interval][tddot_peak], c = "m")
+
+                    plt.scatter(s_peaks[i], signal[s_peaks[i]], c = "g")
+
+                    plt.legend()
+                    plt.show()
+                
                 # Reindex to entire signal not just interval
-                s_ddot.append(int(np.where(smoothed_second == lower)[0] + s_peaks[i]))
-                t_ddot.append(int(np.where(smoothed_second == upper)[0] + s_peaks[i]))
+                s_ddot.append(s_peaks[i] + sddot_peak)
+                t_ddot.append(s_peaks[i] + sddot_peak + tddot_peak)
 
                 # Add a zero at the end
                 if i == (len(r_peaks) - 2):
@@ -425,7 +438,7 @@ class HeartBreak:
 
         return peaks
 
-    def get_ratios_to_RR_intervals(self, p,q,r,s,t):
+    def get_phase_ratios_to_RR_intervals(self, p,q,r,s,t):
         '''
         Takes the peaks for an interval and finds the average ratios from the r peaks
 
@@ -451,7 +464,9 @@ class HeartBreak:
         rs_mean, rs_std = np.mean(rs_ratios), np.std(rs_ratios)
         rt_mean, rt_std = np.mean(rt_ratios), np.std(rt_ratios)
 
-        return  rp_mean, rp_std, rq_mean, rq_std, rs_mean, rs_std, rt_mean, rt_std
+        phase_ratios = (rp_mean, rp_std, rq_mean, rq_std, rs_mean, rs_std, rt_mean, rt_std)
+
+        return phase_ratios
 
     
     def add_stats(self, mean1, std1, weight1, mean2, std2, weight2):
@@ -520,6 +535,59 @@ class HeartBreak:
         plt.text(1.05 * math.cos(np.pi * rt_mean), 1.1 * math.sin(np.pi * rt_mean), "T: " + str(round(rt_mean,3)) + " +/- " + str(round(rt_std,3)), fontsize=12)
 
         plt.show()
+
+    def plot_phase_space_for_dosages(self, folder_name, phase_data):
+        '''
+        Takes the phase ratios for each dosage and plots it
+        '''
+        dosages = ["10", "20", "30", "40"]
+        fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2,2)
+        fig.suptitle(folder_name)
+        plt.xlim(-1.25,1.25)
+        plt.ylim(-1.25,1.25)
+        count = 0
+        for ax, phase_ratios in zip((ax1, ax2, ax3, ax4), phase_data):
+            
+            rp_mean, rp_std, rq_mean, rq_std, rs_mean, rs_std, rt_mean, rt_std = phase_ratios
+
+            ax.set_title(dosages[count] + ' mcg/mg')
+            ax.axis('off')
+            ax.add_patch(plt.Circle((0, 0), radius=1, edgecolor='k', facecolor='None'))
+            ax.set_aspect(1)
+            ax.set_xlim(-1.25,1.25)
+            ax.set_ylim(-1.25,1.25)
+
+            # Add points
+            ax.plot([0, 1], [0, 0], c='red')
+            ax.text(1.05, 0, "R", fontsize=12)
+
+            ax.plot([0, math.cos(np.pi * rp_mean)], [0, math.sin(np.pi * rp_mean)], c='blue', linewidth=2)
+            ax.plot([0, math.cos(np.pi * (rp_mean + rp_std))], [0, math.sin(np.pi * (rp_mean + rp_std))], c='blue', linestyle='dashed', linewidth=1)
+            ax.plot([0, math.cos(np.pi * (rp_mean - rp_std))], [0, math.sin(np.pi * (rp_mean - rp_std))], c='blue', linestyle='dashed', linewidth=1)
+            ax.text(1.05 * math.cos(np.pi * rp_mean), 1.2 * math.sin(np.pi * rp_mean), "P: " + str(round(rp_mean,3)) + " +/- " + str(round(rp_std,3)), fontsize=12)
+
+            ax.plot([0, math.cos(np.pi * rq_mean)], [0, math.sin(np.pi * rq_mean)], c='green', linewidth=2)
+            ax.plot([0, math.cos(np.pi * (rq_mean + rq_std))], [0, math.sin(np.pi * (rq_mean + rq_std))], c='green', linestyle='dashed', linewidth=1)
+            ax.plot([0, math.cos(np.pi * (rq_mean - rq_std))], [0, math.sin(np.pi * (rq_mean - rq_std))], c='green', linestyle='dashed', linewidth=1)
+            ax.text(1.05 * math.cos(np.pi * rq_mean), 1.2 * math.sin(np.pi * rq_mean), "Q: " + str(round(rq_mean,3)) + " +/- " + str(round(rq_std,3)), fontsize=12)
+
+            ax.plot([0, math.cos(np.pi * rs_mean)], [0, math.sin(np.pi * rs_mean)], c='yellow', linewidth=2)
+            ax.plot([0, math.cos(np.pi * (rs_mean + rs_std))], [0, math.sin(np.pi * (rs_mean + rs_std))], c='yellow', linestyle='dashed', linewidth=1)
+            ax.plot([0, math.cos(np.pi * (rs_mean - rs_std))], [0, math.sin(np.pi * (rs_mean - rs_std))], c='yellow', linestyle='dashed', linewidth=1)
+            ax.text(1.05 * math.cos(np.pi * rs_mean), 1.2 * math.sin(np.pi * rs_mean), "S: " + str(round(rs_mean,3)) + " +/- " + str(round(rs_std,3)), fontsize=12)
+
+            ax.plot([0, math.cos(np.pi * rt_mean)], [0, math.sin(np.pi * rt_mean)], c='magenta', linewidth=2)
+            ax.plot([0, math.cos(np.pi * (rt_mean + rt_std))], [0, math.sin(np.pi * (rt_mean + rt_std))], c='magenta', linestyle='dashed', linewidth=1)
+            ax.plot([0, math.cos(np.pi * (rt_mean - rt_std))], [0, math.sin(np.pi * (rt_mean - rt_std))], c='magenta', linestyle='dashed', linewidth=1)
+            ax.text(1.05 * math.cos(np.pi * rt_mean), 1.1 * math.sin(np.pi * rt_mean), "T: " + str(round(rt_mean,3)) + " +/- " + str(round(rt_std,3)), fontsize=12)
+            
+            count += 1
+
+        plt.show()
+
+
+            
+
 
 
 
