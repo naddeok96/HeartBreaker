@@ -40,14 +40,14 @@ files = {"1 9 2020 AH TDMS ESSENTIAL"   :   {10: {"file_name": "DAQData_01092014
                                                                   3: [1150, 1167],
                                                                   4: [1173, 1236],
                                                                   5: [1236, 1280],
-                                                                  6: [1280, 1330]}}},
+                                                                  6: [1280, 1330]}},
 
-                                             # 3: {"file_name": "DAQData_062719135429",
-                                             #      "intervals":   {1: [1356, 1376],
-                                             #                      2: [1060, 1142]}}, # Must add a peak width check
+                                             3: {"file_name": "DAQData_062719135429",
+                                                  "intervals":   {1: [1356, 1366],
+                                                                  2: [1060, 1142]}}, # Must add a peak width check
 
-                                             # 4: {"file_name": "DAQData_062719135858", # Must adding a moving segmentor
-                                             #      "intervals": ["None"]}},
+                                             4: {"file_name": "DAQData_062719135858", # Must adding a moving segmentor
+                                                  "intervals": ["None"]}},
 
                                              
         "Dobutamine Stress Lou"         :   {1: {"file_name": "DAQData_032819134903",
