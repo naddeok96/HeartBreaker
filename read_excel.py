@@ -12,7 +12,7 @@ hb = HeartBreak()
 
 # Hyperparameters
 folder_name = "1 9 2020 AH TDMS ESSENTIAL"
-dosages     = ["10", "20", "30", "40"]
+dosages     = ["0", "10", "20", "30", "40"]
 
 # Find all files in folder
 os.chdir('data/Derived')

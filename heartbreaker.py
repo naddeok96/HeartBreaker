@@ -574,19 +574,26 @@ class HeartBreak:
         '''
         Takes the phase ratios for each dosage and plots it
         '''
-        dosages = ["10", "20", "30", "40"]
-        fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2,2)
+        dosages = ["0", "10", "20", "30", "40"]
+        # fig, ((ax1, ax2), (ax3, ax4), (ax5, ax6)) = plt.subplots(3,2)
+        fig = plt.figure()
+        ax1 = fig.add_subplot(221)
+        ax2 = fig.add_subplot(222)
+        ax3 = fig.add_subplot(234)
+        ax4 = fig.add_subplot(235)
+        ax5 = fig.add_subplot(236)
+
         fig.suptitle(folder_name)
         plt.xlim(-1.25,1.25)
         plt.ylim(-1.25,1.25)
         count = 0
-        for ax, phase_ratios in zip((ax1, ax2, ax3, ax4), phase_data):
-            
+        for ax, phase_ratios in zip((ax1, ax2, ax3, ax4, ax5), phase_data):
+
             rp_mean, rp_std, rq_mean, rq_std, rr_mean, rr_std, rs_mean, rs_std, rt_mean, rt_std, st_mean, st_std, rtddot_mean, rtddot_std, num_data_points = phase_ratios
 
             ax.set_title(dosages[count] + ' mcg/kg')
             ax.text(-0.8, -0.15, "Derived\nfrom " + str(num_data_points) + "\nheartbeats", fontsize=10)
-            font_size = 11
+            font_size = 10
             ax.axis('off')
             ax.add_patch(plt.Circle((0, 0), radius=1, edgecolor='k', facecolor='None'))
             ax.set_aspect(1)

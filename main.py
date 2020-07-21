@@ -14,9 +14,9 @@ import csv
 # Hyperparameters
 #---------------------#
 # Signal Settings
-preloaded_signal = True
-save_signal      = False
-peaks_to_excel   = False
+preloaded_signal = False
+save_signal      = True
+peaks_to_excel   = True
 use_intervals    = True
 
 # Display Settings
@@ -29,7 +29,7 @@ show_peaks       = True
 folder_name = "1 9 2020 AH TDMS ESSENTIAL"
 
 # Implicit
-dosage = 30
+dosage = 0
 interval_number = 2 # "None"
 
 # Iterate

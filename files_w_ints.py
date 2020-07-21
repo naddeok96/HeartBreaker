@@ -6,7 +6,11 @@ The dictionary is set up as:
       Folder Name --> Dosage Level --> Intervals
 '''
 # Known files
-files = {"1 9 2020 AH TDMS ESSENTIAL"   :   {10: {"file_name": "DAQData_010920140634",\
+files = {"1 9 2020 AH TDMS ESSENTIAL"   :   {0:  {"file_name": "DAQData_010920140006",
+                                                  "intervals":   {1: [1227, 1345],
+                                                                  2: [1405, "end"]}},
+
+                                             10: {"file_name": "DAQData_010920140634",
                                                   "intervals":   ["None"]},
                                                                    
                                              20: {"file_name": "DAQData_010920141106",
