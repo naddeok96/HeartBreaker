@@ -1,7 +1,13 @@
 
-# Known Files
-files = {"1 9 2020 AH TDMS ESSENTIAL"   :   {10: {"file_name": "DAQData_010920140634",
-                                                  "intervals": ["None"]},
+'''
+Conatins all patient's test folder names with associated dosage levels and viable intervals
+
+The dictionary is set up as:
+      Folder Name --> Dosage Level --> Intervals
+'''
+# Known files
+files = {"1 9 2020 AH TDMS ESSENTIAL"   :   {10: {"file_name": "DAQData_010920140634",\
+                                                  "intervals":   ["None"]},
                                                                    
                                              20: {"file_name": "DAQData_010920141106",
                                                   "intervals": ["None"]},
@@ -25,7 +31,7 @@ files = {"1 9 2020 AH TDMS ESSENTIAL"   :   {10: {"file_name": "DAQData_01092014
                                                                   5: [3228, 3376],
                                                                   6: [3376, 3526],
                                                                   7: [3853, 3880],
-                                                                  8: [3880, "end"]}}},
+                                                                  8: [3885.25, "end"]}}},
 
         "Dobutamine Stress Test 62719JS":   {1: {"file_name": "DAQData_062719131637",
                                                   "intervals":   {1: [94 , 112],
@@ -44,9 +50,9 @@ files = {"1 9 2020 AH TDMS ESSENTIAL"   :   {10: {"file_name": "DAQData_01092014
 
                                              3: {"file_name": "DAQData_062719135429",
                                                   "intervals":   {1: [1356, 1366],
-                                                                  2: [1060, 1142]}}, # Must add a peak width check
+                                                                  2: [1060, 1142]}}, 
 
-                                             4: {"file_name": "DAQData_062719135858", # Must adding a moving segmentor
+                                             4: {"file_name": "DAQData_062719135858",
                                                   "intervals": ["None"]}},
 
                                              

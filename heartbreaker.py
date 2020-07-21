@@ -279,14 +279,14 @@ class HeartBreak:
                                                 cutoff_freq = cutoff_freq)
 
         # Calculate second derivative
-        _, smoothed_second = self.get_derivatives(smoothed_signal)
+        smoothed_first, smoothed_second = self.get_derivatives(smoothed_signal)
 
         # Initalize other peaks to be the size of R_peaks
         def fill_w_zeros():
             return np.zeros(len(r_peaks)).astype(int)
 
         q_peaks, s_peaks, p_peaks, t_peaks = fill_w_zeros(), fill_w_zeros(), fill_w_zeros(), fill_w_zeros()
-        s_ddot, t_ddot = [], []
+        st_starts, st_ends, t_ddots = [], [], []
 
         # Initalize boundaries
         q_windows, s_windows, p_windows, t_windows = {}, {}, {}, {}
@@ -315,7 +315,10 @@ class HeartBreak:
                 # Find upper bound of s and t peaks and define windows
                 s_upper_bound = r_peaks[i] + int(s_window_ratio * next_r_peak_distance)
                 s_windows[i] = list(range(r_peaks[i], s_upper_bound))
-                s_peaks[i] = int(find_peaks(-signal[s_windows[i]], distance = len(s_windows[i])/2)[0] + r_peaks[i])
+                if len(find_peaks(-signal[s_windows[i]], distance = len(s_windows[i])/2)[0]) == 0:
+                    s_peaks[i] = int(np.argmax(-signal[s_windows[i]]) + r_peaks[i])
+                else:
+                    s_peaks[i] = int(find_peaks(-signal[s_windows[i]], distance = len(s_windows[i])/2)[0][0] + r_peaks[i])
 
                 t_upper_bound = s_peaks[i] + int(t_window_ratio * next_r_peak_distance)
                 t_windows[i] = list(range(s_peaks[i], t_upper_bound))
@@ -325,41 +328,59 @@ class HeartBreak:
                 # Look at interval between s and t peak
                 s_t_interval = range(s_peaks[i], t_peaks[i])
 
-                # Find s''max
-                sddot_peak = np.argmin(second[s_t_interval])
+                # Find start of S-T segment
+                st_start = np.argmin(second[s_t_interval[:int(0.15 * len(s_t_interval))]])
 
-                # Look at interval between s''max and t peak
-                sddot_t_interval = range(s_peaks[i] + sddot_peak, t_peaks[i])
+                # Look at interval between st_start and t peak
+                st_start_t_interval = range(s_peaks[i] + st_start, t_peaks[i])
 
                 # Locate t''max
-                tddot_peak = find_peaks(smoothed_second[s_t_interval],
-                                                distance = len(s_t_interval)/3)[0][-1]
-                
+                smoothed_second_peaks = find_peaks(smoothed_second[st_start_t_interval], distance = len(st_start_t_interval)/6)[0]
+                t_ddot = int(smoothed_second_peaks[-1])
 
-                if plot_segmentation_decisons == True:
+                # Finst end of S-T segment
+                smoothed_first_peaks = find_peaks(smoothed_first[st_start_t_interval], distance = len(st_start_t_interval)/6)[0]
+                st_end = int(smoothed_first_peaks[-2]) if len(smoothed_first_peaks) != 1 else smoothed_first_peaks[0]
+                
+                # Display decison areas for segmentation
+                if plot_segmentation_decisons == True and i != 0:
+                    # Plot Signals
                     plt.plot(range(r_peaks[i-1],r_peaks[i+1]),signal[r_peaks[i-1]:r_peaks[i+1]], label='Signal')
-                    plt.plot(range(r_peaks[i-1],r_peaks[i+1]), second[r_peaks[i-1]:r_peaks[i+1]], label="Second Derivative")
+                    plt.plot(range(r_peaks[i-1],r_peaks[i+1]), smoothed_first[r_peaks[i-1]:r_peaks[i+1]], label="Smoothed First Derivative")
                     plt.plot(range(r_peaks[i-1],r_peaks[i+1]), smoothed_second[r_peaks[i-1]:r_peaks[i+1]], label='Smoothed Second Derivative')
 
-                    plt.axvline(s_peaks[i] + sddot_peak)
-                    plt.scatter(s_peaks[i] + sddot_peak, signal[s_t_interval][sddot_peak], c = "c")
-
-                    plt.axvline(s_peaks[i] + tddot_peak)
-                    plt.scatter(s_peaks[i] + tddot_peak, signal[s_t_interval][tddot_peak], c = "m")
-
+                    # Plot S peak
                     plt.scatter(s_peaks[i], signal[s_peaks[i]], c = "g")
+                    plt.text(s_peaks[i], signal[s_peaks[i]] + 0.2, "S", fontsize=9, horizontalalignment = 'center')
+
+                    # Plot S-T start
+                    plt.axvline(s_peaks[i] + st_start)
+                    plt.scatter(s_peaks[i] + st_start, signal[s_t_interval][st_start], c = "c")
+                    plt.text(s_peaks[i] + st_start, signal[s_t_interval][st_start] + 0.2, "S-T Start", fontsize=9, horizontalalignment = 'center')
+
+                    # Plot S-T end
+                    plt.axvline(s_peaks[i] + st_start + st_end)
+                    plt.scatter(s_peaks[i] + st_start + st_end, signal[st_start_t_interval][st_end], c = "m")
+                    plt.text(s_peaks[i] + st_start + st_end, signal[st_start_t_interval][st_end] + 0.2, "S-T End", fontsize=9, horizontalalignment = 'center')
+                    
+                    # Plot T''max
+                    plt.axvline(s_peaks[i] + st_start + t_ddot)
+                    plt.scatter(s_peaks[i] + st_start + t_ddot, signal[st_start_t_interval][t_ddot], c = "r")
+                    plt.text(s_peaks[i] + st_start + t_ddot, signal[st_start_t_interval][t_ddot] + 0.2, "T''max", fontsize=9, horizontalalignment = 'center')
 
                     plt.legend()
                     plt.show()
                 
                 # Reindex to entire signal not just interval
-                s_ddot.append(s_peaks[i] + sddot_peak)
-                t_ddot.append(s_peaks[i] + sddot_peak + tddot_peak)
+                st_starts.append(s_peaks[i] + st_start)
+                st_ends.append(s_peaks[i] + st_start + st_end)
+                t_ddots.append(s_peaks[i] + st_start + t_ddot)
 
                 # Add a zero at the end
                 if i == (len(r_peaks) - 2):
-                    s_ddot.append(0)
-                    t_ddot.append(0)
+                    st_starts.append(0)
+                    st_ends.append(0)
+                    t_ddots.append(0)
 
         # Display Results
         if plot == True:
@@ -402,11 +423,15 @@ class HeartBreak:
                     ax1.scatter(time[t_peaks[i]], signal[t_peaks[i]], c='magenta', marker = "D")
                     ax1.text(time[t_peaks[i]], 0.02 + signal[t_peaks[i]], "T", fontsize=9)
 
+                    # T''max Peaks
+                    ax1.scatter(time[t_ddots[i]], signal[t_ddots[i]], c='cyan', marker = "D")
+                    ax1.text(time[t_ddots[i]], 0.02 + signal[t_ddots[i]], "T''max", fontsize=9)
+
                     # Plot ST Segments
                     if plot_st_segments == True:
-                        ax1.axvspan(time[s_ddot[i]], time[t_ddot[i]], facecolor='r', alpha=0.25)
-                        ax1.text(time[s_ddot[i]],  1.1 * signal_max_to_mean, "S-T Segment", fontsize=9)
-                        ax1.text(time[s_ddot[i]],  0.5 * signal_max_to_mean, str((abs(t_ddot[i] - s_ddot[i]))/frequency) + "s", fontsize=9)
+                        ax1.axvspan(time[st_starts[i]], time[st_ends[i]], facecolor='r', alpha=0.25)
+                        ax1.text(time[st_starts[i]],  1.1 * signal_max_to_mean, "S-T Segment", fontsize=9)
+                        ax1.text(time[st_starts[i]],  0.5 * signal_max_to_mean, str((abs(st_ends[i] - st_starts[i]))/frequency) + "s", fontsize=9)
                     
                     # Plot Windows
                     if plot_windows == True:
@@ -433,12 +458,13 @@ class HeartBreak:
                  "R" : r_peaks,
                  "S" : s_peaks,
                  "T" : t_peaks,
-                 "S''max": s_ddot,
-                 "T''max": t_ddot}
+                 "S-T Start": st_starts,
+                 "S-T End": st_ends,
+                 "T''max": t_ddots}
 
         return peaks
 
-    def get_phase_ratios_to_RR_intervals(self, p,q,r,s,t):
+    def get_phase_ratios_to_RR_intervals(self, p, q, r, s, t, st_starts, st_ends, t_ddots):
         '''
         Takes the peaks for an interval and finds the average ratios from the r peaks
 
@@ -451,20 +477,28 @@ class HeartBreak:
         rr_intervals = np.diff(r)
         rs_intervals = s - r
         rt_intervals = t - r
+        rtddot_intervals = t_ddots - r
 
         # Caluculate ratios
         rp_ratios = rp_intervals[1:]  / rr_intervals
         rq_ratios = rq_intervals[1:]  / rr_intervals
         rs_ratios = rs_intervals[:-1] / rr_intervals
         rt_ratios = rt_intervals[:-1] / rr_intervals
+        rtddot_ratios = rtddot_intervals[:-1] / rr_intervals
+
+        # Calculate st segment lengths
+        st_seg = st_ends[:-1] - st_starts[:-1]
 
         # Calculate mean and std
+        rr_mean, rr_std = np.mean(rr_intervals), np.std(rr_intervals)
         rp_mean, rp_std = np.mean(rp_ratios), np.std(rp_ratios)
         rq_mean, rq_std = np.mean(rq_ratios), np.std(rq_ratios)
         rs_mean, rs_std = np.mean(rs_ratios), np.std(rs_ratios)
         rt_mean, rt_std = np.mean(rt_ratios), np.std(rt_ratios)
+        st_seg_mean, st_seg_std = np.mean(st_seg), np.std(st_seg)
+        rtddot_mean, rtddot_std = np.mean(rtddot_ratios), np.std(rtddot_ratios)
 
-        phase_ratios = (rp_mean, rp_std, rq_mean, rq_std, rs_mean, rs_std, rt_mean, rt_std)
+        phase_ratios = (rp_mean, rp_std, rq_mean, rq_std, rr_mean, rr_std, rs_mean, rs_std, rt_mean, rt_std, st_seg_mean, st_seg_std, rtddot_mean, rtddot_std)
 
         return phase_ratios
 
@@ -548,9 +582,11 @@ class HeartBreak:
         count = 0
         for ax, phase_ratios in zip((ax1, ax2, ax3, ax4), phase_data):
             
-            rp_mean, rp_std, rq_mean, rq_std, rs_mean, rs_std, rt_mean, rt_std = phase_ratios
+            rp_mean, rp_std, rq_mean, rq_std, rr_mean, rr_std, rs_mean, rs_std, rt_mean, rt_std, st_mean, st_std, rtddot_mean, rtddot_std, num_data_points = phase_ratios
 
-            ax.set_title(dosages[count] + ' mcg/mg')
+            ax.set_title(dosages[count] + ' mcg/kg')
+            ax.text(-0.8, -0.15, "Derived\nfrom " + str(num_data_points) + "\nheartbeats", fontsize=10)
+            font_size = 11
             ax.axis('off')
             ax.add_patch(plt.Circle((0, 0), radius=1, edgecolor='k', facecolor='None'))
             ax.set_aspect(1)
@@ -558,28 +594,45 @@ class HeartBreak:
             ax.set_ylim(-1.25,1.25)
 
             # Add points
+            # R
             ax.plot([0, 1], [0, 0], c='red')
-            ax.text(1.05, 0, "R", fontsize=12)
+            ax.text(1.05, 0, "R: " + str(round(60 / rr_mean - rr_std,3)) + " - " + str(round(60 / rr_mean + rr_std,3)) + " [bpm]", fontsize=font_size)
 
+            # P
             ax.plot([0, math.cos(np.pi * rp_mean)], [0, math.sin(np.pi * rp_mean)], c='blue', linewidth=2)
             ax.plot([0, math.cos(np.pi * (rp_mean + rp_std))], [0, math.sin(np.pi * (rp_mean + rp_std))], c='blue', linestyle='dashed', linewidth=1)
             ax.plot([0, math.cos(np.pi * (rp_mean - rp_std))], [0, math.sin(np.pi * (rp_mean - rp_std))], c='blue', linestyle='dashed', linewidth=1)
-            ax.text(1.05 * math.cos(np.pi * rp_mean), 1.2 * math.sin(np.pi * rp_mean), "P: " + str(round(rp_mean,3)) + " +/- " + str(round(rp_std,3)), fontsize=12)
+            ax.text(1.05 * math.cos(np.pi * rp_mean), 1.2 * math.sin(np.pi * rp_mean), "P: " + str(round(rp_mean,3)) + " +/- " + str(round(rp_std,3)), fontsize=font_size)
 
+            # Q
             ax.plot([0, math.cos(np.pi * rq_mean)], [0, math.sin(np.pi * rq_mean)], c='green', linewidth=2)
             ax.plot([0, math.cos(np.pi * (rq_mean + rq_std))], [0, math.sin(np.pi * (rq_mean + rq_std))], c='green', linestyle='dashed', linewidth=1)
             ax.plot([0, math.cos(np.pi * (rq_mean - rq_std))], [0, math.sin(np.pi * (rq_mean - rq_std))], c='green', linestyle='dashed', linewidth=1)
-            ax.text(1.05 * math.cos(np.pi * rq_mean), 1.2 * math.sin(np.pi * rq_mean), "Q: " + str(round(rq_mean,3)) + " +/- " + str(round(rq_std,3)), fontsize=12)
+            ax.text(1.05 * math.cos(np.pi * rq_mean), 1.2 * math.sin(np.pi * rq_mean), "Q: " + str(round(rq_mean,3)) + " +/- " + str(round(rq_std,3)), fontsize=font_size)
 
+            # S
             ax.plot([0, math.cos(np.pi * rs_mean)], [0, math.sin(np.pi * rs_mean)], c='yellow', linewidth=2)
             ax.plot([0, math.cos(np.pi * (rs_mean + rs_std))], [0, math.sin(np.pi * (rs_mean + rs_std))], c='yellow', linestyle='dashed', linewidth=1)
             ax.plot([0, math.cos(np.pi * (rs_mean - rs_std))], [0, math.sin(np.pi * (rs_mean - rs_std))], c='yellow', linestyle='dashed', linewidth=1)
-            ax.text(1.05 * math.cos(np.pi * rs_mean), 1.2 * math.sin(np.pi * rs_mean), "S: " + str(round(rs_mean,3)) + " +/- " + str(round(rs_std,3)), fontsize=12)
+            ax.text(1.05 * math.cos(np.pi * rs_mean), 1.2 * math.sin(np.pi * rs_mean), "S: " + str(round(rs_mean,3)) + " +/- " + str(round(rs_std,3)), fontsize=font_size)
 
+            # T
             ax.plot([0, math.cos(np.pi * rt_mean)], [0, math.sin(np.pi * rt_mean)], c='magenta', linewidth=2)
             ax.plot([0, math.cos(np.pi * (rt_mean + rt_std))], [0, math.sin(np.pi * (rt_mean + rt_std))], c='magenta', linestyle='dashed', linewidth=1)
             ax.plot([0, math.cos(np.pi * (rt_mean - rt_std))], [0, math.sin(np.pi * (rt_mean - rt_std))], c='magenta', linestyle='dashed', linewidth=1)
-            ax.text(1.05 * math.cos(np.pi * rt_mean), 1.1 * math.sin(np.pi * rt_mean), "T: " + str(round(rt_mean,3)) + " +/- " + str(round(rt_std,3)), fontsize=12)
+            ax.text(1.05 * math.cos(np.pi * rt_mean), 1.1 * math.sin(np.pi * rt_mean), "T: " + str(round(rt_mean,3)) + " +/- " + str(round(rt_std,3)), fontsize=font_size)
+            
+            # S-T
+            between_t_and_s = (((rt_mean - rt_std) - (rs_mean + rs_std))/2) + (rs_mean + rs_std)
+            # ax.plot([0, math.cos(np.pi * between_t_and_s)], [0, math.sin(np.pi * between_t_and_s)], c='orange', linewidth=2)
+            ax.text(1.05 * math.cos(np.pi * between_t_and_s), 0.8 * math.sin(np.pi * between_t_and_s), "ST Segment\n    Duration [s]: " + str(round(st_mean,3)) + " +/- " + str(round(st_std,3)), fontsize=font_size)
+            
+            # T''max
+            ax.plot([0, math.cos(np.pi * rtddot_mean)], [0, math.sin(np.pi * rtddot_mean)], c='cyan', linewidth=2)
+            ax.plot([0, math.cos(np.pi * (rtddot_mean + rtddot_std))], [0, math.sin(np.pi * (rtddot_mean + rtddot_std))], c='cyan', linestyle='dashed', linewidth=1)
+            ax.plot([0, math.cos(np.pi * (rtddot_mean - rtddot_std))], [0, math.sin(np.pi * (rtddot_mean - rtddot_std))], c='cyan', linestyle='dashed', linewidth=1)
+            ax.text(1.05 * math.cos(np.pi * rtddot_mean), 1.1 * math.sin(np.pi * rtddot_mean), "T''max: " + str(round(rtddot_mean,3)) + " +/- " + str(round(rtddot_std,3)), fontsize=font_size)
+            
             
             count += 1
 

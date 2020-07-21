@@ -2,6 +2,8 @@
 import matplotlib.pyplot as plt
 from patient import Patient 
 from heartbreaker import HeartBreak
+# Initalize heartbreaker
+hb = HeartBreak()
 from files_w_ints import files
 import numpy as np
 import math
@@ -12,21 +14,29 @@ import csv
 # Hyperparameters
 #---------------------#
 # Signal Settings
-preloaded_signal = False
+preloaded_signal = True
 save_signal      = False
 peaks_to_excel   = False
-use_intervals    = False
+use_intervals    = True
 
 # Display Settings
-show_signal      = True
-show_freq_domain = True
-show_bandpass    = True
-show_derivatives = True
+show_signal      = False
+show_freq_domain = False
+show_bandpass    = False
+show_derivatives = False
 show_peaks       = True
 
 folder_name = "1 9 2020 AH TDMS ESSENTIAL"
-dosage = 10
-interval_number = 1
+
+# Implicit
+dosage = 30
+interval_number = 2 # "None"
+
+# Iterate
+# for dosage in files[folder_name].keys():
+#      print(dosage)
+#      for interval_number in files[folder_name][dosage]["intervals"]:
+#           print(interval_number)
 
 # Pick file
 file_name = files[folder_name][dosage]["file_name"]
@@ -67,10 +77,6 @@ else:
      time   = np.loadtxt('time_' + save_file_name + '.csv', delimiter=',')
      signal = np.loadtxt('signal_' + save_file_name + '.csv', delimiter=',')
 
-
-# Initalize heartbreaker
-hb = HeartBreak()
-
 # View Signal
 if show_signal == True:
      hb.plot_signal(time, signal)
@@ -81,8 +87,8 @@ if show_freq_domain == True:
                     signal = signal,
                     plot = True)
 
-     hb.get_spectrum(time = time, 
-                         signal = signal)
+     # hb.get_spectrum(time = time, 
+     #                     signal = signal)
 
 # Bandblock
 if show_bandpass == True:
@@ -112,20 +118,23 @@ if show_peaks == True:
 
      # Low-Pass filter under 10Hz
      lowpass_signal = hb.lowpass_filter(time = time, 
-                                   signal = lowpass_signal,
-                                   cutoff_freq = 50)
+                                        signal = lowpass_signal,
+                                        cutoff_freq = 50)
 
      peaks = hb.get_ecg_peaks(time = time, 
                               signal = lowpass_signal,
-                              plot = True,
-                              plot_st_segments = True,
-                              plot_segmentation_decisons=False)
+                              plot = False,
+                              plot_st_segments = False,
+                              plot_segmentation_decisons = False)
+
+     
 
      if peaks_to_excel == True:
           hb.save_peaks_to_excel(save_file_name, time, peaks)
+          os.chdir("../..")
      
      
 
 
-               
+     
 
