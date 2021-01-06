@@ -2,6 +2,7 @@
 import os
 import pickle
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
 from peaks import Peaks
 import heartbreaker as hb
@@ -25,17 +26,19 @@ class HeartbeatIntervalFinder(object):
         self.folder_name     = folder_name
         self.dosage          = dosage
         self.file_number     = file_number
+        self.file_name       = files[folder_name][dosage][file_number]["file_name"]
         self.interval_number = interval_number
         self.interval_size   = interval_size
 
         self.time, self.signal, self.seis, _, self.phono, _ = hb.load_file_data( files = files, 
-                                                                        folder_name = folder_name, 
-                                                                        dosage = dosage,
-                                                                        file_number = file_number,
-                                                                        interval_number = None,
-                                                                        preloaded_signal = False, 
-                                                                        save_signal = False)
+                                                                                folder_name = folder_name, 
+                                                                                dosage = dosage,
+                                                                                file_number = file_number,
+                                                                                interval_number = None,
+                                                                                preloaded_signal = False, 
+                                                                                save_signal = False)
 
+        
         self.echo_time = files[folder_name][dosage][file_number]["echo_time"]
 
         # Clip signal size about echo time
@@ -43,6 +46,7 @@ class HeartbeatIntervalFinder(object):
 
         # Determine Orginal bound
         self.initialize_bounds()
+        self.new_bounds = False
 
         # Plot signals
         self.plot_signals()       
@@ -69,42 +73,83 @@ class HeartbeatIntervalFinder(object):
         self.seis   = self.seis[interval]
         self.phono  = self.phono[interval]
 
+        self.signal = hb.bandpass_filter(time   = self.time, 
+                                        signal  = self.signal,
+                                        freqmin = 59, 
+                                        freqmax = 61)
+
+        self.seis = hb.bandpass_filter(time     = self.time, 
+                                        signal  = self.seis,
+                                        freqmin = 59, 
+                                        freqmax = 61)
+
+        self.phono = hb.bandpass_filter(time    = self.time, 
+                                        signal  = self.phono,
+                                        freqmin = 59, 
+                                        freqmax = 61)
+
+        self.signal = hb.lowpass_filter(time = self.time, 
+                                        signal = self.signal,
+                                        cutoff_freq = 50)
+
+        self.seis = hb.lowpass_filter(time = self.time, 
+                                    signal = self.seis,
+                                    cutoff_freq = 50)
+
     def initialize_bounds(self):
         max_time = max(self.time)
         min_time = min(self.time)
 
-        if max_time - min_time < 20:
-            self.bounds = [[np.searchsorted(self.time, min_time), np.searchsorted(self.time, max_time)]]
+        if (max_time - min_time) < 20:
+            self.lower_bound = min_time
+            self.upper_bound = max_time
 
-        elif self.echo_time - (20/2) < min_time:
-            self.bounds = [[np.searchsorted(self.time, min_time), np.searchsorted(self.time, min_time + 20)]]
+        elif (self.echo_time - (20/2)) < min_time:
+            self.lower_bound = min_time
+            self.upper_bound = min_time + 20
 
-        elif self.echo_time + 20/2 > max_time:
-            self.bounds = [[np.searchsorted(self.time, max_time - 20), np.searchsorted(self.time, max_time)]]
+        elif (self.echo_time + (20/2)) > max_time:
+            self.lower_bound = max_time - 20
+            self.upper_bound = max_time
             
         else:
-            self.bounds = [[np.searchsorted(self.time, self.echo_time - (20/2)), np.searchsorted(self.time, self.echo_time + (20/2))]]
+            self.lower_bound = self.echo_time - (20/2)
+            self.upper_bound = self.echo_time + (20/2)
 
     def plot_signals(self):
         # Create figure
         self.fig, self.ax = plt.subplots()
+
+        self.ax.get_yaxis().set_visible(False)
+        self.ax.set_xlabel("Time [s]")
         
         # Plot ECG, Phono and Seismo
-        self.signal_line, = self.ax.plot(self.time, self.signal, linewidth = 1, c = "b")
+        self.signal_line, = self.ax.plot(self.time, self.signal, linewidth = 0.5, c = "b")
         
-        self.ax.set_xlim(self.time[0] - 0.1*len(self.time), self.time[-1] + 0.1*len(self.time))
-
+        sig_min = min(self.signal)
+        sig_max = max(self.signal)
+        self.ax.set_xlim(self.time[0] - 0.1*(self.time[-1] - self.time[0]), self.time[-1] + 0.1*(self.time[-1] - self.time[0]))
+        self.ax.set_ylim(sig_min - 0.1*(sig_max - sig_min), sig_max + 0.1*(sig_max - sig_min))
         # Echo Line
         signal_max = max(self.signal)
         signal_min = min(self.signal)
         self.echo_line = self.ax.axvline(self.echo_time,
                                              ymin = signal_min - abs(signal_max - signal_min),
-                                             ymax = signal_max + abs(signal_max - signal_min))
+                                             ymax = signal_max + abs(signal_max - signal_min),
+                                             label = "2D Echo Time", c = "k", linewidth = 2)
+        plt.legend(loc = "upper right")
 
         # Set endpoints
-        self.bound_points = self.ax.scatter([self.time[self.bounds]],
-                                            [self.signal[self.bounds]],
-                                             c = '#ff7f0e')
+        self.bound_span   = self.ax.axvspan(self.lower_bound,
+                                            self.upper_bound,
+                                            facecolor='g', alpha=0.25)
+
+        self.bound_text_height = -0.1
+        self.lower_bound_text = self.ax.text(self.lower_bound, self.bound_text_height, transform = self.ax.get_xaxis_transform(),
+                                            s = "Lower Bound\n" + str(self.lower_bound), fontsize=12, horizontalalignment = 'center')
+        self.upper_bound_text = self.ax.text(self.upper_bound, self.bound_text_height, transform = self.ax.get_xaxis_transform(),
+                                            s = "Upper Bound\n" + str(self.upper_bound), fontsize=12, horizontalalignment = 'center')
+                                            
 
         # Initalize axes and data points
         self.x = self.time
@@ -126,6 +171,7 @@ class HeartbeatIntervalFinder(object):
                     s = "File: " + self.files[self.folder_name][self.dosage][self.file_number]["file_name"], fontsize=12, horizontalalignment = 'left')
         self.interval_text = self.ax.text(0.01, start - 2*space, transform = self.ax.transAxes,
                     s = "File #: " + str(self.interval_number), fontsize=12, horizontalalignment = 'left')
+
 
         # Add index buttons
         ax_prev = plt.axes([0.575 - left_shift, 0.9, 0.1, 0.075])
@@ -156,7 +202,7 @@ class HeartbeatIntervalFinder(object):
 
         self.fig.canvas.mpl_connect('button_press_event', self.on_click)
         self.fig.canvas.mpl_connect('button_release_event', self.off_click)
-        
+
         plt.show()
 
     def switch_signal(self, label):
@@ -166,26 +212,63 @@ class HeartbeatIntervalFinder(object):
             self.y = self.signal
 
             self.signal_line.set_data(self.time, self.signal)
-            self.bound_points.set_offsets([self.time[self.bounds], 
-                                           self.signal[self.bounds]])
 
         if label == 'Seismo':
             self.x = self.time
             self.y = self.seis
 
             self.signal_line.set_data(self.time, self.seis)
-            self.bound_points.set_offsets([self.time[self.bounds], 
-                                           self.seis[self.bounds]])
 
         if label == 'Phono':
             self.x = self.time
             self.y = self.phono
 
             self.signal_line.set_data(self.time, self.phono)
-            self.bound_points.set_offsets([self.time[self.bounds], 
-                                           self.phono[self.bounds]])
 
-        self.ax.set_xlim(self.time[0] - 0.1*len(self.time), self.time[-1] + 0.1*len(self.time))
+
+        self.bound_span.remove()
+        self.bound_span = self.ax.axvspan(self.lower_bound, self.upper_bound, facecolor='g', alpha=0.25)
+
+        self.lower_bound_text.set_position((self.lower_bound, self.bound_text_height))
+        self.lower_bound_text.set_text("Lower Bound\n" + str(self.lower_bound))
+
+        self.upper_bound_text.set_position((self.upper_bound, self.bound_text_height))
+        self.upper_bound_text.set_text("Upper Bound\n" + str(self.upper_bound))
+
+        if self.new_bounds == True:
+            sig_min = min(self.signal)
+            sig_max = max(self.signal)
+            self.ax.set_xlim(self.time[0] - 0.1*(self.time[-1] - self.time[0]), self.time[-1] + 0.1*(self.time[-1] - self.time[0]))
+            self.ax.set_ylim(sig_min - 0.1*(sig_max - sig_min), sig_max + 0.1*(sig_max - sig_min))
+            self.new_bounds = False
+            
+    def on_click(self, event):
+        threshold = 2
+        self.update_point = None
+
+        # Make sure a click happened inside the subplot
+        if (event.xdata is not None) and (str(type(event.inaxes)) == "<class 'matplotlib.axes._subplots.AxesSubplot'>"):
+            if abs(self.lower_bound - event.xdata) < threshold:
+                self.lx.set_color('g')
+                self.ly.set_color('g')
+
+                self.lx.set_linewidth(1)
+                self.ly.set_linewidth(1)
+                
+                self.fig.canvas.draw()
+                
+                self.update_point = "lower_bound"
+
+            elif abs(self.upper_bound - event.xdata) < threshold:
+                self.lx.set_color('g')
+                self.ly.set_color('g')
+
+                self.lx.set_linewidth(1)
+                self.ly.set_linewidth(1)
+                
+                self.fig.canvas.draw()
+                
+                self.update_point = "upper_bound"
 
     def off_click(self, event):
         self.lx.set_color('k')
@@ -194,44 +277,29 @@ class HeartbeatIntervalFinder(object):
         self.lx.set_linewidth(0.2)
         self.ly.set_linewidth(0.2)
 
-        if event.xdata is not None:
-            if self.update_point is not None:
+        if (event.xdata is not None) and (self.new_bounds == False):
+            if self.update_point == "lower_bound":
 
-                # Update bounds
-                self.bounds[0][np.searchsorted(self.bounds[0], self.update_point)] = int(self.x[min(np.searchsorted(self.x, event.xdata), len(self.x) - 1)])
-                self.bounds[0].sort()
+                self.lower_bound = max(self.time[0], round(event.xdata, 1))
 
-                # Update on signal
-                self.switch_signal(self.b_switch_signals.value_selected)
-
-                # Update interval in files
-                self.files[self.folder_name][self.dosage][self.file_number]["intervals"][self.interval_number] = self.bounds
-
+            if self.update_point == "upper_bound":
                 
+                self.upper_bound = min(self.time[-1], round(event.xdata, 1))
+
+            lower = min(self.lower_bound, self.upper_bound)
+            upper = max(self.lower_bound, self.upper_bound)
+            self.lower_bound = lower
+            self.upper_bound = upper
+
+            # Update on signal
+            self.switch_signal(self.b_switch_signals.value_selected)
+
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
-
-    def on_click(self, event):
-        threshold = 40
-        self.update_point = None
-
-        if event.xdata is not None:
-            for bound in self.bounds[0]:
-                if bound - event.xdata < threshold:
-                    self.lx.set_color('#d62728')
-                    self.ly.set_color('#d62728')
-
-                    self.lx.set_linewidth(1)
-                    self.ly.set_linewidth(1)
-                    
-                    self.fig.canvas.draw()
-                    
-                    self.update_point = np.int64(bound)
-
-                    continue
-          
+    
     def mouse_move(self, event):
         # If nothing happened do nothing
+        
         if not event.inaxes:
             return
 
@@ -254,21 +322,28 @@ class HeartbeatIntervalFinder(object):
         self.dosage += 10
         if self.dosage > 40:
             self.dosage = 0
+
+        self.new_bounds = True
         self.update_plot() 
 
     def prev(self, event):
         self.dosage -= 10
         if self.dosage < 0:
             self.dosage = 40
+
+        self.new_bounds = True
         self.update_plot()
 
     def save(self, event):
+        # Save bounds
+        self.files[self.folder_name][self.dosage][self.file_number]["intervals"][1] = [self.lower_bound, self.upper_bound]
+
         # Get File Name
-        save_file_name = "Interval_Dict_" + self.folder_name + "_d" + str(self.dosage) + "_" + self.file_name + "_i" + str(self.interval_number)
+        save_filename = "Interval_Dict_" + self.folder_name
 
         # Save
         with open(save_filename + '.pkl', 'wb') as output:
-            pickle.dump(self, output, pickle.HIGHEST_PROTOCOL)
+            pickle.dump(self.files, output, pickle.HIGHEST_PROTOCOL)
         print("Saved")
 
     def update_plot(self):
@@ -300,7 +375,8 @@ class HeartbeatIntervalFinder(object):
         self.clip_signals()
 
         # Find new orginal bounds
-        self.initialize_bounds()
+        if self.new_bounds:
+            self.initialize_bounds()
 
         # Update lines
         self.switch_signal(self.b_switch_signals.value_selected)

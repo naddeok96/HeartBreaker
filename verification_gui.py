@@ -45,14 +45,19 @@ class HeartbeatVerifier(object):
         # Plot ECG, Phono and Seismo
         self.signal_line, = self.ax.plot(signal, linewidth = 1, c = "b", label = "ECG")
 
-        self.second_line, = self.ax.plot(range(composite_peaks.ST_start.data[i], len(signal) - 1), 
-                                        2 + 5*second[range(composite_peaks.ST_start.data[i], len(signal) - 1],
+        self.second_line, = self.ax.plot(range(composite_peaks.ST_start.data[i], int(np.median([composite_peaks.T.data[i], len(signal)]))), 
+                                        2 + 5*second[range(composite_peaks.ST_start.data[i], int(np.median([composite_peaks.T.data[i], len(signal)])))],
                                         '--', linewidth = 0.5, c = 'k', label = "ECG 2nd Derv.")
 
         self.seis_line,   = self.ax.plot(seis , '--', linewidth = 0.5, c = 'r', label = "Seis")
         self.phono_line,  = self.ax.plot(phono, '--', linewidth = 0.5, c = 'g', label = "Phono")
         
         self.ax.set_xlim(0, len(self.signal_i))
+
+        sig_min = min(signal)
+        sig_max = max(signal)
+
+        self.ax.set_ylim(sig_min - 0.1*(sig_max - sig_min), sig_max + 0.1*(sig_max - sig_min))
         plt.legend(loc='upper right')
 
         # Q Peak
@@ -357,5 +362,4 @@ class HeartbeatVerifier(object):
         self.tm_phono_text.set_position((composite_peaks.TM_phono.data[i], phono[composite_peaks.TM_phono.data[i]] + 0.2))
     
         self.fig.canvas.draw()
-
 

@@ -14,6 +14,8 @@ import xlwt
 from xlwt import Workbook 
 import random
 from peaks import Peaks
+import pickle
+import os
 
 # Heartbreaker Functions
 #----------------------------------#
@@ -159,6 +161,14 @@ def load_file_data(files, folder_name, dosage, file_number, interval_number, pre
         phono2 = np.loadtxt('phono2_' + save_file_name + '.csv', delimiter=',')
 
     return time, signal, seis1, seis2, phono1, phono2
+
+def load_intervals(folder_name):
+
+    # Load file name
+    load_filename = "Interval_Dict_" + folder_name
+
+    with open(load_filename + '.pkl', 'rb') as input:
+        return pickle.load(input)
 
 def save_peaks_to_excel(file_name, time, peaks):
     '''

@@ -94,7 +94,7 @@ class CompositePeaks:
 
         return heartbeat_time, heartbeat_signal, heartbeat_seis, heartbeat_phono
 
-    def get_N_composite_signal_dataset(self, N, slide_step_size, display = False):
+    def get_N_composite_signal_dataset(self, N, slide_step_size, display = False, dosage = None):
         # Get all heartbeats in composite
         composite_endpoints = self.get_N_composite_endpoints(N, slide_step_size)
 
@@ -135,8 +135,11 @@ class CompositePeaks:
                 phono_lay_over_cell = fig.add_subplot(3,3,8)
                 composite_cell = fig.add_subplot(1,3,3)
 
-                plt.suptitle("Composite " + str(count) + " of " + str(len(composite_endpoints)) + " for " + str(N) + " Heartbeats w/ Step Size of " + str(slide_step_size) , fontsize=20)
-
+                if dosage is None:
+                    plt.suptitle(str(count) + " of " + str(len(composite_endpoints)) + " Composites given " + str(N) + " Heartbeats w/ Step Size of " + str(slide_step_size) , fontsize=20)
+                else:
+                    plt.suptitle(str(count) + " of " + str(len(composite_endpoints)) + " Composites for Dosage " + str(dosage) + " given " + str(N) + " Heartbeats w/ Step Size of " + str(slide_step_size) , fontsize=20)
+                
                 for i, row in enumerate(axes2d):
                     for j, cell in enumerate(row):
                         interval = range(self.peaks.T.data[start + i], self.peaks.P.data[start + i + 2])

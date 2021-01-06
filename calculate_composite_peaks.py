@@ -62,6 +62,8 @@ for dosage in files[folder_name].keys():
                                                 signal = lowpass_signal,
                                                 cutoff_freq = 50)
 
+
+
             peaks = hb.get_peaks_for_composites(time   = time, 
                                                 signal = lowpass_signal,
                                                 dosage = dosage,

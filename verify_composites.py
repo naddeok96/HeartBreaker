@@ -18,7 +18,7 @@ composite_statistics = {0  : CompositeStats(),
                         40 : CompositeStats(), 
                         42 : CompositeStats()}
 
-folder_name = "ECG-Phono-Seismo DAQ Data 8 20 2020 2" # "1 9 2020 AH TDMS ESSENTIAL"
+folder_name = "1 9 2020 AH TDMS ESSENTIAL" # "ECG-Phono-Seismo DAQ Data 8 20 2020 2" # "1 9 2020 AH TDMS ESSENTIAL"
 print("Folder: ", folder_name)
 # Iterate
 for dosage in files[folder_name].keys():
@@ -55,7 +55,7 @@ for dosage in files[folder_name].keys():
                 #                                 file_name   = file_name,
                 #                                 interval_number = interval_number)
 
-                # temp_composite_peaks.load(save_file_name)
+                temp_composite_peaks.load(save_file_name)
 
                 # Accumulate Stats
                 composite_statistics[dosage].add_data(temp_composite_peaks)
@@ -68,17 +68,15 @@ ax1.get_xaxis().set_visible(False)
 ax1.get_yaxis().set_visible(False)
 ax1.axis('off')
 
-ax2 = fig.add_subplot(111)
+ax2 = fig.add_subplot(212)
 ax2.get_xaxis().set_visible(False)
 ax2.get_yaxis().set_visible(False)
 ax2.axis('off')
 
-ax1.set_title("INO")
-ax1.set_xlabel("1/(E-M)ino Q-Seismo I")
+ax1.set_title("1/(E-M)ino")
 
-ax2.set_title("LUSI")
-ax2.set_xlabel("1/(E-M)lusi T-Seismo I")
-ax2.set_ylabel("Dobutamine Infusion (mcg/kg/min)")
+ax2.set_title("1/(E-M)lusi")
+
 
 qm_seis, qm_phono, tm_seis, tm_phono, doses = [], [], [], [], []
 for dosage in composite_statistics:
@@ -99,6 +97,8 @@ ax11.plot(qm_seis, qm_seis_m*np.asarray(qm_seis) + qm_seis_b, c = 'r')
 ax11.set_ylim(-10, 50)
 ax11.set_yticks(np.arange(0, 50, 10), minor=False)
 ax11.set_xlim(min(qm_seis) - 0.1*(max(qm_seis) - min(qm_seis)), max(qm_seis) + 0.1*(max(qm_seis) - min(qm_seis)))
+ax11.set_title("Seismo")
+ax11.set_ylabel("Dobutamine Infusion (mcg/kg/min)")
 ax11.grid()
 
 ax12 = fig.add_subplot(222)
@@ -108,6 +108,7 @@ ax12.plot(qm_phono, qm_phono_m*np.asarray(qm_phono) + qm_phono_b, c = 'b')
 ax12.set_ylim(-10, 50)
 ax12.set_yticks(np.arange(0, 50, 10), minor=False)
 ax12.set_xlim(min(qm_phono) - 0.1*(max(qm_phono) - min(qm_phono)), max(qm_phono) + 0.1*(max(qm_phono) - min(qm_phono)))
+ax12.set_title("Phono")
 ax12.grid()
 
 ax21 = fig.add_subplot(223)
@@ -117,6 +118,7 @@ ax21.plot(tm_seis, tm_seis_m*np.asarray(tm_seis) + tm_seis_b, c = 'r')
 ax21.set_ylim(-10, 50)
 ax21.set_yticks(np.arange(0, 50, 10), minor=False)
 ax21.set_xlim(min(tm_seis) - 0.1*(max(tm_seis) - min(tm_seis)), max(tm_seis) + 0.1*(max(tm_seis) - min(tm_seis)))
+ax21.set_ylabel("Dobutamine Infusion (mcg/kg/min)")
 ax21.grid()
 
 
