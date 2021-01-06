@@ -15,7 +15,7 @@ class Patient:
     def __init__(self, working_directory,
                        file_name):
         
-        super(Patient, self).__init__
+        super(Patient, self).__init__()
 
         os.chdir(working_directory)
         self.patient_name = file_name
@@ -33,10 +33,10 @@ class Patient:
         self.num_data_points = len(self.times)
 
         self.time_step = self.total_time/self.num_data_points
-        self.frequency = int(1 / self.time_step)
+        self.frequency = 4000
 
     def get_interval(self, interval):
         '''
         Return an interval of the signal
         '''
-        return self.times[interval], self.ecg[interval]
+        return self.times[interval], self.ecg[interval], self.seis1[interval], self.seis2[interval], self.phono1[interval], self.phono2[interval]
