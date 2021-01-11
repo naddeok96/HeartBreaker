@@ -117,11 +117,13 @@ def get_spectrum(time,
 
 def load_file_data(files, folder_name, dosage, file_number, interval_number, preloaded_signal, save_signal):
     file_name = files[folder_name][dosage][file_number]["file_name"]
+    save_file_name = folder_name + "_" + file_name + "_d" + str(dosage)
+
 
     # Initalize patient and interval
     if preloaded_signal == False:
         # Change directory
-        wd = 'data/' + folder_name + '/files_of_interest'\
+        wd = 'data/' + folder_name + '/files_of_interest'
         # Load TDMS file into Patient object
         patient = Patient(wd, file_name)
 
@@ -155,8 +157,8 @@ def load_file_data(files, folder_name, dosage, file_number, interval_number, pre
         os.chdir("data/Derived")
         time   = np.loadtxt('time_' + save_file_name + '.csv', delimiter=',')
         signal = np.loadtxt('signal_' + save_file_name + '.csv', delimiter=',')
-        seis1 = np.loadtxt('seis1_' + save_file_name + '.csv', delimiter=',')
-        seis2 = np.loadtxt('seis2_' + save_file_name + '.csv', delimiter=',')
+        seis1  = np.loadtxt('seis1_' + save_file_name + '.csv', delimiter=',')
+        seis2  = np.loadtxt('seis2_' + save_file_name + '.csv', delimiter=',')
         phono1 = np.loadtxt('phono1_' + save_file_name + '.csv', delimiter=',')
         phono2 = np.loadtxt('phono2_' + save_file_name + '.csv', delimiter=',')
 

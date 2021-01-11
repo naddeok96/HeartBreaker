@@ -15,37 +15,44 @@ class HeartbeatIntervalFinder(object):
     """
     def __init__(self, files,
                        folder_name = "",
-                       dosage = "",
-                       file_number = "",
-                       interval_number = "",
-                       interval_size = 240):
+                       dosage = 0,
+                       file_number = 1,
+                       area_around_echo_size = 240,
+                       use_intervals = False,
+                       preloaded_signal = False,
+                       save_signal = False):
 
         super(HeartbeatIntervalFinder, self).__init__()
         # Load Data
-        self.files           = files
-        self.folder_name     = folder_name
-        self.dosage          = dosage
-        self.file_number     = file_number
-        self.file_name       = files[folder_name][dosage][file_number]["file_name"]
-        self.interval_number = interval_number
-        self.interval_size   = interval_size
+        self.files            = files
+        self.folder_name      = folder_name
+        self.dosage           = dosage
+        self.file_number      = file_number
+        self.file_name        = files[folder_name][dosage][file_number]["file_name"]
+        self.use_intervals    = use_intervals
+        self.interval_number  = 1 if self.use_intervals else None
+        self.area_around_echo_size    = area_around_echo_size
+        self.preloaded_signal = preloaded_signal
+        self.save_signal      = save_signal
 
-        self.time, self.signal, self.seis, _, self.phono, _ = hb.load_file_data( files = files, 
+    
+        self.time, self.signal, self.seis, _, self.phono, _ = hb.load_file_data(files = files, 
                                                                                 folder_name = folder_name, 
                                                                                 dosage = dosage,
                                                                                 file_number = file_number,
-                                                                                interval_number = None,
-                                                                                preloaded_signal = False, 
-                                                                                save_signal = False)
+                                                                                interval_number = self.interval_number,
+                                                                                preloaded_signal = self.preloaded_signal, 
+                                                                                save_signal = self.save_signal)
 
-        
         self.echo_time = files[folder_name][dosage][file_number]["echo_time"]
 
-        # Clip signal size about echo time
-        self.clip_signals()
+        if not self.use_intervals:
+            # Clip signal size about echo time
+            self.clip_signals()
 
-        # Determine Orginal bound
-        self.initialize_bounds()
+            # Determine Orginal bound
+            self.initialize_bounds()
+
         self.new_bounds = False
 
         # Plot signals
@@ -55,17 +62,17 @@ class HeartbeatIntervalFinder(object):
         max_time = max(self.time)
         min_time = min(self.time)
 
-        if max_time - min_time < self.interval_size:
+        if max_time - min_time < self.area_around_echo_size:
             interval = range(np.where(self.time == min_time)[0][0], np.where(self.time == max_time)[0][0])
 
-        elif self.echo_time - self.interval_size/2 < min_time:
-            interval = range(np.where(self.time == min_time)[0][0], int(np.where(self.time == min_time + self.interval_size)[0][0]))
+        elif self.echo_time - self.area_around_echo_size/2 < min_time:
+            interval = range(np.where(self.time == min_time)[0][0], int(np.where(self.time == min_time + self.area_around_echo_size)[0][0]))
 
-        elif self.echo_time + self.interval_size/2 > max_time:
-            interval = range(int(np.where(self.time == (max_time - self.interval_size))[0][0]), np.where(self.time == max_time)[0][0])
+        elif self.echo_time + self.area_around_echo_size/2 > max_time:
+            interval = range(int(np.where(self.time == (max_time - self.area_around_echo_size))[0][0]), np.where(self.time == max_time)[0][0])
 
         else:
-            interval = range(int(np.where(self.time == (self.echo_time - self.interval_size/2))[0][0]), int(np.where(self.time == (self.echo_time + self.interval_size/2))[0][0]))
+            interval = range(int(np.where(self.time == (self.echo_time - self.area_around_echo_size/2))[0][0]), int(np.where(self.time == (self.echo_time + self.area_around_echo_size/2))[0][0]))
 
         self.interval_near_echo = interval
         self.time   = self.time[interval]
@@ -130,6 +137,7 @@ class HeartbeatIntervalFinder(object):
         sig_max = max(self.signal)
         self.ax.set_xlim(self.time[0] - 0.1*(self.time[-1] - self.time[0]), self.time[-1] + 0.1*(self.time[-1] - self.time[0]))
         self.ax.set_ylim(sig_min - 0.1*(sig_max - sig_min), sig_max + 0.1*(sig_max - sig_min))
+
         # Echo Line
         signal_max = max(self.signal)
         signal_min = min(self.signal)
@@ -323,7 +331,7 @@ class HeartbeatIntervalFinder(object):
         if self.dosage > 40:
             self.dosage = 0
 
-        self.new_bounds = True
+        self.new_bounds = False if self.use_intervals else True
         self.update_plot() 
 
     def prev(self, event):
@@ -331,7 +339,7 @@ class HeartbeatIntervalFinder(object):
         if self.dosage < 0:
             self.dosage = 40
 
-        self.new_bounds = True
+        self.new_bounds = False if self.use_intervals else True
         self.update_plot()
 
     def save(self, event):
@@ -363,9 +371,9 @@ class HeartbeatIntervalFinder(object):
                                                                                 folder_name = self.folder_name, 
                                                                                 dosage = self.dosage,
                                                                                 file_number = self.file_number,
-                                                                                interval_number = None,
-                                                                                preloaded_signal = False, 
-                                                                                save_signal = False)
+                                                                                interval_number = self.interval_number,
+                                                                                preloaded_signal = self.preloaded_signal, 
+                                                                                save_signal = self.save_signal)
 
         # Load Echo Time
         self.echo_time = self.files[self.folder_name][self.dosage][self.file_number]["echo_time"]
