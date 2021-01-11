@@ -1,13 +1,3 @@
-# Imports
-import os
-import numpy as np
-import heartbreaker as hb
-import matplotlib.pyplot as plt
-from composite_peaks import CompositePeaks
-from files_w_doseage_and_ints import files
-from verification_gui import HeartbeatVerifier
-from composite_statistics import CompositeStats
-from interval_finder_gui import HeartbeatIntervalFinder
 
 # BOB ONLY EDIT THE HYPERPARAMETER SECTION
 # Hyperparameters
@@ -18,7 +8,7 @@ composite_size        = 10
 step_size             = 5
 
 use_intervals    = False
-preloaded_signal = True
+preloaded_signal = False
 save_signal      = False
 
 display_intervals  = True
@@ -27,7 +17,16 @@ verify_labels      = True
 #------------------------------------------------------------------------------------#
 # END of Hyperparameters
 
-
+# Imports
+import os
+import numpy as np
+import heartbreaker as hb
+import matplotlib.pyplot as plt
+from composite_peaks import CompositePeaks
+from files_w_doseage_and_ints import files
+from verification_gui import HeartbeatVerifier
+from composite_statistics import CompositeStats
+from interval_finder_gui import HeartbeatIntervalFinder
 
 # Initalize Composite Stats
 composite_statistics = {0  : CompositeStats(), 
