@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from peaks import Peaks
 import heartbreaker as hb
 from composite_peaks import CompositePeaks
-from matplotlib.widgets import Button, RadioButtons
+from matplotlib.widgets import Button, RadioButtons, Slider
 
 class HeartbeatVerifier(object):
     """
@@ -28,65 +28,61 @@ class HeartbeatVerifier(object):
         self.interval_number = interval_number
 
         # Plot signals
-        self.plot_signals(self.composite_peaks, index)       
+        self.plot_signals()       
 
-    def plot_signals(self, composite_peaks, i):
+    def plot_signals(self):
         # Create figure
         self.fig, self.ax = plt.subplots()
         
         # Load composite signals
-        time, signal, seis, phono = composite_peaks.composites[i]
-        _, second = hb.get_derivatives(signal)
-
-        self.signal_i = signal
-        self.seis_i   = seis
-        self.phono_i  = phono
+        self.time, self.signal, self.seis, self.phono = self.composite_peaks.composites[self.index]
+        _, second = hb.get_derivatives(self.signal)
 
         # Plot ECG, Phono and Seismo
-        self.signal_line, = self.ax.plot(signal, linewidth = 1, c = "b", label = "ECG")
+        self.signal_line, = self.ax.plot(self.signal, linewidth = 1, c = "b", label = "ECG")
 
-        self.second_line, = self.ax.plot(range(composite_peaks.ST_start.data[i], int(np.median([composite_peaks.T.data[i], len(signal)]))), 
-                                        2 + 5*second[range(composite_peaks.ST_start.data[i], int(np.median([composite_peaks.T.data[i], len(signal)])))],
+        self.second_line, = self.ax.plot(range(self.composite_peaks.ST_start.data[self.index], int(np.median([self.composite_peaks.T.data[self.index], len(self.signal)]))), 
+                                        2 + 5*second[range(self.composite_peaks.ST_start.data[self.index], int(np.median([self.composite_peaks.T.data[self.index], len(self.signal)])))],
                                         '--', linewidth = 0.5, c = 'k', label = "ECG 2nd Derv.")
 
-        self.seis_line,   = self.ax.plot(seis , '--', linewidth = 0.5, c = 'r', label = "Seis")
-        self.phono_line,  = self.ax.plot(phono, '--', linewidth = 0.5, c = 'g', label = "Phono")
+        self.seis_line,   = self.ax.plot(self.seis , '--', linewidth = 0.5, c = 'r', label = "Seis")
+        self.phono_line,  = self.ax.plot(self.phono, '--', linewidth = 0.5, c = 'g', label = "Phono")
         
-        self.ax.set_xlim(0, len(self.signal_i))
+        self.ax.set_xlim(0, len(self.signal))
 
-        sig_min = min(signal)
-        sig_max = max(signal)
+        sig_min = min(self.signal)
+        sig_max = max(self.signal)
 
         self.ax.set_ylim(sig_min - 0.1*(sig_max - sig_min), sig_max + 0.1*(sig_max - sig_min))
         plt.legend(loc='upper right')
 
         # Q Peak
-        self.q_point = self.ax.scatter(composite_peaks.Q.data[i], signal[composite_peaks.Q.data[i]], c = '#ff7f0e')
-        self.q_text  = self.ax.text(composite_peaks.Q.data[i], signal[composite_peaks.Q.data[i]] + 0.2, "Q", fontsize=9, horizontalalignment = 'center')
+        self.q_point = self.ax.scatter(self.composite_peaks.Q.data[self.index], self.signal[self.composite_peaks.Q.data[self.index]], c = '#ff7f0e')
+        self.q_text  = self.ax.text(self.composite_peaks.Q.data[self.index], self.signal[self.composite_peaks.Q.data[self.index]] + 0.2, "Q", fontsize=9, horizontalalignment = 'center')
 
         # QM Seismo
-        self.qm_seis_point = self.ax.scatter(composite_peaks.QM_seis.data[i], seis[composite_peaks.QM_seis.data[i]], c = '#d62728')
-        self.qm_seis_text  = self.ax.text(composite_peaks.QM_seis.data[i], seis[composite_peaks.QM_seis.data[i]] + 0.2, "QM Seis", fontsize=9, horizontalalignment = 'center')
+        self.qm_seis_point = self.ax.scatter(self.composite_peaks.QM_seis.data[self.index], self.seis[self.composite_peaks.QM_seis.data[self.index]], c = '#d62728')
+        self.qm_seis_text  = self.ax.text(self.composite_peaks.QM_seis.data[self.index], self.seis[self.composite_peaks.QM_seis.data[self.index]] + 0.2, "QM Seis", fontsize=9, horizontalalignment = 'center')
 
         # QM Phono
-        self.qm_phono_point = self.ax.scatter(composite_peaks.QM_phono.data[i], phono[composite_peaks.QM_phono.data[i]], c = '#8c564b')
-        self.qm_phono_text  = self.ax.text(composite_peaks.QM_phono.data[i], phono[composite_peaks.QM_phono.data[i]] + 0.2, "QM Phono", fontsize=9, horizontalalignment = 'center')
+        self.qm_phono_point = self.ax.scatter(self.composite_peaks.QM_phono.data[self.index], self.phono[self.composite_peaks.QM_phono.data[self.index]], c = '#8c564b')
+        self.qm_phono_text  = self.ax.text(self.composite_peaks.QM_phono.data[self.index], self.phono[self.composite_peaks.QM_phono.data[self.index]] + 0.2, "QM Phono", fontsize=9, horizontalalignment = 'center')
 
         # T''max Peak
-        self.ddT_max_point = self.ax.scatter(composite_peaks.ddT_max.data[i], signal[composite_peaks.ddT_max.data[i]], c = '#2ca02c')
-        self.ddT_max_text  = self.ax.text(composite_peaks.ddT_max.data[i], signal[composite_peaks.ddT_max.data[i]] + 0.2, "T''max", fontsize=9, horizontalalignment = 'center')
+        self.ddT_max_point = self.ax.scatter(self.composite_peaks.ddT_max.data[self.index], self.signal[self.composite_peaks.ddT_max.data[self.index]], c = '#2ca02c')
+        self.ddT_max_text  = self.ax.text(self.composite_peaks.ddT_max.data[self.index], self.signal[self.composite_peaks.ddT_max.data[self.index]] + 0.2, "T''max", fontsize=9, horizontalalignment = 'center')
 
         # TM Seismo
-        self.tm_seis_point = self.ax.scatter(composite_peaks.TM_seis.data[i], seis[composite_peaks.TM_seis.data[i]], c = '#9467bd')
-        self.tm_seis_text  = self.ax.text(composite_peaks.TM_seis.data[i], seis[composite_peaks.TM_seis.data[i]] + 0.2, "TM Seis", fontsize=9, horizontalalignment = 'center')
+        self.tm_seis_point = self.ax.scatter(self.composite_peaks.TM_seis.data[self.index], self.seis[self.composite_peaks.TM_seis.data[self.index]], c = '#9467bd')
+        self.tm_seis_text  = self.ax.text(self.composite_peaks.TM_seis.data[self.index], self.seis[self.composite_peaks.TM_seis.data[self.index]] + 0.2, "TM Seis", fontsize=9, horizontalalignment = 'center')
 
         # TM Phono
-        self.tm_phono_point = self.ax.scatter(composite_peaks.TM_phono.data[i], phono[composite_peaks.TM_phono.data[i]], c = '#e377c2')
-        self.tm_phono_text  = self.ax.text(composite_peaks.TM_phono.data[i], phono[composite_peaks.TM_phono.data[i]] + 0.2, "TM Phono", fontsize=9, horizontalalignment = 'center')
+        self.tm_phono_point = self.ax.scatter(self.composite_peaks.TM_phono.data[self.index], self.phono[self.composite_peaks.TM_phono.data[self.index]], c = '#e377c2')
+        self.tm_phono_text  = self.ax.text(self.composite_peaks.TM_phono.data[self.index], self.phono[self.composite_peaks.TM_phono.data[self.index]] + 0.2, "TM Phono", fontsize=9, horizontalalignment = 'center')
 
         # Initalize axes and data points
-        self.x = range(len(self.signal_i))
-        self.y = self.signal_i
+        self.x = range(len(self.signal))
+        self.y = self.signal
 
         # Cross hairs
         self.lx = self.ax.axhline(color='k', linewidth=0.2)  # the horiz line
@@ -105,7 +101,7 @@ class HeartbeatVerifier(object):
         self.ax.text(0.01, start - 3*space, transform = self.ax.transAxes,
                     s = "File #: " + str(self.interval_number), fontsize=12, horizontalalignment = 'left')
         self.i_text = self.ax.text(0.61 - left_shift, 1.1 - space, transform = self.ax.transAxes,
-                                    s = "Interval: " + str(i + 1) + "/" + str(len(composite_peaks.composites)), fontsize=12, horizontalalignment = 'left')
+                                    s = "Interval: " + str(self.index + 1) + "/" + str(len(self.composite_peaks.composites)), fontsize=12, horizontalalignment = 'left')
 
         # Add index buttons
         ax_prev = plt.axes([0.575 - left_shift, 0.9, 0.1, 0.075])
@@ -127,7 +123,7 @@ class HeartbeatVerifier(object):
         self.ax.text(1.015, 0.97, transform = self.ax.transAxes,
                     s = "Snap on to:", fontsize=12, horizontalalignment = 'left')
         # left, bottom, width, height
-        ax_switch_signals = plt.axes([0.91, 0.7, 0.075, 0.15])
+        ax_switch_signals = plt.axes([0.91, 0.7, 0.07, 0.15])
         self.b_switch_signals = RadioButtons(ax_switch_signals, ('ECG', 'Seismo', 'Phono'))
         for c in self.b_switch_signals.circles:
             c.set_radius(0.05)
@@ -136,21 +132,100 @@ class HeartbeatVerifier(object):
 
         self.fig.canvas.mpl_connect('button_press_event', self.on_click)
         self.fig.canvas.mpl_connect('button_release_event', self.off_click)
+
+        # Add Sliders
+        self.signal_amp_slider = Slider(plt.axes([0.91, 0.15, 0.01, 0.475]),
+                                        label = "ECG\nA",
+                                        valmin = 0.01,
+                                        valmax = 10, 
+                                        valinit = 1,
+                                        orientation = 'vertical')
+        self.signal_amp_slider.on_changed(self.switch_signal)
+        self.signal_amp_slider.valtext.set_visible(False)
+
+        self.seis_height_slider = Slider(plt.axes([0.93, 0.15, 0.01, 0.475]),
+                                        label = "   Seis\nH",
+                                        valmin = 1.5 * min(self.signal),
+                                        valmax = 1.5 * max(self.signal), 
+                                        valinit = 0,
+                                        orientation = 'vertical')
+        self.seis_height_slider.on_changed(self.switch_signal)
+        self.seis_height_slider.valtext.set_visible(False)
+
+        self.seis_amp_slider = Slider(plt.axes([0.94, 0.15, 0.01, 0.475]),
+                                        label = "\nA",
+                                        valmin = 0.01,
+                                        valmax = 10, 
+                                        valinit = 1,
+                                        orientation = 'vertical')
+        self.seis_amp_slider.on_changed(self.switch_signal)
+        self.seis_amp_slider.valtext.set_visible(False)
+
+        self.phono_height_slider = Slider(plt.axes([0.96, 0.15, 0.01, 0.475]),
+                                        label = "    Phono\nH",
+                                        valmin = 1.5 * min(self.signal),
+                                        valmax = 1.5 * max(self.signal), 
+                                        valinit = 0,
+                                        orientation = 'vertical')
+        self.phono_height_slider.on_changed(self.switch_signal)
+        self.phono_height_slider.valtext.set_visible(False)
+
+        self.phono_amp_slider = Slider(plt.axes([0.97, 0.15, 0.01, 0.475]),
+                                        label = "A",
+                                        valmin = .01,
+                                        valmax = 10, 
+                                        valinit = 1,
+                                        orientation = 'vertical')
+        self.phono_amp_slider.on_changed(self.switch_signal)
+        self.phono_amp_slider.valtext.set_visible(False)
+
         
         plt.show()
 
     def switch_signal(self, label):
+
+        # Update Lines
+        self.signal_line.set_data(range(len(self.signal)), self.signal_amp_slider.val * self.signal)
+        self.seis_line.set_data(range(len(self.signal)),  (self.seis_amp_slider.val * self.seis) + self.seis_height_slider.val)
+        self.phono_line.set_data(range(len(self.signal)), (self.phono_amp_slider.val * self.phono) + self.phono_height_slider.val)
+
+        # Q Peaks
+        self.q_point.set_offsets((self.composite_peaks.Q.data[self.index], self.signal_amp_slider.val * self.signal[self.composite_peaks.Q.data[self.index]]))
+        self.q_text.set_position((self.composite_peaks.Q.data[self.index], self.signal_amp_slider.val * self.signal[self.composite_peaks.Q.data[self.index]] + 0.2))
+
+        # QM Seismo
+        self.qm_seis_point.set_offsets((self.composite_peaks.QM_seis.data[self.index], self.seis_amp_slider.val *  self.seis[self.composite_peaks.QM_seis.data[self.index]] + self.seis_height_slider.val))
+        self.qm_seis_text.set_position((self.composite_peaks.QM_seis.data[self.index], self.seis_amp_slider.val *  self.seis[self.composite_peaks.QM_seis.data[self.index]] + 0.2 + self.seis_height_slider.val))
+        
+        # QM Phono
+        self.qm_phono_point.set_offsets((self.composite_peaks.QM_phono.data[self.index], self.phono_amp_slider.val * self.phono[self.composite_peaks.QM_phono.data[self.index]] + self.phono_height_slider.val))
+        self.qm_phono_text.set_position((self.composite_peaks.QM_phono.data[self.index], self.phono_amp_slider.val * self.phono[self.composite_peaks.QM_phono.data[self.index]] + 0.2+ self.phono_height_slider.val))
+        
+        # T''max Peak
+        self.ddT_max_point.set_offsets((self.composite_peaks.ddT_max.data[self.index], self.signal_amp_slider.val * self.signal[self.composite_peaks.ddT_max.data[self.index]]))
+        self.ddT_max_text.set_position((self.composite_peaks.ddT_max.data[self.index], self.signal_amp_slider.val * self.signal[self.composite_peaks.ddT_max.data[self.index]] + 0.2))
+
+        # TM Seismo
+        self.tm_seis_point.set_offsets((self.composite_peaks.TM_seis.data[self.index], self.seis_amp_slider.val * self.seis[self.composite_peaks.TM_seis.data[self.index]] + self.seis_height_slider.val))
+        self.tm_seis_text.set_position((self.composite_peaks.TM_seis.data[self.index], self.seis_amp_slider.val * self.seis[self.composite_peaks.TM_seis.data[self.index]] + 0.2 + self.seis_height_slider.val))
+        
+        # TM Phono
+        self.tm_phono_point.set_offsets((self.composite_peaks.TM_phono.data[self.index], self.phono_amp_slider.val * self.phono[self.composite_peaks.TM_phono.data[self.index]] + self.phono_height_slider.val))
+        self.tm_phono_text.set_position((self.composite_peaks.TM_phono.data[self.index], self.phono_amp_slider.val * self.phono[self.composite_peaks.TM_phono.data[self.index]] + 0.2 + self.phono_height_slider.val))
+
+        # Update Cross-hairs
+        label = self.b_switch_signals.value_selected
+        self.x = range(len(self.signal))
         if label == 'ECG':
-            self.x = range(len(self.signal_i))
-            self.y = self.signal_i
+            self.y = self.signal_amp_slider.val * self.signal
 
         if label == 'Seismo':
-            self.x = range(len(self.signal_i))
-            self.y = self.seis_i
+            self.y = self.seis_amp_slider.val * self.seis + self.seis_height_slider.val
 
         if label == 'Phono':
-            self.x = range(len(self.signal_i))
-            self.y = self.phono_i
+            self.y = self.phono_amp_slider.val * self.phono + self.phono_height_slider.val
+
+        self.fig.canvas.draw()
 
     def off_click(self, event):
         self.lx.set_color('k')
@@ -161,38 +236,38 @@ class HeartbeatVerifier(object):
 
         if event.xdata is not None:
             if self.update_point == "Q":
-                self.q_point.set_offsets((int(event.xdata), self.signal_i[int(event.xdata)]))
-                self.q_text.set_position((int(event.xdata), self.signal_i[int(event.xdata)] + 0.2))
+                self.q_point.set_offsets((int(event.xdata), self.signal_amp_slider.val *  self.signal[int(event.xdata)]))
+                self.q_text.set_position((int(event.xdata), self.signal_amp_slider.val *  self.signal[int(event.xdata)] + 0.2))
 
                 self.composite_peaks.Q.data[self.index] = int(event.xdata)
 
             if self.update_point == "ddT_max":
-                self.ddT_max_point.set_offsets((int(event.xdata), self.signal_i[int(event.xdata)]))
-                self.ddT_max_text.set_position((int(event.xdata), self.signal_i[int(event.xdata)] + 0.2))
+                self.ddT_max_point.set_offsets((int(event.xdata), self.signal_amp_slider.val * self.signal[int(event.xdata)]))
+                self.ddT_max_text.set_position((int(event.xdata), self.signal_amp_slider.val * self.signal[int(event.xdata)] + 0.2))
 
                 self.composite_peaks.ddT_max.data[self.index] = int(event.xdata)
 
             if self.update_point == "QM Seismo":
-                self.qm_seis_point.set_offsets((int(event.xdata), self.seis_i[int(event.xdata)]))
-                self.qm_seis_text.set_position((int(event.xdata), self.seis_i[int(event.xdata)] + 0.2))
+                self.qm_seis_point.set_offsets((int(event.xdata), self.seis_amp_slider.val * self.seis[int(event.xdata)] + self.seis_height_slider.val))
+                self.qm_seis_text.set_position((int(event.xdata), self.seis_amp_slider.val * self.seis[int(event.xdata)] + 0.2 + self.seis_height_slider.val))
 
                 self.composite_peaks.QM_seis.data[self.index] = int(event.xdata)
 
             if self.update_point == "TM Seismo":
-                self.tm_seis_point.set_offsets((int(event.xdata), self.seis_i[int(event.xdata)]))
-                self.tm_seis_text.set_position((int(event.xdata), self.seis_i[int(event.xdata)] + 0.2))
+                self.tm_seis_point.set_offsets((int(event.xdata), self.seis_amp_slider.val * self.seis[int(event.xdata)] + self.seis_height_slider.val))
+                self.tm_seis_text.set_position((int(event.xdata), self.seis_amp_slider.val * self.seis[int(event.xdata)] + 0.2 + self.seis_height_slider.val))
 
                 self.composite_peaks.TM_seis.data[self.index] = int(event.xdata)
 
             if self.update_point == "QM Phono":
-                self.qm_phono_point.set_offsets((int(event.xdata), self.phono_i[int(event.xdata)]))
-                self.qm_phono_text.set_position((int(event.xdata), self.phono_i[int(event.xdata)] + 0.2))
+                self.qm_phono_point.set_offsets((int(event.xdata), self.phono_amp_slider.val * self.phono[int(event.xdata)] + self.phono_height_slider.val))
+                self.qm_phono_text.set_position((int(event.xdata), self.phono_amp_slider.val * self.phono[int(event.xdata)] + 0.2 + self.phono_height_slider.val))
 
                 self.composite_peaks.QM_phono.data[self.index] = int(event.xdata)
 
             if self.update_point == "TM Phono":
-                self.tm_phono_point.set_offsets((int(event.xdata), self.phono_i[int(event.xdata)]))
-                self.tm_phono_text.set_position((int(event.xdata), self.phono_i[int(event.xdata)] + 0.2))
+                self.tm_phono_point.set_offsets((int(event.xdata), self.phono_amp_slider.val * self.phono[int(event.xdata)] + self.phono_height_slider.val))
+                self.tm_phono_text.set_position((int(event.xdata), self.phono_amp_slider.val * self.phono[int(event.xdata)] + 0.2 + self.phono_height_slider.val))
 
                 self.composite_peaks.TM_phono.data[self.index] = int(event.xdata)
                 
@@ -298,13 +373,13 @@ class HeartbeatVerifier(object):
         self.index += 1
         if self.index > len(self.composite_peaks.composites) - 1:
             self.index = 0
-        self.update_plot(self.composite_peaks, self.index) 
+        self.update_plot() 
 
     def prev(self, event):
         self.index -= 1
         if self.index < 0:
             self.index = len(self.composite_peaks.composites) - 1
-        self.update_plot(self.composite_peaks, self.index)
+        self.update_plot()
 
     def save(self, event):
         # Get File Name
@@ -314,52 +389,48 @@ class HeartbeatVerifier(object):
         self.composite_peaks.save(save_file_name)
         print("Saved")
 
-    def update_plot(self, composite_peaks, i):
+    def update_plot(self):
         # Update index
-        self.i_text.set_text("Interval: " + str(self.index + 1) + "/" + str(len(composite_peaks.composites)))
+        self.i_text.set_text("Interval: " + str(self.index + 1) + "/" + str(len(self.composite_peaks.composites)))
 
         # Load composite signals
-        time, signal, seis, phono = composite_peaks.composites[i]
-        _, second = hb.get_derivatives(signal)
-
-        self.signal_i = signal
-        self.seis_i = seis
-        self.phono_i = phono
+        self.time, self.signal, self.seis, self.phono = self.composite_peaks.composites[self.index]
+        _, self.second = hb.get_derivatives(self.signal)
 
         # Update cross hairs
-        self.switch_signal(self.b_switch_signals.value_selected)
+        self.switch_signal()
 
         # Plot ECG, Phono and Seismo
-        self.signal_line.set_data(range(len(signal)), signal)
-        self.second_line.set_data(range(composite_peaks.ST_start.data[i], composite_peaks.T.data[i]),
-                                  2 + 5*second[range(composite_peaks.ST_start.data[i], composite_peaks.T.data[i])])
+        self.signal_line.set_data(range(len(self.signal)), self.signal)
+        self.second_line.set_data(range(self.composite_peaks.ST_start.data[self.index], int(np.median([self.composite_peaks.T.data[self.index], len(self.signal)]))),
+                                  2 + 5*second[range(self.composite_peaks.ST_start.data[self.index], int(np.median([self.composite_peaks.T.data[self.index], len(self.signal)])))])
         self.seis_line.set_data(range(len(seis)), seis)
-        self.phono_line.set_data(range(len(phono)), phono)
-        self.ax.set_xlim(0, len(self.signal_i))
+        self.phono_line.set_data(range(len(self.phono)), self.phono)
+        self.ax.set_xlim(0, len(self.signal))
 
         # Q Peaks
-        self.q_point.set_offsets((composite_peaks.Q.data[i], signal[composite_peaks.Q.data[i]]))
-        self.q_text.set_position((composite_peaks.Q.data[i], signal[composite_peaks.Q.data[i]] + 0.2))
+        self.q_point.set_offsets((self.composite_peaks.Q.data[self.index], self.signal[self.composite_peaks.Q.data[self.index]]))
+        self.q_text.set_position((self.composite_peaks.Q.data[self.index], self.signal[self.composite_peaks.Q.data[self.index]] + 0.2))
 
         # QM Seismo
-        self.qm_seis_point.set_offsets((composite_peaks.QM_seis.data[i], seis[composite_peaks.QM_seis.data[i]]))
-        self.qm_seis_text.set_position((composite_peaks.QM_seis.data[i], seis[composite_peaks.QM_seis.data[i]] + 0.2))
+        self.qm_seis_point.set_offsets((self.composite_peaks.QM_seis.data[self.index], seis[self.composite_peaks.QM_seis.data[self.index]]))
+        self.qm_seis_text.set_position((self.composite_peaks.QM_seis.data[self.index], seis[self.composite_peaks.QM_seis.data[self.index]] + 0.2))
         
         # QM Phono
-        self.qm_phono_point.set_offsets((composite_peaks.QM_phono.data[i], phono[composite_peaks.QM_phono.data[i]]))
-        self.qm_phono_text.set_position((composite_peaks.QM_phono.data[i], phono[composite_peaks.QM_phono.data[i]] + 0.2))
+        self.qm_phono_point.set_offsets((self.composite_peaks.QM_phono.data[self.index], self.phono[self.composite_peaks.QM_phono.data[self.index]]))
+        self.qm_phono_text.set_position((self.composite_peaks.QM_phono.data[self.index], self.phono[self.composite_peaks.QM_phono.data[self.index]] + 0.2))
         
         # T''max Peak
-        self.ddT_max_point.set_offsets((composite_peaks.ddT_max.data[i], signal[composite_peaks.ddT_max.data[i]]))
-        self.ddT_max_text.set_position((composite_peaks.ddT_max.data[i], signal[composite_peaks.ddT_max.data[i]] + 0.2))
+        self.ddT_max_point.set_offsets((self.composite_peaks.ddT_max.data[self.index], self.signal[self.composite_peaks.ddT_max.data[self.index]]))
+        self.ddT_max_text.set_position((self.composite_peaks.ddT_max.data[self.index], self.signal[self.composite_peaks.ddT_max.data[self.index]] + 0.2))
 
         # TM Seismo
-        self.tm_seis_point.set_offsets((composite_peaks.TM_seis.data[i], seis[composite_peaks.TM_seis.data[i]]))
-        self.tm_seis_text.set_position((composite_peaks.TM_seis.data[i], seis[composite_peaks.TM_seis.data[i]] + 0.2))
+        self.tm_seis_point.set_offsets((self.composite_peaks.TM_seis.data[self.index], self.seis[self.composite_peaks.TM_seis.data[self.index]]))
+        self.tm_seis_text.set_position((self.composite_peaks.TM_seis.data[self.index], self.seis[self.composite_peaks.TM_seis.data[self.index]] + 0.2))
         
         # TM Phono
-        self.tm_phono_point.set_offsets((composite_peaks.TM_phono.data[i], phono[composite_peaks.TM_phono.data[i]]))
-        self.tm_phono_text.set_position((composite_peaks.TM_phono.data[i], phono[composite_peaks.TM_phono.data[i]] + 0.2))
+        self.tm_phono_point.set_offsets((self.composite_peaks.TM_phono.data[self.index], self.phono[self.composite_peaks.TM_phono.data[self.index]]))
+        self.tm_phono_text.set_position((self.composite_peaks.TM_phono.data[self.index], self.phono[self.composite_peaks.TM_phono.data[self.index]] + 0.2))
     
         self.fig.canvas.draw()
 

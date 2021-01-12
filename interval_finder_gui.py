@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from peaks import Peaks
 import heartbreaker as hb
 from composite_peaks import CompositePeaks
-from matplotlib.widgets import Button, RadioButtons
+from matplotlib.widgets import Button, CheckButtons, Slider
 
 class HeartbeatIntervalFinder(object):
     """
@@ -131,7 +131,9 @@ class HeartbeatIntervalFinder(object):
         self.ax.set_xlabel("Time [s]")
         
         # Plot ECG, Phono and Seismo
-        self.signal_line, = self.ax.plot(self.time, self.signal, linewidth = 0.5, c = "b")
+        self.signal_line, = self.ax.plot(self.time, self.signal, label = "ECG", linewidth = 0.5, c = "b")
+        self.seis_line, = self.ax.plot(self.time, self.seis,   label = "Seismo", linewidth = 0.5, c = "r")
+        self.phono_line, = self.ax.plot(self.time, self.phono,  label = "Phono", linewidth = 0.5, c = "g")
         
         sig_min = min(self.signal)
         sig_max = max(self.signal)
@@ -197,42 +199,95 @@ class HeartbeatIntervalFinder(object):
         self.b_save = Button(ax_save, 'Save')
         self.b_save.on_clicked(self.save)
         
-        # Add Line buttons
+        # Add Line hide buttons
         self.ax.text(1.015, 0.97, transform = self.ax.transAxes,
-                    s = "Snap on to:", fontsize=12, horizontalalignment = 'left')
-        # left, bottom, width, height
-        ax_switch_signals = plt.axes([0.91, 0.7, 0.075, 0.15])
-        self.b_switch_signals = RadioButtons(ax_switch_signals, ('ECG', 'Seismo', 'Phono'))
-        for c in self.b_switch_signals.circles:
-            c.set_radius(0.05)
+                    s = "Hide Signal:", fontsize=12, horizontalalignment = 'left')
+        ax_switch_signals = plt.axes([0.91, 0.7, 0.07, 0.15])
+        self.b_switch_signals = CheckButtons(ax_switch_signals, ('ECG', 'Seismo', 'Phono'))
 
         self.b_switch_signals.on_clicked(self.switch_signal)
 
-        self.fig.canvas.mpl_connect('button_press_event', self.on_click)
+        # Add Sliders
+        self.signal_amp_slider = Slider(plt.axes([0.91, 0.15, 0.01, 0.475]),
+                                        label = "ECG\nA",
+                                        valmin = 0.01,
+                                        valmax = 10, 
+                                        valinit = 1,
+                                        orientation = 'vertical')
+        self.signal_amp_slider.on_changed(self.switch_signal)
+        self.signal_amp_slider.valtext.set_visible(False)
+
+        self.seis_height_slider = Slider(plt.axes([0.93, 0.15, 0.01, 0.475]),
+                                        label = "   Seis\nH",
+                                        valmin = 1.5 * min(self.signal),
+                                        valmax = 1.5 * max(self.signal), 
+                                        valinit = 0,
+                                        orientation = 'vertical')
+        self.seis_height_slider.on_changed(self.switch_signal)
+        self.seis_height_slider.valtext.set_visible(False)
+
+        self.seis_amp_slider = Slider(plt.axes([0.94, 0.15, 0.01, 0.475]),
+                                        label = "\nA",
+                                        valmin = 0.01,
+                                        valmax = 10, 
+                                        valinit = 1,
+                                        orientation = 'vertical')
+        self.seis_amp_slider.on_changed(self.switch_signal)
+        self.seis_amp_slider.valtext.set_visible(False)
+
+        self.phono_height_slider = Slider(plt.axes([0.96, 0.15, 0.01, 0.475]),
+                                        label = "    Phono\nH",
+                                        valmin = 1.5 * min(self.signal),
+                                        valmax = 1.5 * max(self.signal), 
+                                        valinit = 0,
+                                        orientation = 'vertical')
+        self.phono_height_slider.on_changed(self.switch_signal)
+        self.phono_height_slider.valtext.set_visible(False)
+
+        self.phono_amp_slider = Slider(plt.axes([0.97, 0.15, 0.01, 0.475]),
+                                        label = "A",
+                                        valmin = .01,
+                                        valmax = 10, 
+                                        valinit = 1,
+                                        orientation = 'vertical')
+        self.phono_amp_slider.on_changed(self.switch_signal)
+        self.phono_amp_slider.valtext.set_visible(False)
+
+        # Add Clicking Actions
+        self.fig.canvas.mpl_connect('button_press_event',   self.on_click)
         self.fig.canvas.mpl_connect('button_release_event', self.off_click)
 
         plt.show()
 
     def switch_signal(self, label):
 
-        if label == 'ECG':
-            self.x = self.time
-            self.y = self.signal
+        self.x = self.time
+        self.y = [np.mean(self.signal)] * len(self.time)
 
-            self.signal_line.set_data(self.time, self.signal)
+        label = self.b_switch_signals.get_status()
+        self.signal_line.set_data(self.time, self.signal_amp_slider.val * self.signal)
+        self.seis_line.set_data(self.time, (self.seis_amp_slider.val * self.seis) + self.seis_height_slider.val)
+        self.phono_line.set_data(self.time, (self.phono_amp_slider.val * self.phono) + self.phono_height_slider.val)
 
-        if label == 'Seismo':
-            self.x = self.time
-            self.y = self.seis
 
-            self.signal_line.set_data(self.time, self.seis)
+        if label[0]: # ECG
+            self.signal_line.set_linewidth(0)
+            
+        else: 
+            self.signal_line.set_linewidth(0.5)
+            
 
-        if label == 'Phono':
-            self.x = self.time
-            self.y = self.phono
+        if label[1]: # Seismo
+            self.seis_line.set_linewidth(0)
 
-            self.signal_line.set_data(self.time, self.phono)
+        else:
+            self.seis_line.set_linewidth(0.5)
 
+        if label[2]: # Phono
+            self.phono_line.set_linewidth(0)
+
+        else:
+            self.phono_line.set_linewidth(0.5)
 
         self.bound_span.remove()
         self.bound_span = self.ax.axvspan(self.lower_bound, self.upper_bound, facecolor='g', alpha=0.25)
@@ -249,6 +304,8 @@ class HeartbeatIntervalFinder(object):
             self.ax.set_xlim(self.time[0] - 0.1*(self.time[-1] - self.time[0]), self.time[-1] + 0.1*(self.time[-1] - self.time[0]))
             self.ax.set_ylim(sig_min - 0.1*(sig_max - sig_min), sig_max + 0.1*(sig_max - sig_min))
             self.new_bounds = False
+
+        self.fig.canvas.draw()
             
     def on_click(self, event):
         threshold = 2
@@ -300,7 +357,7 @@ class HeartbeatIntervalFinder(object):
             self.upper_bound = upper
 
             # Update on signal
-            self.switch_signal(self.b_switch_signals.value_selected)
+            self.switch_signal(self.b_switch_signals.get_status())
 
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
@@ -387,8 +444,8 @@ class HeartbeatIntervalFinder(object):
             self.initialize_bounds()
 
         # Update lines
-        self.switch_signal(self.b_switch_signals.value_selected)
+        self.switch_signal()
 
-        self.fig.canvas.draw()
+        
 
 

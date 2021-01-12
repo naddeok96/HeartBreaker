@@ -55,12 +55,10 @@ for dosage in files[folder_name].keys():
                 #                                 file_name   = file_name,
                 #                                 interval_number = interval_number)
 
-                temp_composite_peaks.load(save_file_name)
+                # temp_composite_peaks.load(save_file_name)
 
                 # Accumulate Stats
                 composite_statistics[dosage].add_data(temp_composite_peaks)
-
-
 
 fig = plt.figure()
 ax1 = fig.add_subplot(211)

@@ -3,7 +3,7 @@
 # Hyperparameters
 #------------------------------------------------------------------------------------#
 folder_name = "ECG-Phono-Seismo DAQ Data 8 20 2020 2" # "1 9 2020 AH TDMS ESSENTIAL" 
-area_around_echo_size = 240 
+area_around_echo_size = 240 #  In Seconds
 composite_size        = 10
 step_size             = 5
 
@@ -11,8 +11,8 @@ use_intervals    = False
 preloaded_signal = False
 save_signal      = False
 
-display_intervals  = True
-display_composites = True
+display_intervals  = False
+display_composites = False
 verify_labels      = True
 #------------------------------------------------------------------------------------#
 # END of Hyperparameters
