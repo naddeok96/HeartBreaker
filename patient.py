@@ -19,15 +19,15 @@ class Patient:
 
         os.chdir(working_directory)
         self.patient_name = file_name
-        self.tdms_file = tdms(file_name + ".tdms")
+        self.tdms_file = tdms.read(file_name + ".tdms")
         os.chdir("../../Derived")
 
-        self.times  = self.tdms_file.object('Data', 'Time(S)').data
-        self.seis1  = self.tdms_file.object('Data', 'Seismocardiogram I').data
-        self.seis2  = self.tdms_file.object('Data', ' Seismocardiogram II').data
-        self.phono1 = self.tdms_file.object('Data', ' Precordial Phonocardiogram-I').data
-        self.phono2 = self.tdms_file.object('Data', ' Precordial Phonocardiogram-II').data
-        self.ecg    = self.tdms_file.object('Data', ' Direct ECG').data
+        self.times  = self.tdms_file['Data']['Time(S)'].data
+        self.seis1  = self.tdms_file['Data']['Seismocardiogram I'].data
+        self.seis2  = self.tdms_file['Data'][' Seismocardiogram II'].data
+        self.phono1 = self.tdms_file['Data'][' Precordial Phonocardiogram-I'].data
+        self.phono2 = self.tdms_file['Data'][' Precordial Phonocardiogram-II'].data
+        self.ecg    = self.tdms_file['Data'][' Direct ECG'].data
 
         self.total_time = math.floor(np.max(self.times)) - math.floor(np.min(self.times))
         self.num_data_points = len(self.times)
