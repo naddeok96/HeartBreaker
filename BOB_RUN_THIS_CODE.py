@@ -2,6 +2,8 @@
 # BOB ONLY EDIT THE HYPERPARAMETER SECTION
 # Hyperparameters
 #------------------------------------------------------------------------------------#
+BLUE_PATH_IN_TERMINAL = '/mnt/c/Python Codes/HeartBreaker'
+
 folder_name = "ECG-Phono-Seismo DAQ Data 8 20 2020 2" # "1 9 2020 AH TDMS ESSENTIAL" 
 area_around_echo_size = 240 #  In Seconds
 composite_size        = 10
@@ -9,13 +11,19 @@ step_size             = 5
 
 use_intervals    = False
 preloaded_signal = False
-save_signal      = False
+save_signal      = True
 
-display_intervals  = False
+display_intervals  = True
 display_composites = False
 verify_labels      = True
 #------------------------------------------------------------------------------------#
 # END of Hyperparameters
+
+# Open Virtual Envornment
+activate_this = BLUE_PATH_IN_TERMINAL + '/hbenv/bin/activate_this.py'
+exec(open(activate_this).read(), {'__file__': activate_this})
+import sys
+assert sys.prefix != sys.base_prefix, "Virual Environment not working!" 
 
 # Imports
 import os
@@ -27,14 +35,6 @@ from files_w_doseage_and_ints import files
 from verification_gui import HeartbeatVerifier
 from composite_statistics import CompositeStats
 from interval_finder_gui import HeartbeatIntervalFinder
-
-# Initalize Composite Stats
-composite_statistics = {0  : CompositeStats(), 
-                        10 : CompositeStats(),
-                        20 : CompositeStats(),
-                        30 : CompositeStats(),
-                        40 : CompositeStats(), 
-                        42 : CompositeStats()}
 
 print("Folder: ", folder_name)
         
@@ -56,6 +56,14 @@ if display_intervals:
     os.chdir("../Derived")
     files = hb.load_intervals(folder_name)
     os.chdir("../..")
+    
+# Initalize Composite Stats
+composite_statistics = {0  : CompositeStats(), 
+                        10 : CompositeStats(),
+                        20 : CompositeStats(),
+                        30 : CompositeStats(),
+                        40 : CompositeStats(), 
+                        42 : CompositeStats()}
 
 # Check Composites
 for dosage in files[folder_name]:
@@ -95,6 +103,7 @@ for dosage in files[folder_name]:
     composite_peaks.get_N_composite_signal_dataset(composite_size, step_size, display = display_composites, dosage = dosage)
     composite_peaks.update_composite_peaks(dosage = dosage)
 
+    # Verify Composites
     if verify_labels:
         verifier = HeartbeatVerifier(composite_peaks, 
                                     folder_name = folder_name,
@@ -104,10 +113,10 @@ for dosage in files[folder_name]:
 
         composite_peaks.load(save_file_name)
 
+    # Add data to stats
     composite_statistics[dosage].add_data(composite_peaks)
 
     os.chdir("../..")
-
 
 fig = plt.figure()
 ax1 = fig.add_subplot(211)
