@@ -189,6 +189,10 @@ class CompositePeaks:
                                 composite_cell.set_title("Composite")
                                 signal_lay_over_cell.set_title("Superimposed") 
                 
+                # Maximize Frame
+                mng = plt.get_current_fig_manager()
+                mng.full_screen_toggle()
+
                 plt.show()
 
         self.composites = composites

@@ -5,16 +5,20 @@
 BLUE_PATH_IN_TERMINAL = '/mnt/c/Python Codes/HeartBreaker'
 
 folder_name = "ECG-Phono-Seismo DAQ Data 8 20 2020 2" # "1 9 2020 AH TDMS ESSENTIAL" 
-area_around_echo_size = 240 #  In Seconds
-composite_size        = 10
-step_size             = 5
+area_around_echo_size = 240 # In Seconds
+composite_size        = 10  # In number of heartbeats
+step_size             = 5   # In number of heartbeats
 
-use_intervals    = False
-preloaded_signal = False
-save_signal      = True
+save_signal          = False
+preloaded_signal     = True
+
+use_intervals        = True
+
+save_composites      = True
+preloaded_composites = False
 
 display_intervals  = True
-display_composites = False
+display_composites = True
 verify_labels      = True
 #------------------------------------------------------------------------------------#
 # END of Hyperparameters
@@ -38,25 +42,22 @@ from interval_finder_gui import HeartbeatIntervalFinder
 
 print("Folder: ", folder_name)
         
-# Check Intervals
-if use_intervals: 
-    os.chdir("../Derived")
+# Load Intervals
+if use_intervals and not preloaded_composites: 
     files = hb.load_intervals(folder_name)
-    os.chdir("../..")
 
-if display_intervals:
+# Check Intervals
+if display_intervals and not preloaded_composites:
     finder = HeartbeatIntervalFinder(files = files,
-                                        folder_name = folder_name,
-                                        area_around_echo_size = 240,
-                                        use_intervals = use_intervals,
-                                        preloaded_signal = preloaded_signal,
-                                        save_signal = save_signal)
+                                    folder_name = folder_name,
+                                    area_around_echo_size = 240,
+                                    use_intervals = use_intervals,
+                                    preloaded_signal = preloaded_signal,
+                                    save_signal = save_signal)
 
     # Use updated intervals moving forward
-    os.chdir("../Derived")
     files = hb.load_intervals(folder_name)
-    os.chdir("../..")
-    
+
 # Initalize Composite Stats
 composite_statistics = {0  : CompositeStats(), 
                         10 : CompositeStats(),
@@ -67,41 +68,70 @@ composite_statistics = {0  : CompositeStats(),
 
 # Check Composites
 for dosage in files[folder_name]:
+    if dosage < 30:
+        continue
     # Pick file
     file_name = files[folder_name][dosage][1]["file_name"]
-    save_file_name = folder_name + "_d" + str(dosage) + "_" + file_name + "_i" + str(1)                                                                                
+    composite_save_file_name = "composites_" + folder_name + "_" + file_name + "_d" + str(dosage) 
 
-    # Load Data
-    time, signal, seis1, seis2, phono1, phono2 = hb.load_file_data( files = files, 
-                                                                    folder_name = folder_name, 
-                                                                    dosage = dosage, 
-                                                                    file_number = 1,
-                                                                    interval_number = 1, 
-                                                                    preloaded_signal = preloaded_signal, 
-                                                                    save_signal = save_signal)
+    if preloaded_composites:
+        composite_peaks.load("data/Derived/composites/"  + composite_save_file_name)                                                                            
 
-    # Low Pass Signal 
-    signal = hb.bandpass_filter(time    = time, 
-                                signal  = signal,
-                                freqmin = 59, 
-                                freqmax = 61)
-    signal = hb.lowpass_filter(time = time, 
-                                signal = signal,
-                                cutoff_freq = 50)
+    else:
+        # Load Data
+        if preloaded_signal or save_signal:
+
+            #  Load Signals
+            signal_save_file_name = folder_name + "_d" + str(dosage)
+            time   = np.loadtxt('data/Derived/signals/time_' + signal_save_file_name + '.csv', delimiter=',')
+            signal = np.loadtxt('data/Derived/signals/signal_' + signal_save_file_name + '.csv', delimiter=',')
+            seis   = np.loadtxt('data/Derived/signals/seis_' + signal_save_file_name + '.csv', delimiter=',')
+            phono  = np.loadtxt('data/Derived/signals/phono_' + signal_save_file_name + '.csv', delimiter=',')
+
+            # Take interval
+            interval = [min(np.searchsorted(time, int(x)), len(time) - 1) for x in files[folder_name][dosage][1]["intervals"][1]]
+            interval = range(interval[0], interval[1])
+
+            time   = time[interval]
+            signal = signal[interval]
+            seis   = seis[interval]
+            phono  = phono[interval]
+
+        else:
+            time, signal, seis, _, phono, _ = hb.load_file_data(files = files, 
+                                                                folder_name = folder_name, 
+                                                                dosage = dosage, 
+                                                                file_number = 1)
+
+        # Low Pass Signal 
+        signal = hb.bandpass_filter(time    = time, 
+                                    signal  = signal,
+                                    freqmin = 59, 
+                                    freqmax = 61)
+        signal = hb.lowpass_filter(time = time, 
+                                    signal = signal,
+                                    cutoff_freq = 50)
 
 
-    # Define T and P peaks to build composites
-    peaks = hb.get_peaks_for_composites(time   = time, 
-                                        signal = signal,
-                                        dosage = dosage,
-                                        seis1  = seis1,
-                                        phono1 = phono1)
-    peaks.get_inital_statistics()
+        # Define T and P peaks to build composites
+        peaks = hb.get_peaks_for_composites(time   = time, 
+                                            signal = signal,
+                                            dosage = dosage,
+                                            seis1  = seis,
+                                            phono1 = phono)
+        peaks.get_inital_statistics()
 
-    # Build Composites
-    composite_peaks = CompositePeaks(peaks)
-    composite_peaks.get_N_composite_signal_dataset(composite_size, step_size, display = display_composites, dosage = dosage)
-    composite_peaks.update_composite_peaks(dosage = dosage)
+        # Build Composites
+        composite_peaks = CompositePeaks(peaks)
+        composite_peaks.get_N_composite_signal_dataset(composite_size, step_size, display = display_composites, dosage = dosage)
+        composite_peaks.update_composite_peaks(dosage = dosage)
+
+    if save_composites:
+        # Get File Name
+        save_file_name = "composites_" + folder_name + "_" + file_name + "_d" + str(dosage) 
+
+        # Save
+        composite_peaks.save("data/Derived/composites/" + save_file_name)
 
     # Verify Composites
     if verify_labels:
@@ -111,14 +141,17 @@ for dosage in files[folder_name]:
                                     file_name   = file_name,
                                     interval_number = 1)
 
-        composite_peaks.load(save_file_name)
+        composite_peaks.load("data/Derived/composites/"  + composite_save_file_name)
 
     # Add data to stats
     composite_statistics[dosage].add_data(composite_peaks)
 
-    os.chdir("../..")
+    
+
 
 fig = plt.figure()
+mng = plt.get_current_fig_manager()
+mng.frame.Maximize(True)
 ax1 = fig.add_subplot(211)
 ax1.get_xaxis().set_visible(False)
 ax1.get_yaxis().set_visible(False)

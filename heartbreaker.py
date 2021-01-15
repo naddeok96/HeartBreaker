@@ -115,62 +115,36 @@ def get_spectrum(time,
     
     plt.show()
 
-def load_file_data(files, folder_name, dosage, file_number, interval_number, preloaded_signal, save_signal):
-    file_name = files[folder_name][dosage][file_number]["file_name"]
-    save_file_name = folder_name + "_" + file_name + "_d" + str(dosage)
-
+def load_file_data(files, folder_name, dosage, file_number):
 
     # Initalize patient and interval
-    if preloaded_signal == False:
-        # Change directory
-        wd = 'data/' + folder_name + '/files_of_interest'
-        # Load TDMS file into Patient object
-        patient = Patient(wd, file_name)
+    # Change directory
+    wd = 'data/' + folder_name + '/files_of_interest'
 
-        # Declare time and signal
-        if files[folder_name][dosage][file_number]["intervals"] != ["None"] and interval_number is not None:
-            start_time = files[folder_name][dosage][file_number]["intervals"][interval_number][0]
-            end_time   = files[folder_name][dosage][file_number]["intervals"][interval_number][1]
-    
-            start = (start_time - np.min(patient.times))*patient.frequency # start_time*patient.frequency #
-            end   = patient.total_time*patient.frequency if end_time == "end" else  (end_time - np.min(patient.times))*patient.frequency # end_time*patient.frequency #
-            interval = range(int(start), int(end))
-            time, signal, seis1, seis2, phono1, phono2 = patient.get_interval(interval)
-        else:
-            time = patient.times
-            signal = patient.ecg
-            seis1 = patient.seis1
-            seis2 = patient.seis2
-            phono1 = patient.phono1
-            phono2 = patient.phono2
+    # Load TDMS file into Patient object
+    file_name = files[folder_name][dosage][file_number]["file_name"]
+    patient = Patient(wd, file_name)
+
+    # Declare time and signal
+    time = patient.times
+    signal = patient.ecg
+    seis1 = patient.seis1
+    seis2 = patient.seis2
+    phono1 = patient.phono1
+    phono2 = patient.phono2
+    os.chdir('../..')
         
-        # Save signal
-        if save_signal == True:
-            np.savetxt('time_'  + save_file_name + '.csv', time, delimiter=',')
-            np.savetxt('signal_'+ save_file_name + '.csv', signal, delimiter=',')
-            np.savetxt('seis1_'+ save_file_name + '.csv', seis1, delimiter=',')
-            np.savetxt('seis2_'+ save_file_name + '.csv', seis2, delimiter=',')
-            np.savetxt('phono1_'+ save_file_name + '.csv', phono1, delimiter=',')
-            np.savetxt('phono2_'+ save_file_name + '.csv', phono2, delimiter=',')
-
-    else:
-        os.chdir("data/Derived")
-        time   = np.loadtxt('time_' + save_file_name + '.csv', delimiter=',')
-        signal = np.loadtxt('signal_' + save_file_name + '.csv', delimiter=',')
-        seis1  = np.loadtxt('seis1_' + save_file_name + '.csv', delimiter=',')
-        seis2  = np.loadtxt('seis2_' + save_file_name + '.csv', delimiter=',')
-        phono1 = np.loadtxt('phono1_' + save_file_name + '.csv', delimiter=',')
-        phono2 = np.loadtxt('phono2_' + save_file_name + '.csv', delimiter=',')
-
     return time, signal, seis1, seis2, phono1, phono2
 
 def load_intervals(folder_name):
 
     # Load file name
-    load_filename = "Interval_Dict_" + folder_name
+    load_filename = "data/Derived/intervals/Interval_Dict_" + folder_name
+    assert os.path.isfile(load_filename + '.pkl'), "Folder does not have preevaluated data. Please make use_intervals = FALSE."
 
     with open(load_filename + '.pkl', 'rb') as input:
         return pickle.load(input)
+
 
 def save_peaks_to_excel(file_name, time, peaks):
     '''

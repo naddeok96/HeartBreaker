@@ -23,37 +23,26 @@ class HeartbeatIntervalFinder(object):
                        save_signal = False):
 
         super(HeartbeatIntervalFinder, self).__init__()
-        # Load Data
+        # Load Arguments
         self.files            = files
         self.folder_name      = folder_name
         self.dosage           = dosage
         self.file_number      = file_number
         self.file_name        = files[folder_name][dosage][file_number]["file_name"]
-        self.use_intervals    = use_intervals
-        self.interval_number  = 1 if self.use_intervals else None
+
+        self.use_intervals            = use_intervals
         self.area_around_echo_size    = area_around_echo_size
-        self.preloaded_signal = preloaded_signal
-        self.save_signal      = save_signal
+        self.preloaded_signal         = preloaded_signal
 
-    
-        self.time, self.signal, self.seis, _, self.phono, _ = hb.load_file_data(files = files, 
-                                                                                folder_name = folder_name, 
-                                                                                dosage = dosage,
-                                                                                file_number = file_number,
-                                                                                interval_number = self.interval_number,
-                                                                                preloaded_signal = self.preloaded_signal, 
-                                                                                save_signal = self.save_signal)
+        # Save signals
+        if save_signal:
+            self.save_signals()
 
-        self.echo_time = files[folder_name][dosage][file_number]["echo_time"]
+        # Load Signals and 2D Echo Time
+        self.load_signals()
 
-        if not self.use_intervals:
-            # Clip signal size about echo time
-            self.clip_signals()
-
-            # Determine Orginal bound
-            self.initialize_bounds()
-
-        self.new_bounds = False
+        # Determine Orginal bounds
+        self.initialize_bounds()
 
         # Plot signals
         self.plot_signals()       
@@ -104,24 +93,29 @@ class HeartbeatIntervalFinder(object):
                                     cutoff_freq = 50)
 
     def initialize_bounds(self):
-        max_time = max(self.time)
-        min_time = min(self.time)
+        if self.use_intervals:
+            self.lower_bound = self.files[self.folder_name][self.dosage][self.file_number]["intervals"][1][0]
+            self.upper_bound = self.files[self.folder_name][self.dosage][self.file_number]["intervals"][1][1]
 
-        if (max_time - min_time) < 20:
-            self.lower_bound = min_time
-            self.upper_bound = max_time
-
-        elif (self.echo_time - (20/2)) < min_time:
-            self.lower_bound = min_time
-            self.upper_bound = min_time + 20
-
-        elif (self.echo_time + (20/2)) > max_time:
-            self.lower_bound = max_time - 20
-            self.upper_bound = max_time
-            
         else:
-            self.lower_bound = self.echo_time - (20/2)
-            self.upper_bound = self.echo_time + (20/2)
+            max_time = max(self.time)
+            min_time = min(self.time)
+
+            if (max_time - min_time) < 20:
+                self.lower_bound = min_time
+                self.upper_bound = max_time
+
+            elif (self.echo_time - (20/2)) < min_time:
+                self.lower_bound = min_time
+                self.upper_bound = min_time + 20
+
+            elif (self.echo_time + (20/2)) > max_time:
+                self.lower_bound = max_time - 20
+                self.upper_bound = max_time
+                
+            else:
+                self.lower_bound = self.echo_time - (20/2)
+                self.upper_bound = self.echo_time + (20/2)
 
     def plot_signals(self):
         # Create figure
@@ -179,8 +173,7 @@ class HeartbeatIntervalFinder(object):
                     s = "Dosage: " + str(self.dosage), fontsize=12, horizontalalignment = 'left')
         self.file_name_text = self.ax.text(0.01, start - space, transform = self.ax.transAxes,
                     s = "File: " + self.files[self.folder_name][self.dosage][self.file_number]["file_name"], fontsize=12, horizontalalignment = 'left')
-        self.interval_text = self.ax.text(0.01, start - 2*space, transform = self.ax.transAxes,
-                    s = "File #: " + str(self.interval_number), fontsize=12, horizontalalignment = 'left')
+        
 
 
         # Add index buttons
@@ -197,7 +190,7 @@ class HeartbeatIntervalFinder(object):
         # Add Save Button
         ax_save = plt.axes([0.8, 0.9, 0.1, 0.075])
         self.b_save = Button(ax_save, 'Save')
-        self.b_save.on_clicked(self.save)
+        self.b_save.on_clicked(self.save_intervals)
         
         # Add Line hide buttons
         self.ax.text(1.015, 0.97, transform = self.ax.transAxes,
@@ -257,6 +250,10 @@ class HeartbeatIntervalFinder(object):
         self.fig.canvas.mpl_connect('button_press_event',   self.on_click)
         self.fig.canvas.mpl_connect('button_release_event', self.off_click)
 
+        # Maximize frame
+        mng = plt.get_current_fig_manager()
+        mng.full_screen_toggle()
+
         plt.show()
 
     def switch_signal(self, label):
@@ -289,6 +286,7 @@ class HeartbeatIntervalFinder(object):
         else:
             self.phono_line.set_linewidth(0.5)
 
+        # Update green shaded region
         self.bound_span.remove()
         self.bound_span = self.ax.axvspan(self.lower_bound, self.upper_bound, facecolor='g', alpha=0.25)
 
@@ -298,11 +296,13 @@ class HeartbeatIntervalFinder(object):
         self.upper_bound_text.set_position((self.upper_bound, self.bound_text_height))
         self.upper_bound_text.set_text("Upper Bound\n" + str(self.upper_bound))
 
-        if self.new_bounds == True:
+        # Update x and y lim
+        if self.new_bounds:
             sig_min = min(self.signal)
             sig_max = max(self.signal)
             self.ax.set_xlim(self.time[0] - 0.1*(self.time[-1] - self.time[0]), self.time[-1] + 0.1*(self.time[-1] - self.time[0]))
             self.ax.set_ylim(sig_min - 0.1*(sig_max - sig_min), sig_max + 0.1*(sig_max - sig_min))
+
             self.new_bounds = False
 
         self.fig.canvas.draw()
@@ -310,9 +310,10 @@ class HeartbeatIntervalFinder(object):
     def on_click(self, event):
         threshold = 2
         self.update_point = None
-
+        self.new_bounds = False
         # Make sure a click happened inside the subplot
         if (event.xdata is not None) and (str(type(event.inaxes)) == "<class 'matplotlib.axes._subplots.AxesSubplot'>"):
+
             if abs(self.lower_bound - event.xdata) < threshold:
                 self.lx.set_color('g')
                 self.ly.set_color('g')
@@ -342,7 +343,7 @@ class HeartbeatIntervalFinder(object):
         self.lx.set_linewidth(0.2)
         self.ly.set_linewidth(0.2)
 
-        if (event.xdata is not None) and (self.new_bounds == False):
+        if event.xdata is not None:
             if self.update_point == "lower_bound":
 
                 self.lower_bound = max(self.time[0], round(event.xdata, 1))
@@ -387,29 +388,81 @@ class HeartbeatIntervalFinder(object):
         self.dosage += 10
         if self.dosage > 40:
             self.dosage = 0
-
-        self.new_bounds = False if self.use_intervals else True
+        self.new_bounds = True
         self.update_plot() 
 
     def prev(self, event):
         self.dosage -= 10
         if self.dosage < 0:
             self.dosage = 40
-
-        self.new_bounds = False if self.use_intervals else True
+        self.new_bounds = True
         self.update_plot()
 
-    def save(self, event):
+    def save_intervals(self, event):
         # Save bounds
-        self.files[self.folder_name][self.dosage][self.file_number]["intervals"][1] = [self.lower_bound, self.upper_bound]
+        save_filename = "data/Derived/intervals/Interval_Dict_" + self.folder_name
+        self.files[self.folder_name][self.dosage][self.file_number]["intervals"][1][0] = self.lower_bound
+        self.files[self.folder_name][self.dosage][self.file_number]["intervals"][1][1] = self.upper_bound
 
-        # Get File Name
-        save_filename = "Interval_Dict_" + self.folder_name
-
-        # Save
+        # Save Bounds
         with open(save_filename + '.pkl', 'wb') as output:
             pickle.dump(self.files, output, pickle.HIGHEST_PROTOCOL)
         print("Saved")
+
+    def save_signals(self):
+
+        print("Saving Signals...")
+        for dosage in self.files[self.folder_name]:
+            # Load data
+            self.time, self.signal, self.seis, _, self.phono, _ = hb.load_file_data(files = self.files, 
+                                                                                    folder_name = self.folder_name, 
+                                                                                    dosage = dosage,
+                                                                                    file_number = self.file_number)
+            
+            # Load Echo Time
+            self.echo_time = self.files[self.folder_name][dosage][self.file_number]["echo_time"]
+
+            # Clip signal size about echo time
+            self.clip_signals()
+
+            # Save File Name
+            save_file_name = self.folder_name + "_d" + str(dosage)
+            assert not os.path.isfile('data/Derived/signals/time_'  + save_file_name + '.csv'), "Saved signals already exist, please delete before saving new signals."
+
+            # Save Signals
+            np.savetxt('data/Derived/signals/time_'  + save_file_name + '.csv', self.time, delimiter=',')
+            np.savetxt('data/Derived/signals/signal_'+ save_file_name + '.csv', self.signal, delimiter=',')
+            np.savetxt('data/Derived/signals/seis_'  + save_file_name + '.csv', self.seis, delimiter=',')
+            np.savetxt('data/Derived/signals/phono_' + save_file_name + '.csv', self.phono, delimiter=',')
+
+            print("\tDosage " + str(dosage) + " done")
+
+        print("...Done Saving Signals")
+
+        # Use these saved files from now on
+        self.preloaded_signal = True
+        
+    def load_signals(self):
+
+        if self.preloaded_signal:
+            
+            save_file_name = self.folder_name + "_d" + str(self.dosage)
+            self.time   = np.loadtxt('data/Derived/signals/time_' + save_file_name + '.csv', delimiter=',')
+            self.signal = np.loadtxt('data/Derived/signals/signal_' + save_file_name + '.csv', delimiter=',')
+            self.seis   = np.loadtxt('data/Derived/signals/seis_' + save_file_name + '.csv', delimiter=',')
+            self.phono  = np.loadtxt('data/Derived/signals/phono_' + save_file_name + '.csv', delimiter=',')
+
+        else:
+            self.time, self.signal, self.seis, _, self.phono, _ = hb.load_file_data(files = self.files, 
+                                                                                folder_name = self.folder_name, 
+                                                                                dosage = self.dosage,
+                                                                                file_number = self.file_number)
+
+            # Clip Signals
+            self.clip_signals()
+
+
+        self.echo_time = self.files[self.folder_name][self.dosage][self.file_number]["echo_time"]
 
     def update_plot(self):
         # Display Loading Screen
@@ -420,32 +473,20 @@ class HeartbeatIntervalFinder(object):
         self.folder_text.set_text("Folder: " + self.folder_name)
         self.dosage_text.set_text("Dosage: " + str(self.dosage))
         self.file_name_text.set_text("File: " + self.files[self.folder_name][self.dosage][self.file_number]["file_name"])
-        self.interval_text.set_text("File #: " + str(self.interval_number))
-
+        
         # Load composite signals
-        os.chdir("../..")
-        self.time, self.signal, self.seis, _, self.phono, _ = hb.load_file_data( files = self.files, 
-                                                                                folder_name = self.folder_name, 
-                                                                                dosage = self.dosage,
-                                                                                file_number = self.file_number,
-                                                                                interval_number = self.interval_number,
-                                                                                preloaded_signal = self.preloaded_signal, 
-                                                                                save_signal = self.save_signal)
+        self.load_signals()
 
-        # Load Echo Time
-        self.echo_time = self.files[self.folder_name][self.dosage][self.file_number]["echo_time"]
+        # Update Echo Line
         self.echo_line.set_xdata(self.echo_time)
 
-        # Clip Signals
-        self.clip_signals()
-
         # Find new orginal bounds
-        if self.new_bounds:
-            self.initialize_bounds()
+        self.initialize_bounds()
 
         # Update lines
-        self.switch_signal()
+        self.switch_signal(self.b_switch_signals.get_status())
 
-        
+
+    
 
 

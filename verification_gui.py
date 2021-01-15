@@ -1,4 +1,6 @@
+import os
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
 from peaks import Peaks
 import heartbreaker as hb
@@ -36,13 +38,13 @@ class HeartbeatVerifier(object):
         
         # Load composite signals
         self.time, self.signal, self.seis, self.phono = self.composite_peaks.composites[self.index]
-        _, second = hb.get_derivatives(self.signal)
+        _, self.second = hb.get_derivatives(self.signal)
 
         # Plot ECG, Phono and Seismo
         self.signal_line, = self.ax.plot(self.signal, linewidth = 1, c = "b", label = "ECG")
 
         self.second_line, = self.ax.plot(range(self.composite_peaks.ST_start.data[self.index], int(np.median([self.composite_peaks.T.data[self.index], len(self.signal)]))), 
-                                        2 + 5*second[range(self.composite_peaks.ST_start.data[self.index], int(np.median([self.composite_peaks.T.data[self.index], len(self.signal)])))],
+                                        2 + 5*self.second[range(self.composite_peaks.ST_start.data[self.index], int(np.median([self.composite_peaks.T.data[self.index], len(self.signal)])))],
                                         '--', linewidth = 0.5, c = 'k', label = "ECG 2nd Derv.")
 
         self.seis_line,   = self.ax.plot(self.seis , '--', linewidth = 0.5, c = 'r', label = "Seis")
@@ -179,7 +181,10 @@ class HeartbeatVerifier(object):
         self.phono_amp_slider.on_changed(self.switch_signal)
         self.phono_amp_slider.valtext.set_visible(False)
 
-        
+        # Maximize frame
+        mng = plt.get_current_fig_manager()
+        mng.full_screen_toggle()
+
         plt.show()
 
     def switch_signal(self, label):
@@ -383,10 +388,10 @@ class HeartbeatVerifier(object):
 
     def save(self, event):
         # Get File Name
-        save_file_name = self.folder_name + "_d" + str(self.dosage) + "_" + self.file_name + "_i" + str(self.interval_number)
+        save_file_name = "composites_" + self.folder_name + "_" + self.file_name + "_d" + str(self.dosage) 
 
         # Save
-        self.composite_peaks.save(save_file_name)
+        self.composite_peaks.save("data/Derived/composites/" + save_file_name)
         print("Saved")
 
     def update_plot(self):
@@ -398,13 +403,13 @@ class HeartbeatVerifier(object):
         _, self.second = hb.get_derivatives(self.signal)
 
         # Update cross hairs
-        self.switch_signal()
+        self.switch_signal(None)
 
         # Plot ECG, Phono and Seismo
         self.signal_line.set_data(range(len(self.signal)), self.signal)
         self.second_line.set_data(range(self.composite_peaks.ST_start.data[self.index], int(np.median([self.composite_peaks.T.data[self.index], len(self.signal)]))),
-                                  2 + 5*second[range(self.composite_peaks.ST_start.data[self.index], int(np.median([self.composite_peaks.T.data[self.index], len(self.signal)])))])
-        self.seis_line.set_data(range(len(seis)), seis)
+                                  2 + 5*self.second[range(self.composite_peaks.ST_start.data[self.index], int(np.median([self.composite_peaks.T.data[self.index], len(self.signal)])))])
+        self.seis_line.set_data(range(len(self.seis)), self.seis)
         self.phono_line.set_data(range(len(self.phono)), self.phono)
         self.ax.set_xlim(0, len(self.signal))
 
@@ -413,8 +418,8 @@ class HeartbeatVerifier(object):
         self.q_text.set_position((self.composite_peaks.Q.data[self.index], self.signal[self.composite_peaks.Q.data[self.index]] + 0.2))
 
         # QM Seismo
-        self.qm_seis_point.set_offsets((self.composite_peaks.QM_seis.data[self.index], seis[self.composite_peaks.QM_seis.data[self.index]]))
-        self.qm_seis_text.set_position((self.composite_peaks.QM_seis.data[self.index], seis[self.composite_peaks.QM_seis.data[self.index]] + 0.2))
+        self.qm_seis_point.set_offsets((self.composite_peaks.QM_seis.data[self.index], self.seis[self.composite_peaks.QM_seis.data[self.index]]))
+        self.qm_seis_text.set_position((self.composite_peaks.QM_seis.data[self.index], self.seis[self.composite_peaks.QM_seis.data[self.index]] + 0.2))
         
         # QM Phono
         self.qm_phono_point.set_offsets((self.composite_peaks.QM_phono.data[self.index], self.phono[self.composite_peaks.QM_phono.data[self.index]]))
