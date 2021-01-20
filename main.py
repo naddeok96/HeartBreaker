@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from patient import Patient 
 import random
 import heartbreaker as hb
-from files_w_ints import files
+from files_w_doseage_and_ints import files
 from bobs_intervals import bobs_waves
 import numpy as np
 import math
@@ -15,9 +15,9 @@ import csv
 # Signal Settings
 preloaded_signal = False
 save_signal      = False
-save_peaks       = True
+save_peaks       = False
 peaks_to_excel   = False
-use_intervals    = True
+use_intervals    = False
 
 # Display Settings
 show_signal      = False
@@ -26,7 +26,7 @@ show_bandpass    = False
 show_derivatives = False
 show_peaks       = True
 
-folder_name = "1 9 2020 AH TDMS ESSENTIAL" # "ECG-Phono-Seismo DAQ Data 8 20 2020 2"
+folder_name = "ECG-Phono-Seismo DAQ Data 8 20 2020 2" # "1 9 2020 AH TDMS ESSENTIAL" # 
 print(folder_name)
 # Iterate
 for dosage in files[folder_name].keys():
@@ -36,7 +36,7 @@ for dosage in files[folder_name].keys():
      # sample_interval = random.choice(list(files[folder_name][dosage]["intervals"]))
 
      print("D: ", dosage)
-     for interval_number in files[folder_name][dosage]["intervals"]:
+     for interval_number in files[folder_name][dosage][1]["intervals"]:
           # if interval_number != sample_interval:
           #      continue
           # if interval_number != 1:
@@ -46,7 +46,7 @@ for dosage in files[folder_name].keys():
                print("I: ", interval_number)
 
           # Pick file
-          file_name = files[folder_name][dosage]["file_name"]
+          file_name = files[folder_name][dosage][1]["file_name"]
           save_file_name = folder_name + "_" + file_name + "_d" + str(dosage) if use_intervals == False else folder_name + "_" + file_name + "_d" + str(dosage) + "_i" + str(interval_number)
 
           # Pick Interval
