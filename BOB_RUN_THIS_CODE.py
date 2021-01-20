@@ -12,14 +12,14 @@ step_size             = 5   # In number of heartbeats
 save_signal          = False
 preloaded_signal     = True
 
-use_intervals        = True
+use_intervals        = False
 
-save_composites      = True
-preloaded_composites = False
+save_composites      = False
+preloaded_composites = True
 
-display_intervals  = True
-display_composites = True
-verify_labels      = True
+display_intervals  = False
+display_composites = False
+verify_labels      = False
 #------------------------------------------------------------------------------------#
 # END of Hyperparameters
 
@@ -68,13 +68,13 @@ composite_statistics = {0  : CompositeStats(),
 
 # Check Composites
 for dosage in files[folder_name]:
-    if dosage < 30:
-        continue
+
     # Pick file
     file_name = files[folder_name][dosage][1]["file_name"]
     composite_save_file_name = "composites_" + folder_name + "_" + file_name + "_d" + str(dosage) 
 
     if preloaded_composites:
+        composite_peaks = CompositePeaks()
         composite_peaks.load("data/Derived/composites/"  + composite_save_file_name)                                                                            
 
     else:
@@ -125,6 +125,7 @@ for dosage in files[folder_name]:
         composite_peaks = CompositePeaks(peaks)
         composite_peaks.get_N_composite_signal_dataset(composite_size, step_size, display = display_composites, dosage = dosage)
         composite_peaks.update_composite_peaks(dosage = dosage)
+        composite_peaks.get_inital_statistics()
 
     if save_composites:
         # Get File Name
@@ -150,8 +151,6 @@ for dosage in files[folder_name]:
 
 
 fig = plt.figure()
-mng = plt.get_current_fig_manager()
-mng.frame.Maximize(True)
 ax1 = fig.add_subplot(211)
 ax1.get_xaxis().set_visible(False)
 ax1.get_yaxis().set_visible(False)
@@ -172,11 +171,11 @@ for dosage in composite_statistics:
     if composite_statistics[dosage].QM_interval_seis is not None:
         doses.append(dosage)
 
-        qm_seis.append(1/composite_statistics[dosage].QM_interval_seis)
-        qm_phono.append(1/composite_statistics[dosage].QM_interval_phono)
+        qm_seis.append(4000/composite_statistics[dosage].QM_interval_seis)
+        qm_phono.append(4000/composite_statistics[dosage].QM_interval_phono)
 
-        tm_seis.append(1/composite_statistics[dosage].TM_interval_seis)
-        tm_phono.append(1/composite_statistics[dosage].TM_interval_phono)
+        tm_seis.append(4000/composite_statistics[dosage].TM_interval_seis)
+        tm_phono.append(4000/composite_statistics[dosage].TM_interval_phono)
 
 
 ax11 = fig.add_subplot(221)
@@ -220,5 +219,8 @@ ax22.set_yticks(np.arange(0, 50, 10), minor=False)
 ax22.set_xlim(min(tm_phono) - 0.1*(max(tm_phono) - min(tm_phono)), max(tm_phono) + 0.1*(max(tm_phono) - min(tm_phono)))
 ax22.grid()
 
+# Maximize frame
+mng = plt.get_current_fig_manager()
+mng.full_screen_toggle()
 
 plt.show()              

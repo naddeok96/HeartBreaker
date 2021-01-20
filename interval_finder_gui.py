@@ -33,6 +33,8 @@ class HeartbeatIntervalFinder(object):
         self.use_intervals            = use_intervals
         self.area_around_echo_size    = area_around_echo_size
         self.preloaded_signal         = preloaded_signal
+        self.update_point             = None 
+        self.new_bounds               = False
 
         # Save signals
         if save_signal:
@@ -101,21 +103,21 @@ class HeartbeatIntervalFinder(object):
             max_time = max(self.time)
             min_time = min(self.time)
 
-            if (max_time - min_time) < 20:
+            if (max_time - min_time) < 16:
                 self.lower_bound = min_time
                 self.upper_bound = max_time
 
-            elif (self.echo_time - (20/2)) < min_time:
+            elif (self.echo_time - (16/2)) < min_time:
                 self.lower_bound = min_time
-                self.upper_bound = min_time + 20
+                self.upper_bound = min_time + 16
 
-            elif (self.echo_time + (20/2)) > max_time:
-                self.lower_bound = max_time - 20
+            elif (self.echo_time + (16/2)) > max_time:
+                self.lower_bound = max_time - 16
                 self.upper_bound = max_time
                 
             else:
-                self.lower_bound = self.echo_time - (20/2)
-                self.upper_bound = self.echo_time + (20/2)
+                self.lower_bound = self.echo_time - (16/2)
+                self.upper_bound = self.echo_time + (16/2)
 
     def plot_signals(self):
         # Create figure
@@ -254,7 +256,7 @@ class HeartbeatIntervalFinder(object):
         mng = plt.get_current_fig_manager()
         mng.full_screen_toggle()
 
-        plt.show()
+        plt.show()        
 
     def switch_signal(self, label):
 
@@ -311,6 +313,7 @@ class HeartbeatIntervalFinder(object):
         threshold = 2
         self.update_point = None
         self.new_bounds = False
+
         # Make sure a click happened inside the subplot
         if (event.xdata is not None) and (str(type(event.inaxes)) == "<class 'matplotlib.axes._subplots.AxesSubplot'>"):
 
@@ -385,16 +388,26 @@ class HeartbeatIntervalFinder(object):
         self.ax.figure.canvas.draw()
 
     def next(self, event):
+        # Update Dosage
+        if self.use_intervals:
+            self.save_intervals(None) 
         self.dosage += 10
         if self.dosage > 40:
             self.dosage = 0
+
+        # Update plot and Save
         self.new_bounds = True
         self.update_plot() 
 
     def prev(self, event):
+        # Update Dosage
+        if self.use_intervals:
+            self.save_intervals(None) 
         self.dosage -= 10
         if self.dosage < 0:
             self.dosage = 40
+
+        # Update plot and Save
         self.new_bounds = True
         self.update_plot()
 
@@ -407,7 +420,8 @@ class HeartbeatIntervalFinder(object):
         # Save Bounds
         with open(save_filename + '.pkl', 'wb') as output:
             pickle.dump(self.files, output, pickle.HIGHEST_PROTOCOL)
-        print("Saved")
+        print("Saved Intervals")
+        self.use_intervals = True
 
     def save_signals(self):
 
@@ -466,7 +480,8 @@ class HeartbeatIntervalFinder(object):
 
     def update_plot(self):
         # Display Loading Screen
-        self.dosage_text.set_text("Loading")
+        self.dosage_text.set_text("Loading...")
+        print("Loading...")
         self.fig.canvas.draw()
 
         # Update index
@@ -485,6 +500,7 @@ class HeartbeatIntervalFinder(object):
 
         # Update lines
         self.switch_signal(self.b_switch_signals.get_status())
+        print("\t...done")
 
 
     
