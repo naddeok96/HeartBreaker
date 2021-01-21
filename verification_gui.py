@@ -45,7 +45,7 @@ class HeartbeatVerifier(object):
         self.signal_line, = self.ax.plot(self.signal, linewidth = 1, c = "b", label = "ECG")
 
         self.second_line, = self.ax.plot(range(self.composite_peaks.ST_start.data[self.index], int(np.median([self.composite_peaks.T.data[self.index], len(self.signal)]))), 
-                                        2 + 5*self.second[range(self.composite_peaks.ST_start.data[self.index], int(np.median([self.composite_peaks.T.data[self.index], len(self.signal)])))],
+                                        2 + 15*self.second[range(self.composite_peaks.ST_start.data[self.index], int(np.median([self.composite_peaks.T.data[self.index], len(self.signal)])))],
                                         '--', linewidth = 0.5, c = 'k', label = "ECG 2nd Derv.")
 
         self.seis_line,   = self.ax.plot(self.seis , '--', linewidth = 0.5, c = 'r', label = "Seis")
@@ -112,11 +112,11 @@ class HeartbeatVerifier(object):
         qm_seis  = str(round(1/(self.time[self.composite_peaks.QM_seis.data[self.index]]  - self.time[self.composite_peaks.Q.data[self.index]]), 2))
         qm_phono = str(round(1/(self.time[self.composite_peaks.QM_phono.data[self.index]] - self.time[self.composite_peaks.Q.data[self.index]]), 2))
         self.qm_text = self.ax.text(start_left, 0.91, horizontalalignment = 'center', transform = self.fig.transFigure,
-                                    s = "1/(E-M)ino\nSeis: " + qm_seis + "\nPhono: " + qm_phono)
+                                    s = "1/(E-M)ino\nSeis: " + qm_seis + " Hz" + "\nPhono: " + qm_phono + " Hz")
         tm_seis  = str(round(1/(self.time[self.composite_peaks.TM_seis.data[self.index]]  - self.time[self.composite_peaks.ddT_max.data[self.index]]), 2))
         tm_phono = str(round(1/(self.time[self.composite_peaks.TM_phono.data[self.index]] - self.time[self.composite_peaks.ddT_max.data[self.index]]), 2))
         self.tm_text = self.ax.text(start_left + shift_left, 0.91, horizontalalignment = 'center', transform = self.fig.transFigure,
-                                    s = "1/(E-M)lusi\nSeis: " + tm_seis + "\nPhono: " + tm_phono)
+                                    s = "1/(E-M)lusi\nSeis: " + tm_seis + " Hz" + "\nPhono: " + tm_phono + " Hz")
 
         # Add index buttons
         ax_prev = plt.axes([0.575 - left_shift, 0.9, 0.1, 0.075])
@@ -242,10 +242,10 @@ class HeartbeatVerifier(object):
         # Update Data
         qm_seis  = str(round(1/(self.time[self.composite_peaks.QM_seis.data[self.index]]  - self.time[self.composite_peaks.Q.data[self.index]]), 2))
         qm_phono = str(round(1/(self.time[self.composite_peaks.QM_phono.data[self.index]] - self.time[self.composite_peaks.Q.data[self.index]]), 2))
-        self.qm_text.set_text("1/(E-M)ino\nSeis: " + qm_seis + "\nPhono: " + qm_phono)
+        self.qm_text.set_text("1/(E-M)ino\nSeis: " + qm_seis + " Hz" + "\nPhono: " + qm_phono + " Hz")
         tm_seis  = str(round(1/(self.time[self.composite_peaks.TM_seis.data[self.index]]  - self.time[self.composite_peaks.ddT_max.data[self.index]]), 2))
         tm_phono = str(round(1/(self.time[self.composite_peaks.TM_phono.data[self.index]] - self.time[self.composite_peaks.ddT_max.data[self.index]]), 2))
-        self.tm_text.set_text("1/(E-M)lusi\nSeis: " + tm_seis + "\nPhono: " + tm_phono)
+        self.tm_text.set_text("1/(E-M)lusi\nSeis: " + tm_seis + " Hz" + "\nPhono: " + tm_phono + " Hz")
 
         # Update Cross-hairs
         label = self.b_switch_signals.value_selected
@@ -467,7 +467,7 @@ class HeartbeatVerifier(object):
         # Plot ECG, Phono and Seismo
         self.signal_line.set_data(range(len(self.signal)), self.signal)
         self.second_line.set_data(range(self.composite_peaks.ST_start.data[self.index], int(np.median([self.composite_peaks.T.data[self.index], len(self.signal)]))),
-                                  2 + 5*self.second[range(self.composite_peaks.ST_start.data[self.index], int(np.median([self.composite_peaks.T.data[self.index], len(self.signal)])))])
+                                  2 + 15*self.second[range(self.composite_peaks.ST_start.data[self.index], int(np.median([self.composite_peaks.T.data[self.index], len(self.signal)])))])
         self.seis_line.set_data(range(len(self.seis)), self.seis)
         self.phono_line.set_data(range(len(self.phono)), self.phono)
         self.ax.set_xlim(0, len(self.signal))

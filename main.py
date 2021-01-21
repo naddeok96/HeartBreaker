@@ -26,12 +26,12 @@ show_bandpass    = False
 show_derivatives = False
 show_peaks       = True
 
-folder_name = "ECG-Phono-Seismo DAQ Data 8 20 2020 2" # "1 9 2020 AH TDMS ESSENTIAL" # 
+folder_name = "ECG-Phono-Seismo DAQ Data 8 20 2020 2" # "1 9 2020 AH TDMS ESSENTIAL" #  
 print(folder_name)
 # Iterate
 for dosage in files[folder_name].keys():
-     # if dosage != 40:
-     #      continue
+     if dosage != 0:
+          continue
 
      # sample_interval = random.choice(list(files[folder_name][dosage]["intervals"]))
 

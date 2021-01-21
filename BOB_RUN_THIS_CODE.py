@@ -1,6 +1,5 @@
-
-# BOB ONLY EDIT THE HYPERPARAMETER SECTION
-# Hyperparameters
+# BOB ONLY EDIT THE SETTING SECTION
+# Settings
 #------------------------------------------------------------------------------------#
 BLUE_PATH_IN_TERMINAL = '/mnt/c/Python Codes/HeartBreaker'
 
@@ -12,16 +11,16 @@ step_size             = 5   # In number of heartbeats
 save_signal          = False
 preloaded_signal     = True
 
-use_intervals        = False
+use_intervals        = True
 
-save_composites      = False
-preloaded_composites = True
+save_composites      = True
+preloaded_composites = False
 
 display_intervals  = False
 display_composites = False
-verify_labels      = False
+verify_labels      = True
 #------------------------------------------------------------------------------------#
-# END of Hyperparameters
+# END of Setting
 
 # Open Virtual Envornment
 activate_this = BLUE_PATH_IN_TERMINAL + '/hbenv/bin/activate_this.py'

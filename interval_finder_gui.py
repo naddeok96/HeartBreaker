@@ -53,17 +53,17 @@ class HeartbeatIntervalFinder(object):
         max_time = max(self.time)
         min_time = min(self.time)
 
-        if max_time - min_time < self.area_around_echo_size:
-            interval = range(np.where(self.time == min_time)[0][0], np.where(self.time == max_time)[0][0])
-
+        if (max_time - min_time) < self.area_around_echo_size:
+            interval = range(np.searchsorted(self.time, min_time), np.searchsorted(self.time, max_time))
+                            
         elif self.echo_time - self.area_around_echo_size/2 < min_time:
-            interval = range(np.where(self.time == min_time)[0][0], int(np.where(self.time == min_time + self.area_around_echo_size)[0][0]))
+            interval = range(np.searchsorted(self.time, min_time), int(np.searchsorted(self.time, min_time + self.area_around_echo_size)))
 
         elif self.echo_time + self.area_around_echo_size/2 > max_time:
-            interval = range(int(np.where(self.time == (max_time - self.area_around_echo_size))[0][0]), np.where(self.time == max_time)[0][0])
+            interval = range(int(np.searchsorted(self.time, (max_time - self.area_around_echo_size))), np.searchsorted(self.time, max_time))
 
         else:
-            interval = range(int(np.where(self.time == (self.echo_time - self.area_around_echo_size/2))[0][0]), int(np.where(self.time == (self.echo_time + self.area_around_echo_size/2))[0][0]))
+            interval = range(int(np.searchsorted(self.time, self.echo_time - (self.area_around_echo_size/2))), int(np.searchsorted(self.time, self.echo_time + (self.area_around_echo_size/2))))
 
         self.interval_near_echo = interval
         self.time   = self.time[interval]
@@ -102,22 +102,22 @@ class HeartbeatIntervalFinder(object):
         else:
             max_time = max(self.time)
             min_time = min(self.time)
-
-            if (max_time - min_time) < 16:
+            inital_interval_size = 20
+            if (max_time - min_time) < inital_interval_size:
                 self.lower_bound = min_time
                 self.upper_bound = max_time
 
-            elif (self.echo_time - (16/2)) < min_time:
+            elif (self.echo_time - (inital_interval_size/2)) < min_time:
                 self.lower_bound = min_time
-                self.upper_bound = min_time + 16
+                self.upper_bound = min_time + inital_interval_size
 
-            elif (self.echo_time + (16/2)) > max_time:
-                self.lower_bound = max_time - 16
+            elif (self.echo_time + (inital_interval_size/2)) > max_time:
+                self.lower_bound = max_time - inital_interval_size
                 self.upper_bound = max_time
                 
             else:
-                self.lower_bound = self.echo_time - (16/2)
-                self.upper_bound = self.echo_time + (16/2)
+                self.lower_bound = self.echo_time - (inital_interval_size/2)
+                self.upper_bound = self.echo_time + (inital_interval_size/2)
 
     def plot_signals(self):
         # Create figure
@@ -457,6 +457,8 @@ class HeartbeatIntervalFinder(object):
         self.preloaded_signal = True
         
     def load_signals(self):
+        # Load Echo Time
+        self.echo_time = self.files[self.folder_name][self.dosage][self.file_number]["echo_time"]
 
         if self.preloaded_signal:
             
@@ -475,13 +477,11 @@ class HeartbeatIntervalFinder(object):
             # Clip Signals
             self.clip_signals()
 
-
-        self.echo_time = self.files[self.folder_name][self.dosage][self.file_number]["echo_time"]
-
+        
     def update_plot(self):
         # Display Loading Screen
-        self.dosage_text.set_text("Loading...")
-        print("Loading...")
+        self.dosage_text.set_text("Loading: " + str(self.dosage) )
+        print("Loading: "  + str(self.dosage) )
         self.fig.canvas.draw()
 
         # Update index
@@ -500,7 +500,7 @@ class HeartbeatIntervalFinder(object):
 
         # Update lines
         self.switch_signal(self.b_switch_signals.get_status())
-        print("\t...done")
+        print("done")
 
 
     
