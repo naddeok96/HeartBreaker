@@ -7,9 +7,9 @@ import heartbreaker as hb
 from composite_peaks import CompositePeaks
 from matplotlib.widgets import Button, RadioButtons, Slider, CheckButtons
 
-class HeartbeatVerifier(object):
+class InoHeartbeatVerifier(object):
     """
-    Cursor for editing heartbeat signals for use of verification
+    GUI for editing heartbeat signal labels for INO case
     """
 
     def __init__(self, composite_peaks, 
@@ -19,7 +19,7 @@ class HeartbeatVerifier(object):
                        file_name = "",
                        interval_number = ""):
 
-        super(HeartbeatVerifier, self).__init__()
+        super(InoHeartbeatVerifier, self).__init__()
         # Save Composite Peaks
         self.composite_peaks = composite_peaks
         self.index = index
@@ -39,15 +39,9 @@ class HeartbeatVerifier(object):
         
         # Load composite signals
         self.time, self.signal, self.seis, self.phono = self.composite_peaks.composites[self.index]
-        _, self.second = hb.get_derivatives(self.signal)
 
         # Plot ECG, Phono and Seismo
         self.signal_line, = self.ax.plot(self.signal, linewidth = 1, c = "b", label = "ECG")
-
-        self.second_line, = self.ax.plot(range(self.composite_peaks.ST_start.data[self.index], int(np.median([self.composite_peaks.T.data[self.index], len(self.signal)]))), 
-                                        2 + 15*self.second[range(self.composite_peaks.ST_start.data[self.index], int(np.median([self.composite_peaks.T.data[self.index], len(self.signal)])))],
-                                        '--', linewidth = 0.5, c = 'k', label = "ECG 2nd Derv.")
-
         self.seis_line,   = self.ax.plot(self.seis , '--', linewidth = 0.5, c = 'r', label = "Seis")
         self.phono_line,  = self.ax.plot(self.phono, '--', linewidth = 0.5, c = 'g', label = "Phono")
         
@@ -70,18 +64,6 @@ class HeartbeatVerifier(object):
         # QM Phono
         self.qm_phono_point = self.ax.scatter(self.composite_peaks.QM_phono.data[self.index], self.phono[self.composite_peaks.QM_phono.data[self.index]], c = '#8c564b')
         self.qm_phono_text  = self.ax.text(self.composite_peaks.QM_phono.data[self.index], self.phono[self.composite_peaks.QM_phono.data[self.index]] + 0.2, "QM Phono", fontsize=9, horizontalalignment = 'center')
-
-        # T''max Peak
-        self.ddT_max_point = self.ax.scatter(self.composite_peaks.ddT_max.data[self.index], self.signal[self.composite_peaks.ddT_max.data[self.index]], c = '#2ca02c')
-        self.ddT_max_text  = self.ax.text(self.composite_peaks.ddT_max.data[self.index], self.signal[self.composite_peaks.ddT_max.data[self.index]] + 0.2, "T''max", fontsize=9, horizontalalignment = 'center')
-
-        # TM Seismo
-        self.tm_seis_point = self.ax.scatter(self.composite_peaks.TM_seis.data[self.index], self.seis[self.composite_peaks.TM_seis.data[self.index]], c = '#9467bd')
-        self.tm_seis_text  = self.ax.text(self.composite_peaks.TM_seis.data[self.index], self.seis[self.composite_peaks.TM_seis.data[self.index]] + 0.2, "TM Seis", fontsize=9, horizontalalignment = 'center')
-
-        # TM Phono
-        self.tm_phono_point = self.ax.scatter(self.composite_peaks.TM_phono.data[self.index], self.phono[self.composite_peaks.TM_phono.data[self.index]], c = '#e377c2')
-        self.tm_phono_text  = self.ax.text(self.composite_peaks.TM_phono.data[self.index], self.phono[self.composite_peaks.TM_phono.data[self.index]] + 0.2, "TM Phono", fontsize=9, horizontalalignment = 'center')
 
         # Initalize axes and data points
         self.x = range(len(self.signal))
@@ -113,10 +95,6 @@ class HeartbeatVerifier(object):
         qm_phono = str(round(1/(self.time[self.composite_peaks.QM_phono.data[self.index]] - self.time[self.composite_peaks.Q.data[self.index]]), 2))
         self.qm_text = self.ax.text(start_left, 0.91, horizontalalignment = 'center', transform = self.fig.transFigure,
                                     s = "1/(E-M)ino\nSeis: " + qm_seis + " Hz" + "\nPhono: " + qm_phono + " Hz")
-        tm_seis  = str(round(1/(self.time[self.composite_peaks.TM_seis.data[self.index]]  - self.time[self.composite_peaks.ddT_max.data[self.index]]), 2))
-        tm_phono = str(round(1/(self.time[self.composite_peaks.TM_phono.data[self.index]] - self.time[self.composite_peaks.ddT_max.data[self.index]]), 2))
-        self.tm_text = self.ax.text(start_left + shift_left, 0.91, horizontalalignment = 'center', transform = self.fig.transFigure,
-                                    s = "1/(E-M)lusi\nSeis: " + tm_seis + " Hz" + "\nPhono: " + tm_phono + " Hz")
 
         # Add index buttons
         ax_prev = plt.axes([0.575 - left_shift, 0.9, 0.1, 0.075])
@@ -227,26 +205,11 @@ class HeartbeatVerifier(object):
         self.qm_phono_point.set_offsets((self.composite_peaks.QM_phono.data[self.index], self.phono_amp_slider.val * self.phono[self.composite_peaks.QM_phono.data[self.index]] + self.phono_height_slider.val))
         self.qm_phono_text.set_position((self.composite_peaks.QM_phono.data[self.index], self.phono_amp_slider.val * self.phono[self.composite_peaks.QM_phono.data[self.index]] + 0.2+ self.phono_height_slider.val))
         
-        # T''max Peak
-        self.ddT_max_point.set_offsets((self.composite_peaks.ddT_max.data[self.index], self.signal_amp_slider.val * self.signal[self.composite_peaks.ddT_max.data[self.index]]))
-        self.ddT_max_text.set_position((self.composite_peaks.ddT_max.data[self.index], self.signal_amp_slider.val * self.signal[self.composite_peaks.ddT_max.data[self.index]] + 0.2))
-
-        # TM Seismo
-        self.tm_seis_point.set_offsets((self.composite_peaks.TM_seis.data[self.index], self.seis_amp_slider.val * self.seis[self.composite_peaks.TM_seis.data[self.index]] + self.seis_height_slider.val))
-        self.tm_seis_text.set_position((self.composite_peaks.TM_seis.data[self.index], self.seis_amp_slider.val * self.seis[self.composite_peaks.TM_seis.data[self.index]] + 0.2 + self.seis_height_slider.val))
-        
-        # TM Phono
-        self.tm_phono_point.set_offsets((self.composite_peaks.TM_phono.data[self.index], self.phono_amp_slider.val * self.phono[self.composite_peaks.TM_phono.data[self.index]] + self.phono_height_slider.val))
-        self.tm_phono_text.set_position((self.composite_peaks.TM_phono.data[self.index], self.phono_amp_slider.val * self.phono[self.composite_peaks.TM_phono.data[self.index]] + 0.2 + self.phono_height_slider.val))
-
         # Update Data
         qm_seis  = str(round(1/(self.time[self.composite_peaks.QM_seis.data[self.index]]  - self.time[self.composite_peaks.Q.data[self.index]]), 2))
         qm_phono = str(round(1/(self.time[self.composite_peaks.QM_phono.data[self.index]] - self.time[self.composite_peaks.Q.data[self.index]]), 2))
         self.qm_text.set_text("1/(E-M)ino\nSeis: " + qm_seis + " Hz" + "\nPhono: " + qm_phono + " Hz")
-        tm_seis  = str(round(1/(self.time[self.composite_peaks.TM_seis.data[self.index]]  - self.time[self.composite_peaks.ddT_max.data[self.index]]), 2))
-        tm_phono = str(round(1/(self.time[self.composite_peaks.TM_phono.data[self.index]] - self.time[self.composite_peaks.ddT_max.data[self.index]]), 2))
-        self.tm_text.set_text("1/(E-M)lusi\nSeis: " + tm_seis + " Hz" + "\nPhono: " + tm_phono + " Hz")
-
+        
         # Update Cross-hairs
         label = self.b_switch_signals.value_selected
         self.x = range(len(self.signal))
@@ -267,7 +230,6 @@ class HeartbeatVerifier(object):
         else: 
             self.signal_line.set_linewidth(0.5)
             
-
         if hide_label[1]: # Seismo
             self.seis_line.set_linewidth(0)
 
@@ -279,7 +241,6 @@ class HeartbeatVerifier(object):
 
         else:
             self.phono_line.set_linewidth(0.5)
-
 
         self.fig.canvas.draw()
 
@@ -297,23 +258,11 @@ class HeartbeatVerifier(object):
 
                 self.composite_peaks.Q.data[self.index] = int(event.xdata)
 
-            if self.update_point == "ddT_max":
-                self.ddT_max_point.set_offsets((int(event.xdata), self.signal_amp_slider.val * self.signal[int(event.xdata)]))
-                self.ddT_max_text.set_position((int(event.xdata), self.signal_amp_slider.val * self.signal[int(event.xdata)] + 0.2))
-
-                self.composite_peaks.ddT_max.data[self.index] = int(event.xdata)
-
             if self.update_point == "QM Seismo":
                 self.qm_seis_point.set_offsets((int(event.xdata), self.seis_amp_slider.val * self.seis[int(event.xdata)] + self.seis_height_slider.val))
                 self.qm_seis_text.set_position((int(event.xdata), self.seis_amp_slider.val * self.seis[int(event.xdata)] + 0.2 + self.seis_height_slider.val))
 
                 self.composite_peaks.QM_seis.data[self.index] = int(event.xdata)
-
-            if self.update_point == "TM Seismo":
-                self.tm_seis_point.set_offsets((int(event.xdata), self.seis_amp_slider.val * self.seis[int(event.xdata)] + self.seis_height_slider.val))
-                self.tm_seis_text.set_position((int(event.xdata), self.seis_amp_slider.val * self.seis[int(event.xdata)] + 0.2 + self.seis_height_slider.val))
-
-                self.composite_peaks.TM_seis.data[self.index] = int(event.xdata)
 
             if self.update_point == "QM Phono":
                 self.qm_phono_point.set_offsets((int(event.xdata), self.phono_amp_slider.val * self.phono[int(event.xdata)] + self.phono_height_slider.val))
@@ -321,20 +270,11 @@ class HeartbeatVerifier(object):
 
                 self.composite_peaks.QM_phono.data[self.index] = int(event.xdata)
 
-            if self.update_point == "TM Phono":
-                self.tm_phono_point.set_offsets((int(event.xdata), self.phono_amp_slider.val * self.phono[int(event.xdata)] + self.phono_height_slider.val))
-                self.tm_phono_text.set_position((int(event.xdata), self.phono_amp_slider.val * self.phono[int(event.xdata)] + 0.2 + self.phono_height_slider.val))
-
-                self.composite_peaks.TM_phono.data[self.index] = int(event.xdata)
-
             # Update Data
             qm_seis  = str(round(1/(self.time[self.composite_peaks.QM_seis.data[self.index]]  - self.time[self.composite_peaks.Q.data[self.index]]), 2))
             qm_phono = str(round(1/(self.time[self.composite_peaks.QM_phono.data[self.index]] - self.time[self.composite_peaks.Q.data[self.index]]), 2))
             self.qm_text.set_text("1/(E-M)ino\nSeis: " + qm_seis + "\nPhono: " + qm_phono)
-            tm_seis  = str(round(1/(self.time[self.composite_peaks.TM_seis.data[self.index]]  - self.time[self.composite_peaks.ddT_max.data[self.index]]), 2))
-            tm_phono = str(round(1/(self.time[self.composite_peaks.TM_phono.data[self.index]] - self.time[self.composite_peaks.ddT_max.data[self.index]]), 2))
-            self.tm_text.set_text("1/(E-M)lusi\nSeis: " + tm_seis + "\nPhono: " + tm_phono)
-                
+               
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
 
@@ -355,17 +295,6 @@ class HeartbeatVerifier(object):
                     self.fig.canvas.draw()
                     
                     self.update_point = "Q"
-                    
-                if abs(self.composite_peaks.ddT_max.data[self.index] - event.xdata) < threshold:
-                    self.lx.set_color('#2ca02c')
-                    self.ly.set_color('#2ca02c')
-
-                    self.lx.set_linewidth(1)
-                    self.ly.set_linewidth(1)
-
-                    self.fig.canvas.draw()
-                    
-                    self.update_point = "ddT_max"
 
             if current_signal == 'Seismo':
                 if abs(self.composite_peaks.QM_seis.data[self.index] - event.xdata) < threshold:
@@ -378,17 +307,6 @@ class HeartbeatVerifier(object):
                     self.fig.canvas.draw()
                     
                     self.update_point = "QM Seismo"
-
-                if abs(self.composite_peaks.TM_seis.data[self.index] - event.xdata) < threshold:
-                    self.lx.set_color('#9467bd')
-                    self.ly.set_color('#9467bd')
-
-                    self.lx.set_linewidth(1)
-                    self.ly.set_linewidth(1)
-                    
-                    self.fig.canvas.draw()
-                    
-                    self.update_point = "TM Seismo"
             
             if current_signal == 'Phono':
                 if abs(self.composite_peaks.QM_phono.data[self.index] - event.xdata) < threshold:
@@ -401,17 +319,6 @@ class HeartbeatVerifier(object):
                     self.fig.canvas.draw()
                     
                     self.update_point = "QM Phono"
-
-                if abs(self.composite_peaks.TM_phono.data[self.index] - event.xdata) < threshold:
-                    self.lx.set_color('#e377c2')
-                    self.ly.set_color('#e377c2')
-
-                    self.lx.set_linewidth(1)
-                    self.ly.set_linewidth(1)
-                    
-                    self.fig.canvas.draw()
-                    
-                    self.update_point = "TM Phono"
 
     def mouse_move(self, event):
         # If nothing happened do nothing
@@ -459,15 +366,12 @@ class HeartbeatVerifier(object):
 
         # Load composite signals
         self.time, self.signal, self.seis, self.phono = self.composite_peaks.composites[self.index]
-        _, self.second = hb.get_derivatives(self.signal)
 
         # Update cross hairs
         self.switch_signal(None)
 
         # Plot ECG, Phono and Seismo
         self.signal_line.set_data(range(len(self.signal)), self.signal)
-        self.second_line.set_data(range(self.composite_peaks.ST_start.data[self.index], int(np.median([self.composite_peaks.T.data[self.index], len(self.signal)]))),
-                                  2 + 15*self.second[range(self.composite_peaks.ST_start.data[self.index], int(np.median([self.composite_peaks.T.data[self.index], len(self.signal)])))])
         self.seis_line.set_data(range(len(self.seis)), self.seis)
         self.phono_line.set_data(range(len(self.phono)), self.phono)
         self.ax.set_xlim(0, len(self.signal))
@@ -484,17 +388,5 @@ class HeartbeatVerifier(object):
         self.qm_phono_point.set_offsets((self.composite_peaks.QM_phono.data[self.index], self.phono[self.composite_peaks.QM_phono.data[self.index]]))
         self.qm_phono_text.set_position((self.composite_peaks.QM_phono.data[self.index], self.phono[self.composite_peaks.QM_phono.data[self.index]] + 0.2))
         
-        # T''max Peak
-        self.ddT_max_point.set_offsets((self.composite_peaks.ddT_max.data[self.index], self.signal[self.composite_peaks.ddT_max.data[self.index]]))
-        self.ddT_max_text.set_position((self.composite_peaks.ddT_max.data[self.index], self.signal[self.composite_peaks.ddT_max.data[self.index]] + 0.2))
-
-        # TM Seismo
-        self.tm_seis_point.set_offsets((self.composite_peaks.TM_seis.data[self.index], self.seis[self.composite_peaks.TM_seis.data[self.index]]))
-        self.tm_seis_text.set_position((self.composite_peaks.TM_seis.data[self.index], self.seis[self.composite_peaks.TM_seis.data[self.index]] + 0.2))
-        
-        # TM Phono
-        self.tm_phono_point.set_offsets((self.composite_peaks.TM_phono.data[self.index], self.phono[self.composite_peaks.TM_phono.data[self.index]]))
-        self.tm_phono_text.set_position((self.composite_peaks.TM_phono.data[self.index], self.phono[self.composite_peaks.TM_phono.data[self.index]] + 0.2))
-    
         self.fig.canvas.draw()
 

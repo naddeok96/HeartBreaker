@@ -394,10 +394,13 @@ def get_peaks_for_composites(time,
     randomlist = random.sample(range(len(peaks.R.data)), random_sample_size)
      # Use R peak to find other peaks
     for i in range(len(peaks.R.data)):
-        peaks.add_Q_peak(       i, q_window_ratio, signal)
-        peaks.add_P_peak(       i, p_window_ratio, signal)
-        peaks.add_S_peak(       i, s_window_ratio, signal)
-        peaks.add_T_peak(       i, t_window_ratio, signal)
+        peaks.add_Q_peak(    i, q_window_ratio, signal)
+        peaks.add_P_peak(    i, p_window_ratio, signal)
+        peaks.add_S_peak(    i, s_window_ratio, signal)
+        peaks.add_T_peak(    i, t_window_ratio, signal)
+
+        peaks.add_ST_segment(i, second, smoothed_first, signal)
+        peaks.add_ddT_peak(  i, smoothed_second)
 
     if plot:
         peaks.plot(time, signal, seis1, seis2, phono1, phono2)

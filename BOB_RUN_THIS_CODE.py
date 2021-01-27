@@ -14,11 +14,13 @@ preloaded_signal     = True
 use_intervals        = True
 
 save_composites      = True
-preloaded_composites = False
+preloaded_composites = True
 
-display_intervals  = False
-display_composites = False
-verify_labels      = True
+display_intervals       = False
+display_INO_composites  = False
+display_LUSI_composites = False
+verify_INO_labels       = False
+verify_LUSI_labels      = True
 #------------------------------------------------------------------------------------#
 # END of Setting
 
@@ -34,8 +36,12 @@ import numpy as np
 import heartbreaker as hb
 import matplotlib.pyplot as plt
 from composite_peaks import CompositePeaks
+from ino_composite_peaks import InoCompositePeaks
+from lusi_composite_peaks import LusiCompositePeaks
 from files_w_doseage_and_ints import files
 from verification_gui import HeartbeatVerifier
+from ino_verification_gui  import InoHeartbeatVerifier
+from lusi_verification_gui import LusiHeartbeatVerifier
 from composite_statistics import CompositeStats
 from interval_finder_gui import HeartbeatIntervalFinder
 
@@ -70,11 +76,15 @@ for dosage in files[folder_name]:
 
     # Pick file
     file_name = files[folder_name][dosage][1]["file_name"]
-    composite_save_file_name = "composites_" + folder_name + "_" + file_name + "_d" + str(dosage) 
+    ino_composite_save_file_name  = "ino_composites_"  + folder_name + "_" + file_name + "_d" + str(dosage) 
+    lusi_composite_save_file_name = "lusi_composites_" + folder_name + "_" + file_name + "_d" + str(dosage) 
 
     if preloaded_composites:
-        composite_peaks = CompositePeaks()
-        composite_peaks.load("data/Derived/composites/"  + composite_save_file_name)                                                                            
+        ino_composite_peaks = InoCompositePeaks()
+        ino_composite_peaks.load("data/Derived/composites/ino/"  + ino_composite_save_file_name)
+
+        lusi_composite_peaks = LusiCompositePeaks()
+        lusi_composite_peaks.load("data/Derived/composites/lusi/"  + lusi_composite_save_file_name)                                                                          
 
     else:
         # Load Data
@@ -121,30 +131,47 @@ for dosage in files[folder_name]:
         peaks.get_inital_statistics()
 
         # Build Composites
-        composite_peaks = CompositePeaks(peaks)
-        composite_peaks.get_N_composite_signal_dataset(composite_size, step_size, display = display_composites, dosage = dosage)
-        composite_peaks.update_composite_peaks(dosage = dosage)
-        composite_peaks.get_inital_statistics()
+        ino_composite_peaks = InoCompositePeaks(peaks)
+        ino_composite_peaks.get_N_composite_signal_dataset(composite_size, step_size, display = display_INO_composites, dosage = dosage)
+        ino_composite_peaks.update_composite_peaks(dosage = dosage)
+        ino_composite_peaks.get_inital_statistics()
+
+        lusi_composite_peaks = LusiCompositePeaks(peaks)
+        lusi_composite_peaks.get_N_composite_signal_dataset(composite_size, step_size, display = display_LUSI_composites, dosage = dosage)
+        lusi_composite_peaks.update_composite_peaks(dosage = dosage)
+        lusi_composite_peaks.get_inital_statistics()
 
     if save_composites:
         # Get File Name
-        save_file_name = "composites_" + folder_name + "_" + file_name + "_d" + str(dosage) 
+        ino_save_file_name = "ino_composites_" + folder_name + "_" + file_name + "_d" + str(dosage) 
+        lusi_save_file_name = "lusi_composites_" + folder_name + "_" + file_name + "_d" + str(dosage) 
 
         # Save
-        composite_peaks.save("data/Derived/composites/" + save_file_name)
+        ino_composite_peaks.save("data/Derived/composites/ino/"   + ino_save_file_name)
+        lusi_composite_peaks.save("data/Derived/composites/lusi/" + lusi_save_file_name)
 
     # Verify Composites
-    if verify_labels:
-        verifier = HeartbeatVerifier(composite_peaks, 
-                                    folder_name = folder_name,
-                                    dosage      = dosage,
-                                    file_name   = file_name,
-                                    interval_number = 1)
+    if verify_INO_labels:
+        InoHeartbeatVerifier(ino_composite_peaks, 
+                            folder_name = folder_name,
+                            dosage      = dosage,
+                            file_name   = file_name,
+                            interval_number = 1)
 
-        composite_peaks.load("data/Derived/composites/"  + composite_save_file_name)
+        ino_composite_peaks.load("data/Derived/composites/ino/"  + ino_composite_save_file_name)
+    
+    if verify_LUSI_labels:
+        LusiHeartbeatVerifier(lusi_composite_peaks, 
+                            folder_name = folder_name,
+                            dosage      = dosage,
+                            file_name   = file_name,
+                            interval_number = 1)
+
+        lusi_composite_peaks.load("data/Derived/composites/lusi/"  + lusi_composite_save_file_name)
 
     # Add data to stats
-    composite_statistics[dosage].add_data(composite_peaks)
+    composite_statistics[dosage].add_ino_data(ino_composite_peaks)
+    composite_statistics[dosage].add_lusi_data(lusi_composite_peaks)
 
     
 

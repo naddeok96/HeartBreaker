@@ -78,3 +78,24 @@ class CompositeStats():
         self.TM_interval_seis  = self.TM_seis.mean - self.ddT_max.mean
         self.TM_interval_phono = self.TM_phono.mean - self.ddT_max.mean
 
+    def add_ino_data(self, composite_peaks):
+        # Update data
+        self.Q.mean, self.Q.std, self.Q.sample_size = self._add_statistics(self.Q, composite_peaks.Q)
+        
+        self.QM_seis.mean , self.QM_seis.std, self.QM_seis.sample_size = self._add_statistics(self.QM_seis, composite_peaks.QM_seis)
+        self.QM_phono.mean, self.QM_phono.std, self.QM_phono.sample_size = self._add_statistics(self.QM_phono, composite_peaks.QM_phono)
+        
+        # Update intervals
+        self.QM_interval_seis  = self.QM_seis.mean - self.Q.mean
+        self.QM_interval_phono = self.QM_phono.mean - self.Q.mean
+        
+    def add_lusi_data(self, composite_peaks):
+        # Update data
+        self.ddT_max.mean, self.ddT_max.std, self.ddT_max.sample_size = self._add_statistics(self.ddT_max, composite_peaks.ddT_max)
+
+        self.TM_seis.mean , self.TM_seis.std, self.TM_seis.sample_size = self._add_statistics(self.TM_seis, composite_peaks.TM_seis)
+        self.TM_phono.mean, self.TM_phono.std, self.TM_phono.sample_size = self._add_statistics(self.TM_phono, composite_peaks.TM_phono)
+        
+        # Update intervals
+        self.TM_interval_seis  = self.TM_seis.mean - self.ddT_max.mean
+        self.TM_interval_phono = self.TM_phono.mean - self.ddT_max.mean
