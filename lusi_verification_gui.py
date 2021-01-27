@@ -141,7 +141,7 @@ class LusiHeartbeatVerifier(object):
         self.b_hide_signals.on_clicked(self.switch_signal)
 
         # Add Sliders
-        self.signal_amp_slider = Slider(plt.axes([0.91, 0.15, 0.01, 0.475]),
+        self.signal_amp_slider = Slider(plt.axes([0.91, 0.15, 0.005, 0.475]),
                                         label = "ECG\nA",
                                         valmin = 0.01,
                                         valmax = 10, 
