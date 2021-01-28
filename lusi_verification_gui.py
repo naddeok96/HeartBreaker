@@ -44,8 +44,7 @@ class LusiHeartbeatVerifier(object):
         # Plot ECG, Phono and Seismo
         self.signal_line, = self.ax.plot(self.signal, linewidth = 1, c = "b", label = "ECG")
 
-        self.second_line, = self.ax.plot(range(self.composite_peaks.ST_start.data[self.index], int(np.median([self.composite_peaks.T.data[self.index], len(self.signal)]))), 
-                                        2 + 15*self.second[range(self.composite_peaks.ST_start.data[self.index], int(np.median([self.composite_peaks.T.data[self.index], len(self.signal)])))],
+        self.second_line, = self.ax.plot(range(len(self.signal)), 1 + 5*self.second,
                                         '--', linewidth = 0.5, c = 'k', label = "ECG 2nd Derv.")
 
         self.seis_line,   = self.ax.plot(self.seis , '--', linewidth = 0.5, c = 'r', label = "Seis")
@@ -60,8 +59,8 @@ class LusiHeartbeatVerifier(object):
         plt.legend(loc='upper right')
 
         # T''max Peak
-        self.ddT_max_point = self.ax.scatter(self.composite_peaks.ddT_max.data[self.index], self.signal[self.composite_peaks.ddT_max.data[self.index]], c = '#2ca02c')
-        self.ddT_max_text  = self.ax.text(self.composite_peaks.ddT_max.data[self.index], self.signal[self.composite_peaks.ddT_max.data[self.index]] + 0.2, "T''max", fontsize=9, horizontalalignment = 'center')
+        self.ddT_point = self.ax.scatter(self.composite_peaks.ddT.data[self.index], self.signal[self.composite_peaks.ddT.data[self.index]], c = '#2ca02c')
+        self.ddT_text  = self.ax.text(self.composite_peaks.ddT.data[self.index], self.signal[self.composite_peaks.ddT.data[self.index]] + 0.2, "T''max", fontsize=9, horizontalalignment = 'center')
 
         # TM Seismo
         self.tm_seis_point = self.ax.scatter(self.composite_peaks.TM_seis.data[self.index], self.seis[self.composite_peaks.TM_seis.data[self.index]], c = '#9467bd')
@@ -97,8 +96,8 @@ class LusiHeartbeatVerifier(object):
         # Add Intervals
         start_left = 0.575
         shift_left = 0.10
-        tm_seis  = str(round(1/(self.time[self.composite_peaks.TM_seis.data[self.index]]  - self.time[self.composite_peaks.ddT_max.data[self.index]]), 2))
-        tm_phono = str(round(1/(self.time[self.composite_peaks.TM_phono.data[self.index]] - self.time[self.composite_peaks.ddT_max.data[self.index]]), 2))
+        tm_seis  = str(round(1/(self.time[self.composite_peaks.TM_seis.data[self.index]]  - self.time[self.composite_peaks.ddT.data[self.index]]), 2))
+        tm_phono = str(round(1/(self.time[self.composite_peaks.TM_phono.data[self.index]] - self.time[self.composite_peaks.ddT.data[self.index]]), 2))
         self.tm_text = self.ax.text(start_left + shift_left, 0.91, horizontalalignment = 'center', transform = self.fig.transFigure,
                                     s = "1/(E-M)lusi\nSeis: " + tm_seis + " Hz" + "\nPhono: " + tm_phono + " Hz")
 
@@ -141,48 +140,77 @@ class LusiHeartbeatVerifier(object):
         self.b_hide_signals.on_clicked(self.switch_signal)
 
         # Add Sliders
-        self.signal_amp_slider = Slider(plt.axes([0.91, 0.15, 0.005, 0.475]),
-                                        label = "ECG\nA",
+        start = 0.91
+        slider_width = 0.0075
+        slider_height = 0.47
+
+        self.signal_amp_slider = Slider(plt.axes([start, 0.15, slider_width, slider_height]),
+                                        label = "ECG\n\nA",
                                         valmin = 0.01,
                                         valmax = 10, 
                                         valinit = 1,
                                         orientation = 'vertical')
+        self.signal_amp_slider.label.set_size(8)
         self.signal_amp_slider.on_changed(self.switch_signal)
         self.signal_amp_slider.valtext.set_visible(False)
 
-        self.seis_height_slider = Slider(plt.axes([0.93, 0.15, 0.01, 0.475]),
-                                        label = "   Seis\nH",
-                                        valmin = 1.5 * min(self.signal),
-                                        valmax = 1.5 * max(self.signal), 
-                                        valinit = 0,
-                                        orientation = 'vertical')
-        self.seis_height_slider.on_changed(self.switch_signal)
-        self.seis_height_slider.valtext.set_visible(False)
+        self.second_height_slider = Slider(plt.axes([start + 2*slider_width, 0.15, slider_width, slider_height]),
+                                                    label = "   2nd\n    Derv.\nH",
+                                                    valmin = 1.5 * min(self.signal),
+                                                    valmax = 1.5 * max(self.signal), 
+                                                    valinit = 0,
+                                                    orientation = 'vertical')
+        self.second_height_slider.label.set_size(8)
+        self.second_height_slider.on_changed(self.switch_signal)
+        self.second_height_slider.valtext.set_visible(False)
 
-        self.seis_amp_slider = Slider(plt.axes([0.94, 0.15, 0.01, 0.475]),
+        self.second_amp_slider = Slider(plt.axes([start + 3*slider_width, 0.15, slider_width, slider_height]),
                                         label = "\nA",
                                         valmin = 0.01,
                                         valmax = 10, 
                                         valinit = 1,
                                         orientation = 'vertical')
-        self.seis_amp_slider.on_changed(self.switch_signal)
-        self.seis_amp_slider.valtext.set_visible(False)
+        self.second_amp_slider.label.set_size(8)
+        self.second_amp_slider.on_changed(self.switch_signal)
+        self.second_amp_slider.valtext.set_visible(False)
 
-        self.phono_height_slider = Slider(plt.axes([0.96, 0.15, 0.01, 0.475]),
-                                        label = "    Phono\nH",
+        self.seis_height_slider = Slider(plt.axes([start + 5*slider_width, 0.15, slider_width, slider_height]),
+                                        label = "   Seis\n\nH",
                                         valmin = 1.5 * min(self.signal),
                                         valmax = 1.5 * max(self.signal), 
                                         valinit = 0,
                                         orientation = 'vertical')
+        self.seis_height_slider.label.set_size(8)
+        self.seis_height_slider.on_changed(self.switch_signal)
+        self.seis_height_slider.valtext.set_visible(False)
+
+        self.seis_amp_slider = Slider(plt.axes([start + 6*slider_width, 0.15, slider_width, slider_height]),
+                                        label = "\n\nA",
+                                        valmin = 0.01,
+                                        valmax = 10, 
+                                        valinit = 1,
+                                        orientation = 'vertical')
+        self.seis_amp_slider.label.set_size(8)
+        self.seis_amp_slider.on_changed(self.switch_signal)
+        self.seis_amp_slider.valtext.set_visible(False)
+
+        self.phono_height_slider = Slider(plt.axes([start + 8*slider_width, 0.15, slider_width, slider_height]),
+                                        label = "\n    Phono\nH",
+                                        valmin = 1.5 * min(self.signal),
+                                        valmax = 1.5 * max(self.signal), 
+                                        valinit = 0,
+                                        orientation = 'vertical')
+        self.phono_height_slider.label.set_size(8)
         self.phono_height_slider.on_changed(self.switch_signal)
         self.phono_height_slider.valtext.set_visible(False)
 
-        self.phono_amp_slider = Slider(plt.axes([0.97, 0.15, 0.01, 0.475]),
+        self.phono_amp_slider = Slider(plt.axes([start + 9*slider_width, 0.15, slider_width, slider_height]),
                                         label = "A",
                                         valmin = .01,
                                         valmax = 10, 
                                         valinit = 1,
                                         orientation = 'vertical')
+        self.phono_amp_slider.label.set_size(8)
         self.phono_amp_slider.on_changed(self.switch_signal)
         self.phono_amp_slider.valtext.set_visible(False)
 
@@ -196,12 +224,13 @@ class LusiHeartbeatVerifier(object):
 
         # Update Lines
         self.signal_line.set_data(range(len(self.signal)), self.signal_amp_slider.val * self.signal)
+        self.second_line.set_data(range(len(self.signal)), (self.second_amp_slider.val * 5* self.second) + self.second_height_slider.val + 1)
         self.seis_line.set_data(range(len(self.signal)),  (self.seis_amp_slider.val * self.seis) + self.seis_height_slider.val)
         self.phono_line.set_data(range(len(self.signal)), (self.phono_amp_slider.val * self.phono) + self.phono_height_slider.val)
-   
+
         # T''max Peak
-        self.ddT_max_point.set_offsets((self.composite_peaks.ddT_max.data[self.index], self.signal_amp_slider.val * self.signal[self.composite_peaks.ddT_max.data[self.index]]))
-        self.ddT_max_text.set_position((self.composite_peaks.ddT_max.data[self.index], self.signal_amp_slider.val * self.signal[self.composite_peaks.ddT_max.data[self.index]] + 0.2))
+        self.ddT_point.set_offsets((self.composite_peaks.ddT.data[self.index], self.signal_amp_slider.val * self.signal[self.composite_peaks.ddT.data[self.index]]))
+        self.ddT_text.set_position((self.composite_peaks.ddT.data[self.index], self.signal_amp_slider.val * self.signal[self.composite_peaks.ddT.data[self.index]] + 0.2))
 
         # TM Seismo
         self.tm_seis_point.set_offsets((self.composite_peaks.TM_seis.data[self.index], self.seis_amp_slider.val * self.seis[self.composite_peaks.TM_seis.data[self.index]] + self.seis_height_slider.val))
@@ -212,8 +241,8 @@ class LusiHeartbeatVerifier(object):
         self.tm_phono_text.set_position((self.composite_peaks.TM_phono.data[self.index], self.phono_amp_slider.val * self.phono[self.composite_peaks.TM_phono.data[self.index]] + 0.2 + self.phono_height_slider.val))
 
         # Update Data
-        tm_seis  = str(round(1/(self.time[self.composite_peaks.TM_seis.data[self.index]]  - self.time[self.composite_peaks.ddT_max.data[self.index]]), 2))
-        tm_phono = str(round(1/(self.time[self.composite_peaks.TM_phono.data[self.index]] - self.time[self.composite_peaks.ddT_max.data[self.index]]), 2))
+        tm_seis  = str(round(1/(self.time[self.composite_peaks.TM_seis.data[self.index]]  - self.time[self.composite_peaks.ddT.data[self.index]]), 2))
+        tm_phono = str(round(1/(self.time[self.composite_peaks.TM_phono.data[self.index]] - self.time[self.composite_peaks.ddT.data[self.index]]), 2))
         self.tm_text.set_text("1/(E-M)lusi\nSeis: " + tm_seis + " Hz" + "\nPhono: " + tm_phono + " Hz")
 
         # Update Cross-hairs
@@ -260,11 +289,11 @@ class LusiHeartbeatVerifier(object):
         self.ly.set_linewidth(0.2)
 
         if event.xdata is not None:
-            if self.update_point == "ddT_max":
-                self.ddT_max_point.set_offsets((int(event.xdata), self.signal_amp_slider.val * self.signal[int(event.xdata)]))
-                self.ddT_max_text.set_position((int(event.xdata), self.signal_amp_slider.val * self.signal[int(event.xdata)] + 0.2))
+            if self.update_point == "ddT":
+                self.ddT_point.set_offsets((int(event.xdata), self.signal_amp_slider.val * self.signal[int(event.xdata)]))
+                self.ddT_text.set_position((int(event.xdata), self.signal_amp_slider.val * self.signal[int(event.xdata)] + 0.2))
 
-                self.composite_peaks.ddT_max.data[self.index] = int(event.xdata)
+                self.composite_peaks.ddT.data[self.index] = int(event.xdata)
 
             if self.update_point == "TM Seismo":
                 self.tm_seis_point.set_offsets((int(event.xdata), self.seis_amp_slider.val * self.seis[int(event.xdata)] + self.seis_height_slider.val))
@@ -279,9 +308,9 @@ class LusiHeartbeatVerifier(object):
                 self.composite_peaks.TM_phono.data[self.index] = int(event.xdata)
 
             # Update Data
-            tm_seis  = str(round(1/(self.time[self.composite_peaks.TM_seis.data[self.index]]  - self.time[self.composite_peaks.ddT_max.data[self.index]]), 2))
-            tm_phono = str(round(1/(self.time[self.composite_peaks.TM_phono.data[self.index]] - self.time[self.composite_peaks.ddT_max.data[self.index]]), 2))
-            self.tm_text.set_text("1/(E-M)lusi\nSeis: " + tm_seis + "\nPhono: " + tm_phono)
+            tm_seis  = str(round(1/(self.time[self.composite_peaks.TM_seis.data[self.index]]  - self.time[self.composite_peaks.ddT.data[self.index]]), 2))
+            tm_phono = str(round(1/(self.time[self.composite_peaks.TM_phono.data[self.index]] - self.time[self.composite_peaks.ddT.data[self.index]]), 2))
+            self.tm_text.set_text("1/(E-M)lusi\nSeis: " + tm_seis + " Hz" + "\nPhono: " + tm_phono + " Hz")
                 
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
@@ -293,7 +322,7 @@ class LusiHeartbeatVerifier(object):
 
         if event.xdata is not None:
             if current_signal == 'ECG':                    
-                if abs(self.composite_peaks.ddT_max.data[self.index] - event.xdata) < threshold:
+                if abs(self.composite_peaks.ddT.data[self.index] - event.xdata) < threshold:
                     self.lx.set_color('#2ca02c')
                     self.ly.set_color('#2ca02c')
 
@@ -302,7 +331,7 @@ class LusiHeartbeatVerifier(object):
 
                     self.fig.canvas.draw()
                     
-                    self.update_point = "ddT_max"
+                    self.update_point = "ddT"
 
             if current_signal == 'Seismo':
                 if abs(self.composite_peaks.TM_seis.data[self.index] - event.xdata) < threshold:
@@ -362,10 +391,10 @@ class LusiHeartbeatVerifier(object):
 
     def save(self, event):
         # Get File Name
-        save_file_name = "composites_" + self.folder_name + "_" + self.file_name + "_d" + str(self.dosage) 
+        save_file_name = "lusi_composites_" + self.folder_name + "_" + self.file_name + "_d" + str(self.dosage) 
 
         # Save
-        self.composite_peaks.save("data/Derived/composites/" + save_file_name)
+        self.composite_peaks.save("data/Derived/composites/lusi/" + save_file_name)
         print("Saved")
 
     def update_plot(self):
@@ -380,16 +409,16 @@ class LusiHeartbeatVerifier(object):
         self.switch_signal(None)
 
         # Plot ECG, Phono and Seismo
-        self.signal_line.set_data(range(len(self.signal)), self.signal)
-        self.second_line.set_data(range(self.composite_peaks.ST_start.data[self.index], int(np.median([self.composite_peaks.T.data[self.index], len(self.signal)]))),
-                                  2 + 15*self.second[range(self.composite_peaks.ST_start.data[self.index], int(np.median([self.composite_peaks.T.data[self.index], len(self.signal)])))])
-        self.seis_line.set_data(range(len(self.seis)), self.seis)
-        self.phono_line.set_data(range(len(self.phono)), self.phono)
+        self.signal_line.set_data(range(len(self.signal)), self.signal_amp_slider.val * self.signal)
+        self.second_line.set_data(range(len(self.signal)), (self.second_amp_slider.val * 5*self.second) + self.second_height_slider.val + 1)
+        self.seis_line.set_data(range(len(self.signal)),  (self.seis_amp_slider.val * self.seis) + self.seis_height_slider.val)
+        self.phono_line.set_data(range(len(self.signal)), (self.phono_amp_slider.val * self.phono) + self.phono_height_slider.val)
+
         self.ax.set_xlim(0, len(self.signal))
 
         # T''max Peak
-        self.ddT_max_point.set_offsets((self.composite_peaks.ddT_max.data[self.index], self.signal[self.composite_peaks.ddT_max.data[self.index]]))
-        self.ddT_max_text.set_position((self.composite_peaks.ddT_max.data[self.index], self.signal[self.composite_peaks.ddT_max.data[self.index]] + 0.2))
+        self.ddT_point.set_offsets((self.composite_peaks.ddT.data[self.index], self.signal[self.composite_peaks.ddT.data[self.index]]))
+        self.ddT_text.set_position((self.composite_peaks.ddT.data[self.index], self.signal[self.composite_peaks.ddT.data[self.index]] + 0.2))
 
         # TM Seismo
         self.tm_seis_point.set_offsets((self.composite_peaks.TM_seis.data[self.index], self.seis[self.composite_peaks.TM_seis.data[self.index]]))

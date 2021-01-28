@@ -1,6 +1,7 @@
 # Imports
 import pickle
 import numpy as np
+import heartbreaker as hb
 import matplotlib.pyplot as plt
 from scipy.signal import find_peaks
 from variable_statistics import Variable
@@ -287,12 +288,14 @@ class Peaks:
             plt.legend(loc = 'upper left')
             plt.show()
 
-    def plot(self, time, signal, seis, seis2, phono1, phono2):
+    def plot(self, time, signal, smoothed_second, seis, seis2, phono1, phono2):
 
         fig, ax1 = plt.subplots()
 
         # Plot Signal
-        ax1.plot(time, signal, color='b', label = "Signal")
+        ax1.plot(time, signal, '--', color='b', label = "Signal", linewidth = 0.75)
+        ax1.plot(time, 0.8 * smoothed_second, '--', color='r', label = "Signal", linewidth = 0.5)
+        ax1.set_ylim(min(signal) - abs(0.2*min(signal)), max(signal) + abs(0.2*max(signal)))
 
         # Plot Sies1
         # if seis is not None:
@@ -319,9 +322,9 @@ class Peaks:
             ax1.scatter(time[self.T.data[i]], signal[self.T.data[i]], c='magenta', marker = "D")
             ax1.text(time[self.T.data[i]], 0.02 + signal[self.T.data[i]], "T", fontsize=9)
 
-            # # T''max Peaks
-            # ax1.scatter(time[self.ddT.data[i]], signal[self.ddT.data[i]], c='cyan', marker = "D")
-            # ax1.text(time[self.ddT.data[i]], 0.02 + signal[self.ddT.data[i]], "T''max", fontsize=9)
+            # T''max Peaks
+            ax1.scatter(time[self.ddT.data[i]], signal[self.ddT.data[i]], c='cyan', marker = "D")
+            ax1.text(time[self.ddT.data[i]], 0.02 + signal[self.ddT.data[i]], "T''max", fontsize=9)
 
             # # Plot Seismocardiogram
             # if seis is not None:                

@@ -403,7 +403,7 @@ def get_peaks_for_composites(time,
         peaks.add_ddT_peak(  i, smoothed_second)
 
     if plot:
-        peaks.plot(time, signal, seis1, seis2, phono1, phono2)
+        peaks.plot(time, signal, smoothed_second, seis1, seis2, phono1, phono2)
 
     return peaks
 
@@ -508,7 +508,7 @@ def temp_get_ecg_peaks(time,
             peaks.plot_segmentation_decisons(i, randomlist, time, seis1, signal, qm_bounds, dosage, frequency)
                     
     if plot:
-        peaks.plot(time, signal, seis1, seis2, phono1, phono2)
+        peaks.plot(time, signal, smoothed_second, seis1, seis2, phono1, phono2)
 
     return peaks
 

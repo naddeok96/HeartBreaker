@@ -24,7 +24,7 @@ class LusiCompositePeaks:
         self.ST_start = Variable([])
         self.ST_end   = Variable([])
 
-        self.ddT_max = Variable([])
+        self.ddT = Variable([])
 
         self.QM  = Variable([])
         self.QM_seis  = Variable([])
@@ -251,7 +251,7 @@ class LusiCompositePeaks:
     def add_composite_ST_segment(self, index, signal):
 
         # Calculate second derivative
-        smoothed_first, second = hb.get_derivatives(signal)
+        first, second = hb.get_derivatives(signal)
 
         # Look at interval between s and t peak
         s_t_interval = range(self.S.data[index], self.T.data[index])
@@ -267,20 +267,20 @@ class LusiCompositePeaks:
 
         # Find end of S-T segment
         if len(st_start_t_interval)/6 > 1:
-            smoothed_first_peaks = find_peaks(smoothed_first[st_start_t_interval], distance = len(st_start_t_interval)/6)[0]
+            first_peaks = find_peaks(first[st_start_t_interval], distance = len(st_start_t_interval)/6)[0]
         else:
-            smoothed_first_peaks = find_peaks(smoothed_first[st_start_t_interval])[0]
+            first_peaks = find_peaks(first[st_start_t_interval])[0]
         
-        if len(smoothed_first_peaks) > 1:
-            st_end = int(smoothed_first_peaks[-2])
-        elif len(smoothed_first_peaks) == 1:
-            st_end = smoothed_first_peaks[0]
+        if len(first_peaks) > 1:
+            st_end = int(first_peaks[-2])
+        elif len(first_peaks) == 1:
+            st_end = first_peaks[0]
         else:
             st_end = ((self.T.data[index] - self.ST_start.data[index])/2) + self.ST_start.data[index]
     
         self.ST_end.data.append(self.ST_start.data[index] + st_end)
 
-    def add_composite_ddT_max(self, index, signal):
+    def add_composite_ddT(self, index, signal):
 
         # Calculate second derivative
         _, second = hb.get_derivatives(signal)
@@ -311,11 +311,11 @@ class LusiCompositePeaks:
             # Add data
             if len(st_start_t_interval) == 0:
                 st_start_t_interval = [self.ST_start.data[index]]
-            self.ddT_max.data.append(st_start_t_interval[0] + int(second_peaks[-1]))
+            self.ddT.data.append(st_start_t_interval[0] + int(second_peaks[-1]))
 
         else:
             # Add data
-            self.ddT_max.data.append(low_mag_interval[0] + int(second_low_mag_peaks[-1]))
+            self.ddT.data.append(low_mag_interval[0] + int(second_low_mag_peaks[-1]))
 
     def add_composite_QM_seis_peak(self, index, seis, qm_max_to_mean_ratio, qm_bound_indices):
         # Look at interval between Q and T Peak
@@ -368,9 +368,9 @@ class LusiCompositePeaks:
                                             height   = (tm_max_to_mean_ratio * (np.max(seis[tm_window]) - np.mean(seis[tm_window]))) + np.mean(seis[tm_window]))[0]
         
         if len(tm_seis_peaks_temp) == 0:
-            self.TM_seis.data.append(self.T.data[index] + (( len(seis) - self.T.data[index])/2))
+            self.TM_seis.data.append(self.T.data[index] + int(((len(seis) - self.T.data[index])/2)))
         else:
-            # Pick the first such peak
+            # Pick the first such peak 
             self.TM_seis.data.append(self.T.data[index] + tm_seis_peaks_temp[0])
         
     def add_composite_TM_phono_peak(self, index, phono):   
@@ -387,7 +387,7 @@ class LusiCompositePeaks:
                                     height   = np.mean(phono[tm_window]))[0]
 
         if len(tm_peaks_temp) == 0:
-            self.TM_seis.data.append(self.T.data[index] + ((len(phono) - self.T.data[index])/2))
+            self.TM_phono.data.append(self.T.data[index] + int((len(phono) - self.T.data[index])/2))
         else:
             # Pick the first such peak
              self.TM_phono.data.append(self.T.data[index] + tm_peaks_temp[0])
@@ -422,7 +422,7 @@ class LusiCompositePeaks:
             self.add_composite_T_peak(i, signal, t_window_ratio)
 
             self.add_composite_ST_segment(i, signal)
-            self.add_composite_ddT_max(i, signal)
+            self.add_composite_ddT(i, signal)
 
             self.add_composite_QM_seis_peak(i, seis, qm_max_to_mean_ratio, qm_bound_indices) 
             self.add_composite_QM_phono_peak(i, phono)
@@ -451,7 +451,7 @@ class LusiCompositePeaks:
         self.ST_start = peaks.ST_start
         self.ST_end   = peaks.ST_end
 
-        self.ddT_max = peaks.ddT_max
+        self.ddT = peaks.ddT
 
         self.QM  = peaks.QM
         self.QM_seis  = peaks.QM_seis
@@ -474,7 +474,7 @@ class LusiCompositePeaks:
         self.ST_start._get_inital_statistics()
         self.ST_end._get_inital_statistics()
 
-        self.ddT_max._get_inital_statistics()
+        self.ddT._get_inital_statistics()
 
         self.QM._get_inital_statistics()
         self.QM_seis._get_inital_statistics()

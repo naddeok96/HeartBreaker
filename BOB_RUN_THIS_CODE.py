@@ -14,7 +14,7 @@ preloaded_signal     = True
 use_intervals        = True
 
 save_composites      = True
-preloaded_composites = True
+preloaded_composites = False
 
 display_intervals       = False
 display_INO_composites  = False
@@ -127,7 +127,8 @@ for dosage in files[folder_name]:
                                             signal = signal,
                                             dosage = dosage,
                                             seis1  = seis,
-                                            phono1 = phono)
+                                            phono1 = phono,
+                                            plot = True)
         peaks.get_inital_statistics()
 
         # Build Composites

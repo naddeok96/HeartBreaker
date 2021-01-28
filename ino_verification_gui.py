@@ -273,7 +273,7 @@ class InoHeartbeatVerifier(object):
             # Update Data
             qm_seis  = str(round(1/(self.time[self.composite_peaks.QM_seis.data[self.index]]  - self.time[self.composite_peaks.Q.data[self.index]]), 2))
             qm_phono = str(round(1/(self.time[self.composite_peaks.QM_phono.data[self.index]] - self.time[self.composite_peaks.Q.data[self.index]]), 2))
-            self.qm_text.set_text("1/(E-M)ino\nSeis: " + qm_seis + "\nPhono: " + qm_phono)
+            self.qm_text.set_text("1/(E-M)ino\nSeis: " + qm_seis + " Hz" + "\nPhono: " + qm_phono + " Hz")
                
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
