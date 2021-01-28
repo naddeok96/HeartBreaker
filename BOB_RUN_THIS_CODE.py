@@ -40,6 +40,7 @@ from ino_composite_peaks import InoCompositePeaks
 from lusi_composite_peaks import LusiCompositePeaks
 from files_w_doseage_and_ints import files
 from verification_gui import HeartbeatVerifier
+from peak_verification_gui import PeakHeartbeatVerifier
 from ino_verification_gui  import InoHeartbeatVerifier
 from lusi_verification_gui import LusiHeartbeatVerifier
 from composite_statistics import CompositeStats
@@ -129,6 +130,9 @@ for dosage in files[folder_name]:
                                             seis1  = seis,
                                             phono1 = phono,
                                             plot = False)
+
+        peaks_verifier = PeakHeartbeatVerifier(peaks)
+        peaks = peaks_verifier.peaks
         peaks.get_inital_statistics()
 
         # Build Composites
