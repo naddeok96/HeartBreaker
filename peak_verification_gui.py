@@ -45,8 +45,7 @@ class PeakHeartbeatVerifier(object):
                                             cutoff_freq = cutoff_freq)
 
         # Calculate second derivative
-        smoothed_first, smoothed_second = hb.get_derivatives(smoothed_signal)
-        _, self.second = hb.get_derivatives(self.signal)
+        _, self.second = hb.get_derivatives(smoothed_signal)
 
         # Plot ECG, Phono and Seismo
         self.signal_line, = self.ax.plot(range(len(self.signal)), self.signal, linewidth = 1, c = "b", label = "ECG")
@@ -261,8 +260,7 @@ class PeakHeartbeatVerifier(object):
                                             cutoff_freq = cutoff_freq)
 
         # Calculate second derivative
-        smoothed_first, smoothed_second = hb.get_derivatives(smoothed_signal)
-        _, self.second = hb.get_derivatives(self.signal)
+        _, self.second = hb.get_derivatives(smoothed_signal)
 
         # Update cross hairs
         self.switch_signal(None)

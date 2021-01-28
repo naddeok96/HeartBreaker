@@ -17,6 +17,8 @@ save_composites      = True
 preloaded_composites = False
 
 display_intervals       = False
+display_raw_peaks       = True
+verify_LUSI_raw_labels  = True
 display_INO_composites  = False
 display_LUSI_composites = False
 verify_INO_labels       = False
@@ -129,10 +131,11 @@ for dosage in files[folder_name]:
                                             dosage = dosage,
                                             seis1  = seis,
                                             phono1 = phono,
-                                            plot = False)
+                                            plot = display_raw_peaks)
+        if verify_LUSI_raw_labels:
+            peaks_verifier = PeakHeartbeatVerifier(peaks)
+            peaks = peaks_verifier.peaks
 
-        peaks_verifier = PeakHeartbeatVerifier(peaks)
-        peaks = peaks_verifier.peaks
         peaks.get_inital_statistics()
 
         # Build Composites

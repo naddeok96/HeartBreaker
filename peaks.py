@@ -322,6 +322,10 @@ class Peaks:
             ax1.scatter(time[self.T.data[i]], signal[self.T.data[i]], c='magenta', marker = "D")
             ax1.text(time[self.T.data[i]], 0.02 + signal[self.T.data[i]], "T", fontsize=9)
 
+            # ST Start Peaks
+            ax1.scatter(time[self.ST_start.data[i]], signal[self.ST_start.data[i]], c='k', marker = "D")
+            ax1.text(time[self.ST_start.data[i]], 0.02 + signal[self.ST_start.data[i]], "S-T Start", fontsize=9)
+
             # T''max Peaks
             ax1.scatter(time[self.ddT.data[i]], signal[self.ddT.data[i]], c='cyan', marker = "D")
             ax1.text(time[self.ddT.data[i]], 0.02 + signal[self.ddT.data[i]], "T''max", fontsize=9)
