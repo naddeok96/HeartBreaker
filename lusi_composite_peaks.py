@@ -58,7 +58,7 @@ class LusiCompositePeaks:
             interval = range(self.peaks.T.data[start + i], self.peaks.P.data[start + i + 2])
 
             # Find endpoints of current peak interval and compare with current composite endpoints
-            heartbeat_time   = self.peaks.time[interval] - self.peaks.time[self.peaks.T.data[start + 1 + i]]
+            heartbeat_time   = self.peaks.time[interval] - self.peaks.time[self.peaks.ddT.data[start + 1 + i]]
             composite_start  = min(composite_start, np.where(heartbeat_time == 0)[0])
             composite_end    = min(composite_end, len(heartbeat_time) - np.where(heartbeat_time == 0)[0])
 
@@ -66,10 +66,10 @@ class LusiCompositePeaks:
 
     def get_clipped_heartbeat_signals(self, i, start, interval, composite_start, composite_end):
         # Center signals in current interval at the R peak
-        heartbeat_time   = self.peaks.time[interval]   - self.peaks.time[self.peaks.T.data[start + 1 + i]]
-        heartbeat_signal = self.peaks.signal[interval] - self.peaks.signal[self.peaks.T.data[start + 1 + i]]
-        heartbeat_seis   = self.peaks.seis[interval]   - self.peaks.signal[self.peaks.T.data[start + 1 + i]]
-        heartbeat_phono  = self.peaks.phono[interval]  - self.peaks.signal[self.peaks.T.data[start + 1 + i]]
+        heartbeat_time   = self.peaks.time[interval]   - self.peaks.time[self.peaks.ddT.data[start + 1 + i]]
+        heartbeat_signal = self.peaks.signal[interval] - self.peaks.signal[self.peaks.ddT.data[start + 1 + i]]
+        heartbeat_seis   = self.peaks.seis[interval]   - self.peaks.signal[self.peaks.ddT.data[start + 1 + i]]
+        heartbeat_phono  = self.peaks.phono[interval]  - self.peaks.signal[self.peaks.ddT.data[start + 1 + i]]
 
         # Clip Front
         remove_from_start = int(np.where(heartbeat_time == 0)[0] - composite_start)
@@ -155,9 +155,9 @@ class LusiCompositePeaks:
                             cell.set_ylabel(start + i)
                             
                         elif j == 1:
-                            signal_lay_over_cell.plot(self.peaks.time[interval] - self.peaks.time[self.peaks.T.data[start + 1 + i]], hb.normalize(self.peaks.signal[interval] - self.peaks.signal[self.peaks.T.data[start + 1 + i]]), "--", linewidth= 0.5)
-                            seis_lay_over_cell.plot(self.peaks.time[interval]   - self.peaks.time[self.peaks.T.data[start + 1 + i]], hb.normalize(self.peaks.seis[interval]   - self.peaks.signal[self.peaks.T.data[start + 1 + i]]), "--", linewidth= 0.5)
-                            phono_lay_over_cell.plot(self.peaks.time[interval]  - self.peaks.time[self.peaks.T.data[start + 1 + i]], hb.normalize(self.peaks.phono[interval]  - self.peaks.signal[self.peaks.T.data[start + 1 + i]]), "--", linewidth= 0.5)
+                            signal_lay_over_cell.plot(self.peaks.time[interval] - self.peaks.time[self.peaks.ddT.data[start + 1 + i]], hb.normalize(self.peaks.signal[interval] - self.peaks.signal[self.peaks.ddT.data[start + 1 + i]]), "--", linewidth= 0.5)
+                            seis_lay_over_cell.plot(self.peaks.time[interval]   - self.peaks.time[self.peaks.ddT.data[start + 1 + i]], hb.normalize(self.peaks.seis[interval]   - self.peaks.signal[self.peaks.ddT.data[start + 1 + i]]), "--", linewidth= 0.5)
+                            phono_lay_over_cell.plot(self.peaks.time[interval]  - self.peaks.time[self.peaks.ddT.data[start + 1 + i]], hb.normalize(self.peaks.phono[interval]  - self.peaks.signal[self.peaks.ddT.data[start + 1 + i]]), "--", linewidth= 0.5)
 
                             signal_lay_over_cell.set_xticks([])
                             signal_lay_over_cell.set_yticks([])
