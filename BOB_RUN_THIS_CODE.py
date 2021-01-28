@@ -128,7 +128,7 @@ for dosage in files[folder_name]:
                                             dosage = dosage,
                                             seis1  = seis,
                                             phono1 = phono,
-                                            plot = True)
+                                            plot = False)
         peaks.get_inital_statistics()
 
         # Build Composites
