@@ -39,10 +39,13 @@ class LusiHeartbeatVerifier(object):
         
         # Load composite signals
         self.time, self.signal, self.seis, self.phono = self.composite_peaks.composites[self.index]
-        _, self.second = hb.get_derivatives(self.signal)
+        self.first, self.second = hb.get_derivatives(self.signal)
 
         # Plot ECG, Phono and Seismo
         self.signal_line, = self.ax.plot(self.signal, linewidth = 1, c = "b", label = "ECG")
+
+        self.first_line, = self.ax.plot(range(len(self.signal)), 1 + 5*self.first,
+                                        '--', linewidth = 0.5, c = 'magenta', label = "ECG 1st Derv.")
 
         self.second_line, = self.ax.plot(range(len(self.signal)), 1 + 5*self.second,
                                         '--', linewidth = 0.5, c = 'k', label = "ECG 2nd Derv.")
@@ -224,6 +227,7 @@ class LusiHeartbeatVerifier(object):
 
         # Update Lines
         self.signal_line.set_data(range(len(self.signal)), self.signal_amp_slider.val * self.signal)
+        self.first_line.set_data(range(len(self.signal)), self.first)
         self.second_line.set_data(range(len(self.signal)), (self.second_amp_slider.val * 5* self.second) + self.second_height_slider.val + 1)
         self.seis_line.set_data(range(len(self.signal)),  (self.seis_amp_slider.val * self.seis) + self.seis_height_slider.val)
         self.phono_line.set_data(range(len(self.signal)), (self.phono_amp_slider.val * self.phono) + self.phono_height_slider.val)
@@ -403,13 +407,14 @@ class LusiHeartbeatVerifier(object):
 
         # Load composite signals
         self.time, self.signal, self.seis, self.phono = self.composite_peaks.composites[self.index]
-        _, self.second = hb.get_derivatives(self.signal)
+        self.first, self.second = hb.get_derivatives(self.signal)
 
         # Update cross hairs
         self.switch_signal(None)
 
         # Plot ECG, Phono and Seismo
         self.signal_line.set_data(range(len(self.signal)), self.signal_amp_slider.val * self.signal)
+        self.first_line.set_data(range(len(self.signal)), self.first)
         self.second_line.set_data(range(len(self.signal)), (self.second_amp_slider.val * 5*self.second) + self.second_height_slider.val + 1)
         self.seis_line.set_data(range(len(self.signal)),  (self.seis_amp_slider.val * self.seis) + self.seis_height_slider.val)
         self.phono_line.set_data(range(len(self.signal)), (self.phono_amp_slider.val * self.phono) + self.phono_height_slider.val)

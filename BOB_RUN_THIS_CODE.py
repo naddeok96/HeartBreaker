@@ -1,8 +1,6 @@
 # BOB ONLY EDIT THE SETTING SECTION
 # Settings
 #------------------------------------------------------------------------------------#
-BLUE_PATH_IN_TERMINAL = '/mnt/c/Python Codes/HeartBreaker'
-
 folder_name = "ECG-Phono-Seismo DAQ Data 8 20 2020 2" # "1 9 2020 AH TDMS ESSENTIAL" 
 area_around_echo_size = 240 # In Seconds
 composite_size        = 10  # In number of heartbeats
@@ -18,25 +16,26 @@ preloaded_composites = False
 
 display_intervals       = False
 
+start_at_dosage         = 20
 display_raw_peaks       = False
 verify_LUSI_raw_labels  = True
 
 display_INO_composites  = False
-display_LUSI_composites = True
+display_LUSI_composites = False
 
-verify_INO_labels       = False
+verify_INO_labels       = True
 verify_LUSI_labels      = True
 #------------------------------------------------------------------------------------#
 # END of Setting
 
 # Open Virtual Envornment
-activate_this = BLUE_PATH_IN_TERMINAL + '/hbenv/bin/activate_this.py'
+import os
+activate_this = os.getcwd() + '/hbenv/bin/activate_this.py'
 exec(open(activate_this).read(), {'__file__': activate_this})
 import sys
 assert sys.prefix != sys.base_prefix, "Virual Environment not working!" 
 
 # Imports
-import os
 import numpy as np
 import heartbreaker as hb
 import matplotlib.pyplot as plt
@@ -64,7 +63,8 @@ if display_intervals and not preloaded_composites:
                                     area_around_echo_size = 240,
                                     use_intervals = use_intervals,
                                     preloaded_signal = preloaded_signal,
-                                    save_signal = save_signal)
+                                    save_signal = save_signal,
+                                    dosage = start_at_dosage)
 
     # Use updated intervals moving forward
     files = hb.load_intervals(folder_name)
@@ -79,6 +79,8 @@ composite_statistics = {0  : CompositeStats(),
 
 # Check Composites
 for dosage in files[folder_name]:
+    if dosage < start_at_dosage:
+        continue
 
     # Pick file
     file_name = files[folder_name][dosage][1]["file_name"]
@@ -136,7 +138,9 @@ for dosage in files[folder_name]:
                                             phono1 = phono,
                                             plot = display_raw_peaks)
         if verify_LUSI_raw_labels:
-            peaks_verifier = PeakHeartbeatVerifier(peaks)
+            peaks_verifier = PeakHeartbeatVerifier(peaks,
+                                                    folder_name = folder_name, 
+                                                    dosage = dosage)
             peaks = peaks_verifier.peaks
 
         peaks.get_inital_statistics()
@@ -172,6 +176,7 @@ for dosage in files[folder_name]:
         ino_composite_peaks.load("data/Derived/composites/ino/"  + ino_composite_save_file_name)
     
     if verify_LUSI_labels:
+        print(5)
         LusiHeartbeatVerifier(lusi_composite_peaks, 
                             folder_name = folder_name,
                             dosage      = dosage,

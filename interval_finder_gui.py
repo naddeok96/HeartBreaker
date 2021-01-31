@@ -88,7 +88,7 @@ class HeartbeatIntervalFinder(object):
 
         self.signal = hb.lowpass_filter(time = self.time, 
                                         signal = self.signal,
-                                        cutoff_freq = 50)
+                                        cutoff_freq = 10)
 
         self.seis = hb.lowpass_filter(time = self.time, 
                                     signal = self.seis,

@@ -49,8 +49,7 @@ def plot_signal(time,
 
     plt.show()
 
-def get_fft(time, 
-                    signal, 
+def get_fft(signal, 
                     plot = False,
                     save = False,
                     patient_name = None):
@@ -59,7 +58,7 @@ def get_fft(time,
     '''
 
     # Frequency Domain
-    time_step = (np.max(time) - np.min(time))/ (len(time) - 1)
+    time_step = 1/4000
     freqs = np.fft.fftfreq(len(signal), d = time_step)
     amps  = np.fft.fft(signal)
 
@@ -73,10 +72,8 @@ def get_fft(time,
     # Display
     if plot == True:    
         fig, (ax1, ax2) = plt.subplots(2,1)
-        ax1.plot(time, signal)
-        ax1.set_xlabel('Time [s]')
+        ax1.plot(signal)
         ax1.set_ylabel('Signal amplitude')
-        ax1.set_xlim(min(time), max(time))
         ax1.set_ylim(min(signal) - (0.2 * abs(min(signal))), max(signal) * 1.2)
 
         ax2.stem(freqs, np.abs(amps), use_line_collection = True)
