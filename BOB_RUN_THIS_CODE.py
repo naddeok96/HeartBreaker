@@ -17,10 +17,13 @@ save_composites      = True
 preloaded_composites = False
 
 display_intervals       = False
-display_raw_peaks       = True
+
+display_raw_peaks       = False
 verify_LUSI_raw_labels  = True
+
 display_INO_composites  = False
-display_LUSI_composites = False
+display_LUSI_composites = True
+
 verify_INO_labels       = False
 verify_LUSI_labels      = True
 #------------------------------------------------------------------------------------#

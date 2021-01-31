@@ -31,6 +31,8 @@ class Peaks:
         self.ST_start = Variable([])
         self.ST_end   = Variable([])
 
+        
+        self.dT = Variable([])
         self.ddT = Variable([])
 
         self.QM  = Variable([])
@@ -176,6 +178,19 @@ class Peaks:
             self.ST_start.data.append(0)
             self.ST_end.data.append(0)
 
+    def add_dT_peak(self, index, smoothed_first):
+        # Do not calculate peaks if there is no next R peak
+        if index != (len(self.R.data) - 1):
+            # Look at interval between st_start and t peak
+            st_start_t_interval = range(self.ST_start.data[index], self.T.data[index])
+
+            # Locate T'max
+            smoothed_first_peaks = find_peaks(smoothed_first[st_start_t_interval], distance = len(st_start_t_interval)/6)[0]
+            self.dT.data.append(self.ST_start.data[index] + int(smoothed_first_peaks[-1]))
+
+        else:
+            self.dT.data.append(0)
+
     def add_ddT_peak(self, index, smoothed_second):
         # Do not calculate peaks if there is no next R peak
         if index != (len(self.R.data) - 1):
@@ -288,13 +303,13 @@ class Peaks:
             plt.legend(loc = 'upper left')
             plt.show()
 
-    def plot(self, time, signal, smoothed_second, seis, seis2, phono1, phono2):
+    def plot(self, time, signal, smoothed_first, seis, seis2, phono1, phono2):
 
         fig, ax1 = plt.subplots()
 
         # Plot Signal
         ax1.plot(time, signal, '--', color='b', label = "Signal", linewidth = 0.75)
-        ax1.plot(time, 0.8 * smoothed_second, '--', color='r', label = "Signal", linewidth = 0.5)
+        ax1.plot(time, 0.8 * smoothed_first, '--', color='r', label = "Signal", linewidth = 0.5)
         ax1.set_ylim(min(signal) - abs(0.2*min(signal)), max(signal) + abs(0.2*max(signal)))
 
         # Plot Sies1
@@ -326,9 +341,9 @@ class Peaks:
             ax1.scatter(time[self.ST_start.data[i]], signal[self.ST_start.data[i]], c='k', marker = "D")
             ax1.text(time[self.ST_start.data[i]], 0.02 + signal[self.ST_start.data[i]], "S-T Start", fontsize=9)
 
-            # T''max Peaks
-            ax1.scatter(time[self.ddT.data[i]], signal[self.ddT.data[i]], c='cyan', marker = "D")
-            ax1.text(time[self.ddT.data[i]], 0.02 + signal[self.ddT.data[i]], "T''max", fontsize=9)
+            # T'max Peaks
+            ax1.scatter(time[self.dT.data[i]], signal[self.dT.data[i]], c='cyan', marker = "D")
+            ax1.text(time[self.dT.data[i]], 0.02 + signal[self.dT.data[i]], "T'max", fontsize=9)
 
             # # Plot Seismocardiogram
             # if seis is not None:                
@@ -372,6 +387,7 @@ class Peaks:
         self.ST_start = peaks.ST_start
         self.ST_end   = peaks.ST_end
 
+        self.ddT = peaks.dT
         self.ddT = peaks.ddT
 
         self.QM  = peaks.QM

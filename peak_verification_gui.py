@@ -44,14 +44,14 @@ class PeakHeartbeatVerifier(object):
         smoothed_signal = hb.lowpass_filter(signal = self.signal,
                                             cutoff_freq = cutoff_freq)
 
-        # Calculate second derivative
-        _, self.second = hb.get_derivatives(smoothed_signal)
+        # Calculate first derivative
+        self.first, _ = hb.get_derivatives(smoothed_signal)
 
         # Plot ECG, Phono and Seismo
         self.signal_line, = self.ax.plot(range(len(self.signal)), self.signal, linewidth = 1, c = "b", label = "ECG")
 
-        self.second_line, = self.ax.plot(range(len(self.signal)), 1 + 5*self.second,
-                                        '--', linewidth = 0.5, c = 'k', label = "ECG 2nd Derv.")
+        self.first_line, = self.ax.plot(range(len(self.signal)), 1 + 5*self.first,
+                                        '--', linewidth = 0.5, c = 'k', label = "ECG 1st Derv.")
 
         self.ax.set_xlim(0, len(self.signal))
 
@@ -61,13 +61,17 @@ class PeakHeartbeatVerifier(object):
         self.ax.set_ylim(sig_min - 0.2*(sig_max - sig_min), sig_max + 0.2*(sig_max - sig_min))
         plt.legend(loc='upper right')
 
-        # T Peak
-        self.T_point = self.ax.scatter(self.peaks.T.data[self.index] - self.peaks.R.data[self.index], self.signal[self.peaks.T.data[self.index] - self.peaks.R.data[self.index]], c = '#9467bd')
-        self.T_text  = self.ax.text(self.peaks.T.data[self.index] - self.peaks.R.data[self.index], self.signal[self.peaks.T.data[self.index] - self.peaks.R.data[self.index]] + 0.2, "T", fontsize=9, horizontalalignment = 'center')
+        # # T Peak
+        # self.T_point = self.ax.scatter(self.peaks.T.data[self.index] - self.peaks.R.data[self.index], self.signal[self.peaks.T.data[self.index] - self.peaks.R.data[self.index]], c = '#9467bd')
+        # self.T_text  = self.ax.text(self.peaks.T.data[self.index] - self.peaks.R.data[self.index], self.signal[self.peaks.T.data[self.index] - self.peaks.R.data[self.index]] + 0.2, "T", fontsize=9, horizontalalignment = 'center')
 
-        # T''max Peak
-        self.ddT_point = self.ax.scatter(self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index], self.signal[self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index]], c = '#2ca02c')
-        self.ddT_text  = self.ax.text(self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index], self.signal[self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index]] + 0.2, "T''max", fontsize=9, horizontalalignment = 'center')
+        # # T''max Peak
+        self.dT_point = self.ax.scatter(self.peaks.dT.data[self.index] - self.peaks.R.data[self.index], self.signal[self.peaks.dT.data[self.index] - self.peaks.R.data[self.index]], c = '#2ca02c')
+        self.dT_text  = self.ax.text(self.peaks.dT.data[self.index] - self.peaks.R.data[self.index], self.signal[self.peaks.dT.data[self.index] - self.peaks.R.data[self.index]] + 0.2, "T'max", fontsize=9, horizontalalignment = 'center')
+
+        # # T''max Peak
+        # self.ddT_point = self.ax.scatter(self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index], self.signal[self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index]], c = '#2ca02c')
+        # self.ddT_text  = self.ax.text(self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index], self.signal[self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index]] + 0.2, "T''max", fontsize=9, horizontalalignment = 'center')
 
         # Initalize axes and data points
         self.x = range(len(self.signal))
@@ -117,25 +121,25 @@ class PeakHeartbeatVerifier(object):
         self.signal_amp_slider.on_changed(self.switch_signal)
         self.signal_amp_slider.valtext.set_visible(False)
 
-        self.second_height_slider = Slider(plt.axes([start + 2*slider_width, 0.15, slider_width, slider_height]),
+        self.first_height_slider = Slider(plt.axes([start + 2*slider_width, 0.15, slider_width, slider_height]),
                                                     label = "   2nd\n    Derv.\nH",
                                                     valmin = 1.5 * min(self.signal),
                                                     valmax = 1.5 * max(self.signal), 
                                                     valinit = 0,
                                                     orientation = 'vertical')
-        self.second_height_slider.label.set_size(8)
-        self.second_height_slider.on_changed(self.switch_signal)
-        self.second_height_slider.valtext.set_visible(False)
+        self.first_height_slider.label.set_size(8)
+        self.first_height_slider.on_changed(self.switch_signal)
+        self.first_height_slider.valtext.set_visible(False)
 
-        self.second_amp_slider = Slider(plt.axes([start + 3*slider_width, 0.15, slider_width, slider_height]),
+        self.first_amp_slider = Slider(plt.axes([start + 3*slider_width, 0.15, slider_width, slider_height]),
                                         label = "\nA",
                                         valmin = 0.01,
                                         valmax = 10, 
                                         valinit = 1,
                                         orientation = 'vertical')
-        self.second_amp_slider.label.set_size(8)
-        self.second_amp_slider.on_changed(self.switch_signal)
-        self.second_amp_slider.valtext.set_visible(False)
+        self.first_amp_slider.label.set_size(8)
+        self.first_amp_slider.on_changed(self.switch_signal)
+        self.first_amp_slider.valtext.set_visible(False)
 
         # Maximize frame
         mng = plt.get_current_fig_manager()
@@ -147,15 +151,20 @@ class PeakHeartbeatVerifier(object):
 
         # Update Lines
         self.signal_line.set_data(range(len(self.signal)), self.signal_amp_slider.val * self.signal)
-        self.second_line.set_data(range(len(self.signal)), (self.second_amp_slider.val * 5* self.second) + self.second_height_slider.val + 1)
+        self.first_line.set_data(range(len(self.signal)), (self.first_amp_slider.val * 5* self.first) + self.first_height_slider.val + 1)
         
-        # T Peak
-        self.T_point.set_offsets((self.peaks.T.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.T.data[self.index] - self.peaks.R.data[self.index]]))
-        self.T_text.set_position((self.peaks.T.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.T.data[self.index] - self.peaks.R.data[self.index]] + 0.2))
+        # # T Peak
+        # self.T_point.set_offsets((self.peaks.T.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.T.data[self.index] - self.peaks.R.data[self.index]]))
+        # self.T_text.set_position((self.peaks.T.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.T.data[self.index] - self.peaks.R.data[self.index]] + 0.2))
 
-        # T''max Peak
-        self.ddT_point.set_offsets((self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index]]))
-        self.ddT_text.set_position((self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index]] + 0.2))
+        # T'max Peak
+        self.dT_point.set_offsets((self.peaks.dT.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.dT.data[self.index] - self.peaks.R.data[self.index]]))
+        self.dT_text.set_position((self.peaks.dT.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.dT.data[self.index] - self.peaks.R.data[self.index]] + 0.2))
+
+
+        # # T''max Peak
+        # self.ddT_point.set_offsets((self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index]]))
+        # self.ddT_text.set_position((self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index]] + 0.2))
 
         self.y = self.signal_amp_slider.val * self.signal
         self.fig.canvas.draw()
@@ -173,6 +182,12 @@ class PeakHeartbeatVerifier(object):
                 self.T_text.set_position((int(event.xdata), self.signal_amp_slider.val * self.signal[int(event.xdata)] + 0.2))
 
                 self.peaks.T.data[self.index] = int(event.xdata) + self.peaks.R.data[self.index]
+
+            if self.update_point == "dT":
+                self.dT_point.set_offsets((int(event.xdata), self.signal_amp_slider.val * self.signal[int(event.xdata)]))
+                self.dT_text.set_position((int(event.xdata), self.signal_amp_slider.val * self.signal[int(event.xdata)] + 0.2))
+
+                self.peaks.ddT.data[self.index] = int(event.xdata) + self.peaks.R.data[self.index]
 
             if self.update_point == "ddT":
                 self.ddT_point.set_offsets((int(event.xdata), self.signal_amp_slider.val * self.signal[int(event.xdata)]))
@@ -198,6 +213,17 @@ class PeakHeartbeatVerifier(object):
                 self.fig.canvas.draw()
                 
                 self.update_point = "T"
+
+            if abs(self.peaks.dT.data[self.index] - self.peaks.R.data[self.index] - event.xdata) < threshold:
+                self.lx.set_color('#2ca02c')
+                self.ly.set_color('#2ca02c')
+
+                self.lx.set_linewidth(1)
+                self.ly.set_linewidth(1)
+
+                self.fig.canvas.draw()
+                
+                self.update_point = "dT"
 
             if abs(self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index] - event.xdata) < threshold:
                 self.lx.set_color('#2ca02c')
@@ -259,25 +285,29 @@ class PeakHeartbeatVerifier(object):
         smoothed_signal = hb.lowpass_filter(signal = self.signal,
                                             cutoff_freq = cutoff_freq)
 
-        # Calculate second derivative
-        _, self.second = hb.get_derivatives(smoothed_signal)
+        # Calculate first derivative
+        self.first, _ = hb.get_derivatives(smoothed_signal)
 
         # Update cross hairs
         self.switch_signal(None)
 
         # Plot ECG, Phono and Seismo
         self.signal_line.set_data(range(len(self.signal)), self.signal_amp_slider.val * self.signal)
-        self.second_line.set_data(range(len(self.signal)), (self.second_amp_slider.val * 5*self.second) + self.second_height_slider.val + 1)
+        self.first_line.set_data(range(len(self.signal)), (self.first_amp_slider.val * 5*self.first) + self.first_height_slider.val + 1)
        
         self.ax.set_xlim(0, len(self.signal))
 
-        # T Peak
-        self.T_point.set_offsets((self.peaks.T.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.T.data[self.index] - self.peaks.R.data[self.index]]))
-        self.T_text.set_position((self.peaks.T.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.T.data[self.index] - self.peaks.R.data[self.index]] + 0.2))
+        # # T Peak
+        # self.T_point.set_offsets((self.peaks.T.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.T.data[self.index] - self.peaks.R.data[self.index]]))
+        # self.T_text.set_position((self.peaks.T.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.T.data[self.index] - self.peaks.R.data[self.index]] + 0.2))
 
         # T''max Peak
-        self.ddT_point.set_offsets((self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index]]))
-        self.ddT_text.set_position((self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index]] + 0.2))
+        self.dT_point.set_offsets((self.peaks.dT.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.dT.data[self.index] - self.peaks.R.data[self.index]]))
+        self.dT_text.set_position((self.peaks.dT.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.dT.data[self.index] - self.peaks.R.data[self.index]] + 0.2))
+        
+        # # T''max Peak
+        # self.ddT_point.set_offsets((self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index]]))
+        # self.ddT_text.set_position((self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index]] + 0.2))
 
         self.fig.canvas.draw()
 

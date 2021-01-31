@@ -400,10 +400,11 @@ def get_peaks_for_composites(time,
         peaks.add_T_peak(    i, t_window_ratio, signal)
 
         peaks.add_ST_segment(i, second, smoothed_first, signal)
+        peaks.add_dT_peak(   i, smoothed_first)
         peaks.add_ddT_peak(  i, smoothed_second)
 
     if plot:
-        peaks.plot(time, signal, smoothed_second, seis1, seis2, phono1, phono2)
+        peaks.plot(time, signal, smoothed_first, seis1, seis2, phono1, phono2)
 
     return peaks
 
