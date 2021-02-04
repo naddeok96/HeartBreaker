@@ -126,7 +126,7 @@ class PeakHeartbeatVerifier(object):
         self.signal_amp_slider.valtext.set_visible(False)
 
         self.first_height_slider = Slider(plt.axes([start + 2*slider_width, 0.15, slider_width, slider_height]),
-                                                    label = "   2nd\n    Derv.\nH",
+                                                    label = "   1st\n    Derv.\nH",
                                                     valmin = 1.5 * min(self.signal),
                                                     valmax = 1.5 * max(self.signal), 
                                                     valinit = 0,
