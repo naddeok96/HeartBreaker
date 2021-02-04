@@ -199,7 +199,10 @@ class LusiCompositePeaks:
         return composites
 
     def get_composite_R_peak(self, signal):
-        self.R.data.append(np.argmax(signal))
+        first, _ = hb.get_derivatives(signal)
+        area = range(int(np.argmax(-first) - 0.1*len(signal)), int(np.argmax(-first) + 0.1*len(signal)))
+
+        self.R.data.append(int(np.argmax(-first) - 0.1*len(signal) + np.argmax(signal[area])))
 
     def add_composite_Q_peak(self, index, signal, q_window_ratio):
         # Find lower bound of Q windows and define windows
@@ -246,7 +249,7 @@ class LusiCompositePeaks:
         t_window = list(range(self.S.data[index], t_upper_bound))
         
         # Add T peak
-        self.T.data.append(int(np.argmax(signal[t_window]) + self.S.data[index]))
+        self.T.data.append(int(self.S.data[index] + np.argmax(signal[t_window])))
 
     def add_composite_ST_segment(self, index, signal):
 
@@ -283,55 +286,40 @@ class LusiCompositePeaks:
     def add_composite_ddT(self, index, signal):
 
         # Calculate second derivative
-        print(1)
         _, second = hb.get_derivatives(signal)
         
-
         # Look at interval between st_start and t peak
-        print(2)
         st_start_t_interval = range(self.ST_start.data[index], self.T.data[index])
-
+        
         # Locate T''max
         if len(st_start_t_interval)/6 > 1:
-            print(31)
             second_peaks = find_peaks(5 * second[st_start_t_interval], distance = len(st_start_t_interval)/6)[0]
         else:
-            print(32)
             second_peaks = find_peaks(5 * second[st_start_t_interval])[0]
 
         if len(second_peaks) == 0:
-            print(4)
-            plt.plot(signal)
-            plt.show()
-            exit()
             second_peaks = [self.T.data[index]] if np.isnan(np.median(second[st_start_t_interval])) else [np.median(second[st_start_t_interval])]
         
 
-        # Look at interval between big hump and t peak
-        print(5)
+        # Look at interval between big hump and t peak 
         low_mag_interval = range(self.ST_start.data[index] + int(second_peaks[0]), self.T.data[index])
 
         # Locate T''max
         if len(low_mag_interval)/2 > 1:
-            print(61)
             second_low_mag_peaks = find_peaks(5 * second[low_mag_interval], distance = len(low_mag_interval)/2)[0]
         else:
-            print(62)
             second_low_mag_peaks = find_peaks(5 * second[low_mag_interval])[0]
 
         if len(second_low_mag_peaks) == 0:
-            print(71)
             # Add data
             if len(st_start_t_interval) == 0:
                 st_start_t_interval = [self.ST_start.data[index]]
             self.ddT.data.append(st_start_t_interval[0] + int(second_peaks[-1]))
 
         else:
-            print(72)
             # Add data
             self.ddT.data.append(low_mag_interval[0] + int(second_low_mag_peaks[-1]))
 
-        exit()
     def add_composite_QM_seis_peak(self, index, seis, qm_max_to_mean_ratio, qm_bound_indices):
         # Look at interval between Q and T Peak
         q_t_interval = range(self.Q.data[index], self.T.data[index])

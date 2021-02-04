@@ -62,20 +62,20 @@ class PeakHeartbeatVerifier(object):
         plt.legend(loc='upper right')
 
         # T Peak
-        self.T_point = self.ax.scatter(self.peaks.T.data[self.index] - self.peaks.R.data[self.index], self.signal[self.peaks.T.data[self.index] - self.peaks.R.data[self.index]], c = '#9467bd')
-        self.T_text  = self.ax.text(self.peaks.T.data[self.index] - self.peaks.R.data[self.index], self.signal[self.peaks.T.data[self.index] - self.peaks.R.data[self.index]] + 0.2, "T", fontsize=9, horizontalalignment = 'center')
+        self.T_point = self.ax.scatter(self.peaks.T.data[self.index] - self.peaks.R.data[self.index], self.smoothed_signal[self.peaks.T.data[self.index] - self.peaks.R.data[self.index]], c = '#9467bd')
+        self.T_text  = self.ax.text(self.peaks.T.data[self.index] - self.peaks.R.data[self.index], self.smoothed_signal[self.peaks.T.data[self.index] - self.peaks.R.data[self.index]] + 0.2, "T", fontsize=9, horizontalalignment = 'center')
 
          # ST Start Peak
-        self.ST_start_point = self.ax.scatter(self.peaks.ST_start.data[self.index] - self.peaks.R.data[self.index], self.signal[self.peaks.ST_start.data[self.index] - self.peaks.R.data[self.index]], c = 'y')
-        self.ST_start_text  = self.ax.text(self.peaks.ST_start.data[self.index] - self.peaks.R.data[self.index], self.signal[self.peaks.ST_start.data[self.index] - self.peaks.R.data[self.index]] + 0.2, "ST Start", fontsize=9, horizontalalignment = 'center')
+        self.ST_start_point = self.ax.scatter(self.peaks.ST_start.data[self.index] - self.peaks.R.data[self.index], self.smoothed_signal[self.peaks.ST_start.data[self.index] - self.peaks.R.data[self.index]], c = 'y')
+        self.ST_start_text  = self.ax.text(self.peaks.ST_start.data[self.index] - self.peaks.R.data[self.index], self.smoothed_signal[self.peaks.ST_start.data[self.index] - self.peaks.R.data[self.index]] + 0.2, "ST Start", fontsize=9, horizontalalignment = 'center')
 
         # T'max Peak
         self.dT_point = self.ax.scatter(self.peaks.dT.data[self.index] - self.peaks.R.data[self.index], self.smoothed_signal[self.peaks.dT.data[self.index] - self.peaks.R.data[self.index]], c = '#2ca02c')
         self.dT_text  = self.ax.text(self.peaks.dT.data[self.index] - self.peaks.R.data[self.index], self.smoothed_signal[self.peaks.dT.data[self.index] - self.peaks.R.data[self.index]] + 0.2, "T'max", fontsize=9, horizontalalignment = 'center')
 
         # # T''max Peak
-        # self.ddT_point = self.ax.scatter(self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index], self.signal[self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index]], c = '#2ca02c')
-        # self.ddT_text  = self.ax.text(self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index], self.signal[self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index]] + 0.2, "T''max", fontsize=9, horizontalalignment = 'center')
+        # self.ddT_point = self.ax.scatter(self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index], self.smoothed_signal[self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index]], c = '#2ca02c')
+        # self.ddT_text  = self.ax.text(self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index], self.smoothed_signal[self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index]] + 0.2, "T''max", fontsize=9, horizontalalignment = 'center')
 
         # Initalize axes and data points
         self.x = range(len(self.signal))
@@ -158,20 +158,20 @@ class PeakHeartbeatVerifier(object):
         self.first_line.set_data(range(len(self.signal)), (self.first_amp_slider.val * 5* self.first) + self.first_height_slider.val + 1)
         
         # T Peak
-        self.T_point.set_offsets((self.peaks.T.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.T.data[self.index] - self.peaks.R.data[self.index]]))
-        self.T_text.set_position((self.peaks.T.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.T.data[self.index] - self.peaks.R.data[self.index]] + 0.2))
+        self.T_point.set_offsets((self.peaks.T.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.smoothed_signal[self.peaks.T.data[self.index] - self.peaks.R.data[self.index]]))
+        self.T_text.set_position((self.peaks.T.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.smoothed_signal[self.peaks.T.data[self.index] - self.peaks.R.data[self.index]] + 0.2))
 
         # ST Start Peak
-        self.ST_start_point.set_offsets((self.peaks.ST_start.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.ST_start.data[self.index] - self.peaks.R.data[self.index]]))
-        self.ST_start_text.set_position((self.peaks.ST_start.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.ST_start.data[self.index] - self.peaks.R.data[self.index]] + 0.2))
+        self.ST_start_point.set_offsets((self.peaks.ST_start.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.smoothed_signal[self.peaks.ST_start.data[self.index] - self.peaks.R.data[self.index]]))
+        self.ST_start_text.set_position((self.peaks.ST_start.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.smoothed_signal[self.peaks.ST_start.data[self.index] - self.peaks.R.data[self.index]] + 0.2))
 
         # T'max Peak
         self.dT_point.set_offsets((self.peaks.dT.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.smoothed_signal[self.peaks.dT.data[self.index] - self.peaks.R.data[self.index]]))
         self.dT_text.set_position((self.peaks.dT.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.smoothed_signal[self.peaks.dT.data[self.index] - self.peaks.R.data[self.index]] + 0.2))
 
         # # T''max Peak
-        # self.ddT_point.set_offsets((self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index]]))
-        # self.ddT_text.set_position((self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index]] + 0.2))
+        # self.ddT_point.set_offsets((self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.smoothed_signal[self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index]]))
+        # self.ddT_text.set_position((self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.smoothed_signal[self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index]] + 0.2))
 
         self.y = self.signal_amp_slider.val * self.smoothed_signal
         self.fig.canvas.draw()
@@ -185,14 +185,14 @@ class PeakHeartbeatVerifier(object):
 
         if event.xdata is not None:
             if self.update_point == "T":
-                self.T_point.set_offsets((int(event.xdata), self.signal_amp_slider.val * self.signal[int(event.xdata)]))
-                self.T_text.set_position((int(event.xdata), self.signal_amp_slider.val * self.signal[int(event.xdata)] + 0.2))
+                self.T_point.set_offsets((int(event.xdata), self.signal_amp_slider.val * self.smoothed_signal[int(event.xdata)]))
+                self.T_text.set_position((int(event.xdata), self.signal_amp_slider.val * self.smoothed_signal[int(event.xdata)] + 0.2))
 
                 self.peaks.T.data[self.index] = int(event.xdata) + self.peaks.R.data[self.index]
 
             if self.update_point == "ST Start":
-                self.ST_start_point.set_offsets((int(event.xdata), self.signal_amp_slider.val * self.signal[int(event.xdata)]))
-                self.ST_start_text.set_position((int(event.xdata), self.signal_amp_slider.val * self.signal[int(event.xdata)] + 0.2))
+                self.ST_start_point.set_offsets((int(event.xdata), self.signal_amp_slider.val * self.smoothed_signal[int(event.xdata)]))
+                self.ST_start_text.set_position((int(event.xdata), self.signal_amp_slider.val * self.smoothed_signal[int(event.xdata)] + 0.2))
 
                 self.peaks.ST_start.data[self.index] = int(event.xdata) + self.peaks.R.data[self.index]
 
@@ -203,8 +203,8 @@ class PeakHeartbeatVerifier(object):
                 self.peaks.dT.data[self.index] = int(event.xdata) + self.peaks.R.data[self.index]
 
             # if self.update_point == "ddT":
-            #     self.ddT_point.set_offsets((int(event.xdata), self.signal_amp_slider.val * self.signal[int(event.xdata)]))
-            #     self.ddT_text.set_position((int(event.xdata), self.signal_amp_slider.val * self.signal[int(event.xdata)] + 0.2))
+            #     self.ddT_point.set_offsets((int(event.xdata), self.signal_amp_slider.val * self.smoothed_signal[int(event.xdata)]))
+            #     self.ddT_text.set_position((int(event.xdata), self.signal_amp_slider.val * self.smoothed_signal[int(event.xdata)] + 0.2))
 
             #     self.peaks.ddT.data[self.index] = int(event.xdata) + self.peaks.R.data[self.index]
 
@@ -322,20 +322,20 @@ class PeakHeartbeatVerifier(object):
         self.ax.set_xlim(0, len(self.signal))
 
         # T Peak
-        self.T_point.set_offsets((self.peaks.T.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.T.data[self.index] - self.peaks.R.data[self.index]]))
-        self.T_text.set_position((self.peaks.T.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.T.data[self.index] - self.peaks.R.data[self.index]] + 0.2))
+        self.T_point.set_offsets((self.peaks.T.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.smoothed_signal[self.peaks.T.data[self.index] - self.peaks.R.data[self.index]]))
+        self.T_text.set_position((self.peaks.T.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.smoothed_signal[self.peaks.T.data[self.index] - self.peaks.R.data[self.index]] + 0.2))
 
         # ST Start Peak
-        self.ST_start_point.set_offsets((self.peaks.ST_start.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.ST_start.data[self.index] - self.peaks.R.data[self.index]]))
-        self.ST_start_text.set_position((self.peaks.ST_start.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.ST_start.data[self.index] - self.peaks.R.data[self.index]] + 0.2))
+        self.ST_start_point.set_offsets((self.peaks.ST_start.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.smoothed_signal[self.peaks.ST_start.data[self.index] - self.peaks.R.data[self.index]]))
+        self.ST_start_text.set_position((self.peaks.ST_start.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.smoothed_signal[self.peaks.ST_start.data[self.index] - self.peaks.R.data[self.index]] + 0.2))
 
         # T''max Peak
         self.dT_point.set_offsets((self.peaks.dT.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.smoothed_signal[self.peaks.dT.data[self.index] - self.peaks.R.data[self.index]]))
         self.dT_text.set_position((self.peaks.dT.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.smoothed_signal[self.peaks.dT.data[self.index] - self.peaks.R.data[self.index]] + 0.2))
         
         # # T''max Peak
-        # self.ddT_point.set_offsets((self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index]]))
-        # self.ddT_text.set_position((self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.signal[self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index]] + 0.2))
+        # self.ddT_point.set_offsets((self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.smoothed_signal[self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index]]))
+        # self.ddT_text.set_position((self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index], self.signal_amp_slider.val * self.smoothed_signal[self.peaks.ddT.data[self.index] - self.peaks.R.data[self.index]] + 0.2))
 
         self.fig.canvas.draw()
 

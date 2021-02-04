@@ -12,11 +12,11 @@ preloaded_signal     = True
 use_intervals        = True
 
 save_composites      = True
-preloaded_composites = False
+preloaded_composites = True
 
-display_intervals       = False
+display_intervals       = True
 
-start_at_dosage         = 20
+start_at_dosage         = 0
 display_raw_peaks       = False
 verify_LUSI_raw_labels  = True
 
@@ -26,7 +26,7 @@ display_LUSI_composites = False
 verify_INO_labels       = True
 verify_LUSI_labels      = True
 #------------------------------------------------------------------------------------#
-# END of Setting
+# END of Settings
 
 # Open Virtual Envornment
 import os
@@ -176,7 +176,6 @@ for dosage in files[folder_name]:
         ino_composite_peaks.load("data/Derived/composites/ino/"  + ino_composite_save_file_name)
     
     if verify_LUSI_labels:
-        print(5)
         LusiHeartbeatVerifier(lusi_composite_peaks, 
                             folder_name = folder_name,
                             dosage      = dosage,

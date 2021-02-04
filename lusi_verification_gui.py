@@ -137,8 +137,8 @@ class LusiHeartbeatVerifier(object):
         # Add Line hide buttons
         self.ax.text(1.015, 0.97, transform = self.ax.transAxes,
                     s = "Hide Signal:", fontsize=12, horizontalalignment = 'left')
-        ax_hide_signals = plt.axes([0.91, 0.7, 0.07, 0.15])
-        self.b_hide_signals = CheckButtons(ax_hide_signals, ('ECG', 'Seismo', 'Phono'))
+        ax_hide_signals = plt.axes([0.91, 0.7, 0.08, 0.20])
+        self.b_hide_signals = CheckButtons(ax_hide_signals, ('ECG', '1st Derv.', '2nd Derv.', 'Seismo', 'Phono'))
 
         self.b_hide_signals.on_clicked(self.switch_signal)
 
@@ -268,15 +268,27 @@ class LusiHeartbeatVerifier(object):
             
         else: 
             self.signal_line.set_linewidth(0.5)
+
+        if hide_label[1]: # 1st Derv ECG
+            self.first_line.set_linewidth(0)
+            
+        else: 
+            self.first_line.set_linewidth(0.5)
+
+        if hide_label[2]: # 2nd Derv ECG
+            self.second_line.set_linewidth(0)
+            
+        else: 
+            self.second_line.set_linewidth(0.5)
             
 
-        if hide_label[1]: # Seismo
+        if hide_label[3]: # Seismo
             self.seis_line.set_linewidth(0)
 
         else:
             self.seis_line.set_linewidth(0.5)
 
-        if hide_label[2]: # Phono
+        if hide_label[4]: # Phono
             self.phono_line.set_linewidth(0)
 
         else:
