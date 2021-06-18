@@ -13,11 +13,11 @@ import csv
 # Hyperparameters
 #---------------------#
 # Signal Settings
-preloaded_signal = False
+preloaded_signal = True
 save_signal      = False
 save_peaks       = False
 peaks_to_excel   = False
-use_intervals    = False
+use_intervals    = True
 
 # Display Settings
 show_signal      = False
@@ -26,12 +26,14 @@ show_bandpass    = False
 show_derivatives = False
 show_peaks       = True
 
-folder_name = "ECG-Phono-Seismo DAQ Data 8 20 2020 2" # "1 9 2020 AH TDMS ESSENTIAL" #  
+folder_name = "10 22 20 Files" # "ECG-Phono-Seismo DAQ Data 8 20 2020 2" # "1 9 2020 AH TDMS ESSENTIAL" #  
 print(folder_name)
 # Iterate
 for dosage in files[folder_name].keys():
-     if dosage != 0:
-          continue
+     # if dosage != 0:
+     #    os.chdir("../..")
+     # if dosage != 30:
+     #      continue
 
      # sample_interval = random.choice(list(files[folder_name][dosage]["intervals"]))
 
@@ -42,7 +44,7 @@ for dosage in files[folder_name].keys():
           # if interval_number != 1:
           #      continue
 
-          if use_intervals == True:
+          if use_intervals:
                print("I: ", interval_number)
 
           # Pick file
@@ -50,14 +52,23 @@ for dosage in files[folder_name].keys():
           save_file_name = folder_name + "_" + file_name + "_d" + str(dosage) if use_intervals == False else folder_name + "_" + file_name + "_d" + str(dosage) + "_i" + str(interval_number)
 
           # Pick Interval
-          if use_intervals == True and files[folder_name][dosage]["intervals"] != ["None"]:
-               start_time = files[folder_name][dosage]["intervals"][interval_number][0]
-               end_time   = files[folder_name][dosage]["intervals"][interval_number][1]
+          if use_intervals and files[folder_name][dosage][1]["intervals"] != ["None"]:
+               start_time = files[folder_name][dosage][1]["intervals"][interval_number][0]
+               end_time   = files[folder_name][dosage][1]["intervals"][interval_number][1]
           #---------------------------------------------------------------------------------#
           # End of Hyperparameters
 
           # Initalize patient and interval
-          if preloaded_signal == False:
+          if preloaded_signal:
+               os.chdir("data/Derived")
+               time   = np.loadtxt('time_' + save_file_name + '.csv', delimiter=',')
+               signal = np.loadtxt('signal_' + save_file_name + '.csv', delimiter=',')
+               seis1 = np.loadtxt('seis1_' + save_file_name + '.csv', delimiter=',')
+               seis2 = np.loadtxt('seis2_' + save_file_name + '.csv', delimiter=',')
+               phono1 = np.loadtxt('phono1_' + save_file_name + '.csv', delimiter=',')
+               phono2 = np.loadtxt('phono2_' + save_file_name + '.csv', delimiter=',')
+
+          else:
                # Change directory
                wd = 'data/' + folder_name + '/files_of_interest'
 
@@ -65,7 +76,7 @@ for dosage in files[folder_name].keys():
                patient = Patient(wd, file_name)
 
                # Declare time and signal
-               if use_intervals == True and files[folder_name][dosage]["intervals"] != ["None"]:
+               if use_intervals and files[folder_name][dosage][1]["intervals"] != ["None"]:
                     start = (start_time - np.min(patient.times))*patient.frequency
                     end   = patient.total_time*patient.frequency if end_time == "end" else (end_time - np.min(patient.times))*patient.frequency
                     interval = range(int(start), int(end))
@@ -86,19 +97,11 @@ for dosage in files[folder_name].keys():
                     np.savetxt('seis2_'+ save_file_name + '.csv', seis2, delimiter=',')
                     np.savetxt('phono1_'+ save_file_name + '.csv', phono1, delimiter=',')
                     np.savetxt('phono2_'+ save_file_name + '.csv', phono2, delimiter=',')
-
-          else:
-               os.chdir("data/Derived")
-               time   = np.loadtxt('time_' + save_file_name + '.csv', delimiter=',')
-               signal = np.loadtxt('signal_' + save_file_name + '.csv', delimiter=',')
-               seis1 = np.loadtxt('seis1_' + save_file_name + '.csv', delimiter=',')
-               seis2 = np.loadtxt('seis2_' + save_file_name + '.csv', delimiter=',')
-               phono1 = np.loadtxt('phono1_' + save_file_name + '.csv', delimiter=',')
-               phono2 = np.loadtxt('phono2_' + save_file_name + '.csv', delimiter=',')
+               
 
           # View Signal
           if show_signal == True:
-               hb.plot_signal(time, signal, intervals = files[folder_name][dosage]["intervals"] if use_intervals else None)
+               hb.plot_signal(time, signal, intervals = files[folder_name][dosage][1]["intervals"] if use_intervals else None)
 
           # View Frequency Domain
           if show_freq_domain == True:
@@ -129,39 +132,42 @@ for dosage in files[folder_name].keys():
                                    plot =True)
 
           # Find Peaks
-          if show_peaks == True:
+          if show_peaks:
 
-               # lowpass_signal = hb.bandpass_filter(time    = time, 
-               #                                    signal  = signal,
-               #                                    freqmin = 59, 
-               #                                    freqmax = 61)
+               # Bandpass out 60 Hz
+               filtered_signal = hb.bandpass_filter(time    = time, 
+                                                  signal  = signal,
+                                                  freqmin = 59, 
+                                                  freqmax = 61)
+
+               filtered_seis2 = hb.bandpass_filter(time    = time, 
+                                                  signal  = seis2,
+                                                  freqmin = 59, 
+                                                  freqmax = 61)
+
                
-               # # Low-Pass filter under 10Hz
-               # lowpass_signal = hb.lowpass_filter(time = time, 
-               #                                    signal = lowpass_signal,
-               #                                    cutoff_freq = 50)
-               print(min(time), max(time))
-               os.chdir("../..")
-               continue
 
-               peaks = hb.temp_get_ecg_peaks(time = time, 
+               peaks = hb.get_ecg_peaks_v2(time = time, 
                                              signal = signal, #signal = lowpass_signal,
                                              dosage = dosage,
-                                             peaks_dict = None,
                                              plot = True,
                                              plot_st_segments = False,
                                              random_sample_size = 25,
                                              plot_segmentation_decisons = False,
                                              seis1 = seis1,
-                                             seis2 = seis2,
+                                             seis2 = filtered_seis2,
                                              phono1 = phono1,
                                              phono2 = phono2)
 
+               # Save peaks to pickle
                if save_peaks:
                     peaks.save(save_file_name)
 
+               # Save peaks to excel file
                if peaks_to_excel:
                     hb.save_peaks_to_excel(save_file_name, time, peaks)
+
+               # Back up one
                os.chdir("../..")
                
                

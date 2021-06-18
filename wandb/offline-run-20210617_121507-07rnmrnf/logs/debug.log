@@ -1,0 +1,29 @@
+2021-06-17 12:15:07,661 INFO    MainThread:20808 [wandb_setup.py:_flush():69] setting env: {'mode': 'dryrun'}
+2021-06-17 12:15:07,661 INFO    MainThread:20808 [wandb_init.py:_log_setup():336] Logging user logs to /mnt/c/Python Codes/HeartBreaker/wandb/offline-run-20210617_121507-07rnmrnf/logs/debug.log
+2021-06-17 12:15:07,661 INFO    MainThread:20808 [wandb_init.py:_log_setup():337] Logging internal logs to /mnt/c/Python Codes/HeartBreaker/wandb/offline-run-20210617_121507-07rnmrnf/logs/debug-internal.log
+2021-06-17 12:15:07,662 INFO    MainThread:20808 [wandb_init.py:init():369] calling init triggers
+2021-06-17 12:15:07,662 INFO    MainThread:20808 [wandb_init.py:init():376] wandb.init called with sweep_config: {}
+config: {'epochs': 1, 'batch_size': 1, 'momentum': 0.9, 'weight_decay': 1e-05, 'learning_rate': 1e-06, 'optimizer': 'nesterov', 'scheduler': 'Cosine Annealing', 'criterion': 'cross_entropy', 'use_SAM': True, 'pretrained': True, 'transformation': None, 'model_name': 'cifar10_mobilenetv2_x1_4'}
+2021-06-17 12:15:07,662 INFO    MainThread:20808 [wandb_init.py:init():418] starting backend
+2021-06-17 12:15:07,662 INFO    MainThread:20808 [backend.py:_multiprocessing_setup():72] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2021-06-17 12:15:07,866 INFO    MainThread:20808 [backend.py:ensure_launched():132] starting backend process...
+2021-06-17 12:15:07,997 INFO    MainThread:20808 [backend.py:ensure_launched():137] started backend process with pid: 20834
+2021-06-17 12:15:07,999 INFO    MainThread:20808 [wandb_init.py:init():423] backend started and connected
+2021-06-17 12:15:08,004 INFO    MainThread:20808 [wandb_init.py:init():465] updated telemetry
+2021-06-17 12:15:08,007 INFO    MainThread:20808 [wandb_init.py:init():522] starting run threads in backend
+2021-06-17 12:15:13,017 INFO    MainThread:20808 [wandb_run.py:_console_start():1565] atexit reg
+2021-06-17 12:15:13,018 INFO    MainThread:20808 [wandb_run.py:_redirect():1412] redirect: SettingsConsole.REDIRECT
+2021-06-17 12:15:13,022 INFO    MainThread:20808 [wandb_run.py:_redirect():1417] Redirecting console.
+2021-06-17 12:15:13,028 INFO    MainThread:20808 [wandb_run.py:_redirect():1479] Redirects installed.
+2021-06-17 12:15:13,028 INFO    MainThread:20808 [wandb_init.py:init():546] run started, returning control to user process
+2021-06-17 12:15:13,089 INFO    MainThread:20808 [wandb_run.py:_atexit_cleanup():1535] got exitcode: 1
+2021-06-17 12:15:13,089 INFO    MainThread:20808 [wandb_run.py:_restore():1507] restore
+2021-06-17 12:15:20,107 INFO    MainThread:20808 [wandb_run.py:_wait_for_finish():1657] got exit ret: None
+2021-06-17 12:15:25,222 INFO    MainThread:20808 [wandb_run.py:_wait_for_finish():1657] got exit ret: None
+2021-06-17 12:15:30,334 INFO    MainThread:20808 [wandb_run.py:_wait_for_finish():1657] got exit ret: None
+2021-06-17 12:15:35,446 INFO    MainThread:20808 [wandb_run.py:_wait_for_finish():1657] got exit ret: None
+2021-06-17 12:15:36,255 INFO    MainThread:20808 [wandb_run.py:_wait_for_finish():1657] got exit ret: 
+2021-06-17 12:15:36,359 INFO    MainThread:20808 [wandb_run.py:_wait_for_finish():1657] got exit ret: done: true
+exit_result {
+}
+

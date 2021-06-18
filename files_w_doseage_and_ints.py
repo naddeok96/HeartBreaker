@@ -38,6 +38,39 @@ files = { "1 9 2020 AH TDMS ESSENTIAL"   :   {0:  {1: {"file_name": "DAQData_010
                                                       "intervals": {
                                                                     1: [2740, 2750]
                                                                     }}}},
+
+          "10 22 20 Files" : {0: {
+                                    1 : {"file_name": "DAQData_102220141448",
+                                        "echo_time": 290 ,
+                                        "intervals": {
+                                                      1: [287, 293.25]
+                                                      }}},
+                              10: {
+                                    1 : {"file_name": "DAQData_102220141448",
+                                        "echo_time": 923 ,
+                                        "intervals": {
+                                                      1: [920.55, 926.2]
+                                                      }}},
+
+                              20: {
+                                    1 : {"file_name": "DAQData_102220143121",
+                                        "echo_time": 1168 ,
+                                        "intervals": {
+                                                      1: [1168.2, 1171.85]
+                                                      }}},
+                              30: {
+                                    1 : {"file_name": "DAQData_102220143121",
+                                        "echo_time": 1453,
+                                        "intervals": {
+                                                      1: [1451.75, 1454.6]
+                                                      }}}#,
+                              # 40: {
+                              #       1 : {"file_name": "DAQData_102220143121",
+                              #           "echo_time": 334 ,
+                              #           "intervals": {
+                              #                         1: [1449, 1456]
+                              #                         }}}
+                                                      },
                                           
           "ECG-Phono-Seismo DAQ Data 8 20 2020 2"   :   {0: {
                                                              1 : {"file_name": "DAQData_082020133649",

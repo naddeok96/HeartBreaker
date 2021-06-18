@@ -1,0 +1,21 @@
+2021-06-17 12:41:16,625 INFO    Thread-4  :21514 [wandb_setup.py:_flush():69] setting env: {'mode': 'dryrun', 'entity': 'naddeok', 'project': 'ECG Heartbeat Verifier', 'root_dir': '/mnt/c/Python Codes/HeartBreaker', 'run_id': 'z3zvgpvi', 'sweep_param_path': '/mnt/c/Python Codes/HeartBreaker/wandb/sweep-k53yb5oa/config-z3zvgpvi.yaml', 'sweep_id': 'k53yb5oa'}
+2021-06-17 12:41:16,626 INFO    Thread-4  :21514 [wandb_init.py:_log_setup():336] Logging user logs to /mnt/c/Python Codes/HeartBreaker/wandb/offline-run-20210617_124116-z3zvgpvi/logs/debug.log
+2021-06-17 12:41:16,626 INFO    Thread-4  :21514 [wandb_init.py:_log_setup():337] Logging internal logs to /mnt/c/Python Codes/HeartBreaker/wandb/offline-run-20210617_124116-z3zvgpvi/logs/debug-internal.log
+2021-06-17 12:41:16,627 INFO    Thread-4  :21514 [wandb_init.py:init():369] calling init triggers
+2021-06-17 12:41:16,627 INFO    Thread-4  :21514 [wandb_init.py:init():376] wandb.init called with sweep_config: {'batch_size': 15, 'criterion': 'binary_cross_entropy', 'epochs': 1, 'learning_rate': 0.0013988605502023178, 'momentum': 0.9, 'optimizer': 'adam', 'scheduler': 'Cosine Annealing', 'use_SAM': False, 'weight_decay': 1e-05}
+config: {'epochs': 1, 'batch_size': 1, 'momentum': 0.9, 'weight_decay': 1e-05, 'learning_rate': 1e-05, 'optimizer': 'adam', 'scheduler': 'Cosine Annealing', 'criterion': 'binary_cross_entropy', 'use_SAM': False}
+2021-06-17 12:41:16,627 INFO    Thread-4  :21514 [wandb_init.py:init():415] wandb.init() called when a run is still active
+2021-06-17 12:41:21,896 INFO    Thread-5  :21514 [wandb_setup.py:_flush():69] setting env: {'mode': 'dryrun', 'entity': 'naddeok', 'project': 'ECG Heartbeat Verifier', 'root_dir': '/mnt/c/Python Codes/HeartBreaker', 'run_id': 'nk1ijnfd', 'sweep_param_path': '/mnt/c/Python Codes/HeartBreaker/wandb/sweep-k53yb5oa/config-nk1ijnfd.yaml', 'sweep_id': 'k53yb5oa'}
+2021-06-17 12:41:21,897 INFO    Thread-5  :21514 [wandb_init.py:_log_setup():336] Logging user logs to /mnt/c/Python Codes/HeartBreaker/wandb/offline-run-20210617_124121-nk1ijnfd/logs/debug.log
+2021-06-17 12:41:21,897 INFO    Thread-5  :21514 [wandb_init.py:_log_setup():337] Logging internal logs to /mnt/c/Python Codes/HeartBreaker/wandb/offline-run-20210617_124121-nk1ijnfd/logs/debug-internal.log
+2021-06-17 12:41:21,898 INFO    Thread-5  :21514 [wandb_init.py:init():369] calling init triggers
+2021-06-17 12:41:21,898 INFO    Thread-5  :21514 [wandb_init.py:init():376] wandb.init called with sweep_config: {'batch_size': 25, 'criterion': 'binary_cross_entropy', 'epochs': 1, 'learning_rate': 0.04476046076330271, 'momentum': 0.9, 'optimizer': 'adam', 'scheduler': 'Cosine Annealing', 'use_SAM': False, 'weight_decay': 1e-05}
+config: {'epochs': 1, 'batch_size': 1, 'momentum': 0.9, 'weight_decay': 1e-05, 'learning_rate': 1e-05, 'optimizer': 'adam', 'scheduler': 'Cosine Annealing', 'criterion': 'binary_cross_entropy', 'use_SAM': False}
+2021-06-17 12:41:21,898 INFO    Thread-5  :21514 [wandb_init.py:init():415] wandb.init() called when a run is still active
+2021-06-17 12:41:26,560 INFO    MainThread:21514 [wandb_run.py:_atexit_cleanup():1535] got exitcode: 0
+2021-06-17 12:41:26,561 INFO    MainThread:21514 [wandb_run.py:_restore():1507] restore
+2021-06-17 12:41:26,571 INFO    MainThread:21514 [wandb_run.py:_wait_for_finish():1657] got exit ret: 
+2021-06-17 12:41:26,677 INFO    MainThread:21514 [wandb_run.py:_wait_for_finish():1657] got exit ret: done: true
+exit_result {
+}
+

@@ -1,0 +1,31 @@
+2021-06-17 12:33:28,566 INFO    Thread-4  :21168 [wandb_setup.py:_flush():69] setting env: {'mode': 'dryrun', 'entity': 'naddeok', 'project': 'ECG Heartbeat Verifier', 'root_dir': '/mnt/c/Python Codes/HeartBreaker', 'run_id': 'ae8zoq3l', 'sweep_param_path': '/mnt/c/Python Codes/HeartBreaker/wandb/sweep-q0tq2gjv/config-ae8zoq3l.yaml', 'sweep_id': 'q0tq2gjv'}
+2021-06-17 12:33:28,567 INFO    Thread-4  :21168 [wandb_init.py:_log_setup():336] Logging user logs to /mnt/c/Python Codes/HeartBreaker/wandb/offline-run-20210617_123328-ae8zoq3l/logs/debug.log
+2021-06-17 12:33:28,567 INFO    Thread-4  :21168 [wandb_init.py:_log_setup():337] Logging internal logs to /mnt/c/Python Codes/HeartBreaker/wandb/offline-run-20210617_123328-ae8zoq3l/logs/debug-internal.log
+2021-06-17 12:33:28,574 INFO    Thread-4  :21168 [wandb_init.py:init():369] calling init triggers
+2021-06-17 12:33:28,574 INFO    Thread-4  :21168 [wandb_init.py:init():376] wandb.init called with sweep_config: {'batch_size': 24, 'criterion': 'binary_cross_entropy', 'epochs': 1, 'learning_rate': 0.0839242671143481, 'momentum': 0.9, 'optimizer': 'adam', 'scheduler': 'Cosine Annealing', 'use_SAM': False, 'weight_decay': 1e-05}
+config: {'epochs': 1, 'batch_size': 1, 'momentum': 0.9, 'weight_decay': 1e-05, 'learning_rate': 1e-05, 'optimizer': 'adam', 'scheduler': 'Cosine Annealing', 'criterion': 'binary_cross_entropy', 'use_SAM': False}
+2021-06-17 12:33:28,574 INFO    Thread-4  :21168 [wandb_init.py:init():418] starting backend
+2021-06-17 12:33:28,575 INFO    Thread-4  :21168 [backend.py:_multiprocessing_setup():72] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2021-06-17 12:33:28,607 INFO    Thread-4  :21168 [backend.py:ensure_launched():132] starting backend process...
+2021-06-17 12:33:28,742 INFO    Thread-4  :21168 [backend.py:ensure_launched():137] started backend process with pid: 21231
+2021-06-17 12:33:28,743 INFO    Thread-4  :21168 [wandb_init.py:init():423] backend started and connected
+2021-06-17 12:33:28,745 INFO    Thread-4  :21168 [wandb_run.py:_config_callback():787] config_cb None None {'batch_size': 24, 'criterion': 'binary_cross_entropy', 'epochs': 1, 'learning_rate': 0.0839242671143481, 'momentum': 0.9, 'optimizer': 'adam', 'scheduler': 'Cosine Annealing', 'use_SAM': False, 'weight_decay': 1e-05}
+2021-06-17 12:33:28,746 INFO    Thread-4  :21168 [wandb_init.py:init():465] updated telemetry
+2021-06-17 12:33:28,748 INFO    Thread-4  :21168 [wandb_init.py:init():522] starting run threads in backend
+2021-06-17 12:33:33,816 ERROR   Thread-4  :21168 [wandb_init.py:init():770] error
+Traceback (most recent call last):
+  File "/home/naddeok/.local/lib/python3.6/site-packages/wandb/sdk/wandb_init.py", line 744, in init
+    run = wi.init()
+  File "/home/naddeok/.local/lib/python3.6/site-packages/wandb/sdk/wandb_init.py", line 525, in init
+    _ = backend.interface.communicate_run_start(run_obj)
+  File "/home/naddeok/.local/lib/python3.6/site-packages/wandb/sdk/interface/interface.py", line 799, in communicate_run_start
+    result = self._communicate(rec)
+  File "/home/naddeok/.local/lib/python3.6/site-packages/wandb/sdk/interface/interface.py", line 537, in _communicate
+    return self._communicate_async(rec, local=local).get(timeout=timeout)
+  File "/home/naddeok/.local/lib/python3.6/site-packages/wandb/sdk/interface/interface.py", line 82, in get
+    is_set = self._object_ready.wait(timeout)
+  File "/usr/lib/python3.6/threading.py", line 551, in wait
+    signaled = self._cond.wait(timeout)
+  File "/usr/lib/python3.6/threading.py", line 299, in wait
+    gotit = waiter.acquire(True, timeout)
+Exception

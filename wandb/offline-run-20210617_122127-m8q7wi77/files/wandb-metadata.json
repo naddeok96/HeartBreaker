@@ -1,0 +1,22 @@
+{
+    "os": "Linux-4.4.0-19041-Microsoft-x86_64-with-Ubuntu-18.04-bionic",
+    "python": "3.6.8",
+    "heartbeatAt": "2021-06-17T19:21:33.837377",
+    "startedAt": "2021-06-17T19:21:27.639430",
+    "docker": null,
+    "cpu_count": 8,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "model_trainer.py",
+    "codePath": "model_trainer.py",
+    "git": {
+        "remote": "https://github.com/naddeok96/HeartBreaker.git",
+        "commit": "7ae6ea1e6506a1a4ed7fb2b8e13f544d58da5150"
+    },
+    "email": "naddeok5@rowan.edu",
+    "root": "/mnt/c/Python Codes/HeartBreaker",
+    "host": "KyleNaddeo-PC",
+    "username": "naddeok",
+    "executable": "/usr/bin/python3"
+}

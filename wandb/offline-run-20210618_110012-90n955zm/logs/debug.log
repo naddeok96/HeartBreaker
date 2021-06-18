@@ -1,0 +1,32 @@
+2021-06-18 11:00:12,059 INFO    MainThread:21937 [wandb_setup.py:_flush():69] setting env: {'mode': 'dryrun'}
+2021-06-18 11:00:12,060 INFO    MainThread:21937 [wandb_init.py:_log_setup():336] Logging user logs to /mnt/c/Python Codes/HeartBreaker/wandb/offline-run-20210618_110012-90n955zm/logs/debug.log
+2021-06-18 11:00:12,060 INFO    MainThread:21937 [wandb_init.py:_log_setup():337] Logging internal logs to /mnt/c/Python Codes/HeartBreaker/wandb/offline-run-20210618_110012-90n955zm/logs/debug-internal.log
+2021-06-18 11:00:12,060 INFO    MainThread:21937 [wandb_init.py:init():369] calling init triggers
+2021-06-18 11:00:12,061 INFO    MainThread:21937 [wandb_init.py:init():376] wandb.init called with sweep_config: {}
+config: {'epochs': 1, 'batch_size': 1, 'momentum': 0.9, 'weight_decay': 1e-05, 'learning_rate': 1e-05, 'optimizer': 'adam', 'scheduler': 'Cosine Annealing', 'criterion': 'binary_cross_entropy', 'use_SAM': False}
+2021-06-18 11:00:12,067 INFO    MainThread:21937 [wandb_init.py:init():418] starting backend
+2021-06-18 11:00:12,067 INFO    MainThread:21937 [backend.py:_multiprocessing_setup():72] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2021-06-18 11:00:12,177 INFO    MainThread:21937 [backend.py:ensure_launched():132] starting backend process...
+2021-06-18 11:00:12,275 INFO    MainThread:21937 [backend.py:ensure_launched():137] started backend process with pid: 21963
+2021-06-18 11:00:12,277 INFO    MainThread:21937 [wandb_init.py:init():423] backend started and connected
+2021-06-18 11:00:12,287 INFO    MainThread:21937 [wandb_init.py:init():465] updated telemetry
+2021-06-18 11:00:12,293 INFO    MainThread:21937 [wandb_init.py:init():522] starting run threads in backend
+2021-06-18 11:00:17,308 INFO    MainThread:21937 [wandb_run.py:_console_start():1565] atexit reg
+2021-06-18 11:00:17,309 INFO    MainThread:21937 [wandb_run.py:_redirect():1412] redirect: SettingsConsole.REDIRECT
+2021-06-18 11:00:17,314 INFO    MainThread:21937 [wandb_run.py:_redirect():1417] Redirecting console.
+2021-06-18 11:00:17,320 INFO    MainThread:21937 [wandb_run.py:_redirect():1479] Redirects installed.
+2021-06-18 11:00:17,321 INFO    MainThread:21937 [wandb_init.py:init():546] run started, returning control to user process
+2021-06-18 11:00:22,131 INFO    MainThread:21937 [wandb_setup.py:_flush():69] setting env: {'mode': 'dryrun'}
+2021-06-18 11:00:22,132 INFO    MainThread:21937 [wandb_init.py:_log_setup():336] Logging user logs to /mnt/c/Python Codes/HeartBreaker/wandb/offline-run-20210618_110022-iq6nqsuc/logs/debug.log
+2021-06-18 11:00:22,132 INFO    MainThread:21937 [wandb_init.py:_log_setup():337] Logging internal logs to /mnt/c/Python Codes/HeartBreaker/wandb/offline-run-20210618_110022-iq6nqsuc/logs/debug-internal.log
+2021-06-18 11:00:22,132 INFO    MainThread:21937 [wandb_init.py:init():369] calling init triggers
+2021-06-18 11:00:22,133 INFO    MainThread:21937 [wandb_init.py:init():376] wandb.init called with sweep_config: {}
+config: {'epochs': 1, 'batch_size': 1, 'momentum': 0.9, 'weight_decay': 1e-05, 'learning_rate': 1e-05, 'optimizer': 'adam', 'scheduler': 'Cosine Annealing', 'criterion': 'binary_cross_entropy', 'use_SAM': False}
+2021-06-18 11:00:22,139 INFO    MainThread:21937 [wandb_init.py:init():415] wandb.init() called when a run is still active
+2021-06-18 11:00:22,140 INFO    MainThread:21937 [wandb_run.py:_atexit_cleanup():1535] got exitcode: 0
+2021-06-18 11:00:22,140 INFO    MainThread:21937 [wandb_run.py:_restore():1507] restore
+2021-06-18 11:00:24,154 INFO    MainThread:21937 [wandb_run.py:_wait_for_finish():1657] got exit ret: 
+2021-06-18 11:00:24,265 INFO    MainThread:21937 [wandb_run.py:_wait_for_finish():1657] got exit ret: done: true
+exit_result {
+}
+

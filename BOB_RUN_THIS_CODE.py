@@ -1,7 +1,7 @@
 # BOB ONLY EDIT THE SETTING SECTION
 # Settings
 #------------------------------------------------------------------------------------#
-folder_name = "ECG-Phono-Seismo DAQ Data 8 20 2020 2" # "1 9 2020 AH TDMS ESSENTIAL" 
+folder_name = "10 22 20 Files" # "ECG-Phono-Seismo DAQ Data 8 20 2020 2" # "1 9 2020 AH TDMS ESSENTIAL" 
 area_around_echo_size = 240 # In Seconds
 composite_size        = 10  # In number of heartbeats
 step_size             = 5   # In number of heartbeats
@@ -9,19 +9,19 @@ step_size             = 5   # In number of heartbeats
 save_signal          = False
 preloaded_signal     = True
 
-use_intervals        = True
+use_intervals        = False
 
-save_composites      = True
-preloaded_composites = True
+save_composites      = False
+preloaded_composites = False
 
 display_intervals       = True
 
 start_at_dosage         = 0
-display_raw_peaks       = False
+display_raw_peaks       = True
 verify_LUSI_raw_labels  = True
 
-display_INO_composites  = False
-display_LUSI_composites = False
+display_INO_composites  = True
+display_LUSI_composites = True
 
 verify_INO_labels       = True
 verify_LUSI_labels      = True
@@ -79,6 +79,9 @@ composite_statistics = {0  : CompositeStats(),
 
 # Check Composites
 for dosage in files[folder_name]:
+    if dosage != 0:
+        os.chdir("../..")
+
     if dosage < start_at_dosage:
         continue
 

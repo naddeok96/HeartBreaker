@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.signal import find_peaks, argrelmin
 from scipy import signal as scisig
+import copy
 import math
 import csv
 from patient import Patient
@@ -142,7 +143,6 @@ def load_intervals(folder_name):
     with open(load_filename + '.pkl', 'rb') as input:
         return pickle.load(input)
 
-
 def save_peaks_to_excel(file_name, time, peaks):
     '''
     Save PQRST, S''max and T''max peaks in time to excel
@@ -194,11 +194,14 @@ def lowpass_filter(signal, cutoff_freq, time = None):
     b, a = butter(5 , normal_cutoff, btype='low', analog=False)
     return filtfilt(b, a, signal)
 
-def moving_average(signal, pt) :
+def moving_average(list_of_signals, pt = 100) :
     '''
     Calculate moving point average of the signal
     '''
-    return np.convolve(signal, np.ones((pt,))/pt, mode='valid')
+    for i, signal in enumerate(list_of_signals):
+        list_of_signals[i] = np.convolve(signal, np.ones((pt,))/pt, mode='valid')
+        
+    return list_of_signals
 
 def normalize(signal):
     '''
@@ -507,6 +510,132 @@ def temp_get_ecg_peaks(time,
                     
     if plot:
         peaks.plot(time, signal, smoothed_second, seis1, seis2, phono1, phono2)
+
+    return peaks
+
+def get_ecg_peaks_v2(   time,
+                        signal,
+                        dosage,
+
+                        num_pts = 100, # Moving average
+
+                        random_sample_size = 0,
+
+                        r_max_to_mean_ratio  = 0.6,  ## 0.0 -> mean ## 1.0 -> max
+                        qm_max_to_mean_ratio = 0.4,
+                        tm_max_to_mean_ratio = 0.4, 
+
+                        r_window_ratio = 0.3,       ## r_window_ratio == 150 beats per min
+                        q_window_ratio = 0.06,      ## 
+                        s_window_ratio = 0.06,      ## 
+                        p_window_ratio = 0.22,      ## 
+                        t_window_ratio = 0.40,      ## 
+
+                        qm_bounds    = { 0: [0.2500, 0.3333],
+                                        10: [0.1000, 0.1111],
+                                        20: [0.0714, 0.0769],
+                                        30: [0.0625, 0.0667],
+                                        40: [0.0488, 0.0513]},
+                        
+                        plot                         = False,
+                        plot_windows                 = False,
+                        plot_derivatives             = False,
+                        plot_segmentation_decisons   = False,
+                        plot_st_segments             = False,
+                        
+                        seis1  = None,
+                        seis2  = None,
+                        phono1 = None,
+                        phono2 = None):
+    '''
+    Finds the P, Q, R, S, T and S-T segments of each beat in a signal
+    '''
+    # Normalize
+
+    # ECG
+    signal = normalize(signal)
+
+    # Seismo
+    if seis1 is not None:
+        seis1  = 0.75 * normalize(seis1)
+    if seis2 is not None:
+        seis2  = 0.75 * normalize(seis2)
+    if (seis1 is not None) or (seis2 is not None):
+        seis   = (seis1 + seis2) / 2
+    else:
+        seis = None
+        
+    # Phono
+    if phono1 is not None:
+        phono1 = 0.75 * normalize(phono1)
+    if phono2 is not None:
+        phono2 = 0.75 * normalize(phono2)
+    if (phono1 is not None) or (phono2 is not None):
+        phono = (phono1 + phono2) / 2
+    else:
+        phono = None
+
+    # Initalize Peaks
+    peaks = Peaks()
+    peaks.time = time
+    peaks.signal = signal
+    peaks.seis1 = seis1
+    peaks.seis2 = seis2
+    peaks.seis  = seis
+    peaks.phono1 = phono1
+    peaks.phono2 = phono2
+    peaks.phono  = phono
+
+    # 3x 100pt Moving Average
+    orginal_time = copy.copy(time)
+    signal, time = moving_average([signal, time], num_pts)
+    signal, time = moving_average([signal, time], num_pts)
+    signal, time = moving_average([signal, time], num_pts)
+
+    # # Take 1st Derivative
+    first, _ = get_derivatives(signal)
+
+    # # 3x 100pt Moving Average  
+    signal, time, first = moving_average([signal, time, first], num_pts)
+    signal, time, first = moving_average([signal, time, first], num_pts)
+    signal, time, first = moving_average([signal, time, first], num_pts)
+    
+    # Take 2nd Derivative
+    second, _ = get_derivatives(first)
+
+    # Calculate frequency    
+    frequency =  (len(time) - 1) / (np.max(time) - np.min(time))
+
+    # Define Signal and Time range
+    signal_max_to_mean = np.max(-second) - np.mean(-second)
+
+    # Find R Peaks in Interval
+    peaks.get_R_peaks(second, r_max_to_mean_ratio, signal_max_to_mean, signal, r_window_ratio, frequency, display_windowing = False)
+    
+     # Use R peak to find other peaks
+    for i in range(len(peaks.R.data)):
+        peaks.add_Q_peak(       i, q_window_ratio, signal, second, display_windowing = False)
+        peaks.add_P_peak(       i, p_window_ratio, signal, display_windowing = False)
+        peaks.add_S_peak(       i, s_window_ratio, signal, display_windowing = True)
+        peaks.add_T_peak(       i, t_window_ratio, signal, display_windowing = True)
+
+        # peaks.add_ST_segment(   i, second, first, signal)
+        # peaks.add_dT_peak(      i, second)
+        # peaks.add_ddT_peak(     i, second)
+        # peaks.add_ddQ_peak(     i, signal, second)
+
+        if seis2 is not None:
+            peaks.add_QM_peak_v2(      i, seis2, qm_max_to_mean_ratio, time =time, alt_time = orginal_time, signal = signal) 
+            peaks.add_TM_peak_v2(      i, seis2, tm_max_to_mean_ratio, time =time, alt_time = orginal_time, signal = signal, second = second, dosage = dosage)
+
+        # if plot_segmentation_decisons:
+        #     peaks.plot_segmentation_decisons(i, randomlist, time, seis1, signal, qm_bounds, dosage, frequency)
+                    
+    if plot:
+        if seis2 is not None:
+            peaks.plot(time, signal, second = second, seis = seis2, alt_time = orginal_time)
+        else:
+            peaks.plot(time, signal, second = second)
 
     return peaks
 

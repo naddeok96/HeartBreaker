@@ -1,0 +1,14 @@
+2021-06-18 11:03:46,734 INFO    MainThread:22117 [wandb_setup.py:_flush():69] setting env: {'mode': 'dryrun'}
+2021-06-18 11:03:46,734 INFO    MainThread:22117 [wandb_init.py:_log_setup():336] Logging user logs to /mnt/c/Python Codes/HeartBreaker/wandb/offline-run-20210618_110346-ka1y7oee/logs/debug.log
+2021-06-18 11:03:46,735 INFO    MainThread:22117 [wandb_init.py:_log_setup():337] Logging internal logs to /mnt/c/Python Codes/HeartBreaker/wandb/offline-run-20210618_110346-ka1y7oee/logs/debug-internal.log
+2021-06-18 11:03:46,735 INFO    MainThread:22117 [wandb_init.py:init():369] calling init triggers
+2021-06-18 11:03:46,735 INFO    MainThread:22117 [wandb_init.py:init():376] wandb.init called with sweep_config: {}
+config: {'epochs': 1, 'batch_size': 1, 'momentum': 0.9, 'weight_decay': 1e-05, 'learning_rate': 1e-05, 'optimizer': 'adam', 'scheduler': 'Cosine Annealing', 'criterion': 'binary_cross_entropy', 'use_SAM': False}
+2021-06-18 11:03:46,736 INFO    MainThread:22117 [wandb_init.py:init():415] wandb.init() called when a run is still active
+2021-06-18 11:03:47,308 INFO    MainThread:22117 [wandb_run.py:_atexit_cleanup():1535] got exitcode: 1
+2021-06-18 11:03:47,308 INFO    MainThread:22117 [wandb_run.py:_restore():1507] restore
+2021-06-18 11:03:49,328 INFO    MainThread:22117 [wandb_run.py:_wait_for_finish():1657] got exit ret: 
+2021-06-18 11:03:49,432 INFO    MainThread:22117 [wandb_run.py:_wait_for_finish():1657] got exit ret: done: true
+exit_result {
+}
+

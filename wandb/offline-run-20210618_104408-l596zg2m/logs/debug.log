@@ -1,0 +1,32 @@
+2021-06-18 10:44:08,458 INFO    Thread-4  :21678 [wandb_setup.py:_flush():69] setting env: {'mode': 'dryrun', 'entity': 'naddeok', 'project': 'ECG Heartbeat Verifier', 'root_dir': '/mnt/c/Python Codes/HeartBreaker', 'run_id': 'l596zg2m', 'sweep_param_path': '/mnt/c/Python Codes/HeartBreaker/wandb/sweep-by1ewx3r/config-l596zg2m.yaml', 'sweep_id': 'by1ewx3r'}
+2021-06-18 10:44:08,459 INFO    Thread-4  :21678 [wandb_init.py:_log_setup():336] Logging user logs to /mnt/c/Python Codes/HeartBreaker/wandb/offline-run-20210618_104408-l596zg2m/logs/debug.log
+2021-06-18 10:44:08,459 INFO    Thread-4  :21678 [wandb_init.py:_log_setup():337] Logging internal logs to /mnt/c/Python Codes/HeartBreaker/wandb/offline-run-20210618_104408-l596zg2m/logs/debug-internal.log
+2021-06-18 10:44:08,466 INFO    Thread-4  :21678 [wandb_init.py:init():369] calling init triggers
+2021-06-18 10:44:08,466 INFO    Thread-4  :21678 [wandb_init.py:init():376] wandb.init called with sweep_config: {'batch_size': 27, 'criterion': 'binary_cross_entropy', 'epochs': 1, 'learning_rate': 0.05977909410572137, 'momentum': 0.9, 'optimizer': 'adam', 'scheduler': 'Cosine Annealing', 'use_SAM': False, 'weight_decay': 1e-05}
+config: {'epochs': 1, 'batch_size': 1, 'momentum': 0.9, 'weight_decay': 1e-05, 'learning_rate': 1e-05, 'optimizer': 'adam', 'scheduler': 'Cosine Annealing', 'criterion': 'binary_cross_entropy', 'use_SAM': False}
+2021-06-18 10:44:08,466 INFO    Thread-4  :21678 [wandb_init.py:init():418] starting backend
+2021-06-18 10:44:08,466 INFO    Thread-4  :21678 [backend.py:_multiprocessing_setup():72] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2021-06-18 10:44:08,488 INFO    Thread-4  :21678 [backend.py:ensure_launched():132] starting backend process...
+2021-06-18 10:44:08,767 INFO    Thread-4  :21678 [backend.py:ensure_launched():137] started backend process with pid: 21744
+2021-06-18 10:44:08,770 INFO    Thread-4  :21678 [wandb_init.py:init():423] backend started and connected
+2021-06-18 10:44:08,771 INFO    Thread-4  :21678 [wandb_run.py:_config_callback():787] config_cb None None {'batch_size': 27, 'criterion': 'binary_cross_entropy', 'epochs': 1, 'learning_rate': 0.05977909410572137, 'momentum': 0.9, 'optimizer': 'adam', 'scheduler': 'Cosine Annealing', 'use_SAM': False, 'weight_decay': 1e-05}
+2021-06-18 10:44:08,772 INFO    Thread-4  :21678 [wandb_init.py:init():465] updated telemetry
+2021-06-18 10:44:08,775 INFO    Thread-4  :21678 [wandb_init.py:init():522] starting run threads in backend
+2021-06-18 10:44:13,792 INFO    Thread-4  :21678 [wandb_run.py:_console_start():1565] atexit reg
+2021-06-18 10:44:13,794 INFO    Thread-4  :21678 [wandb_run.py:_redirect():1412] redirect: SettingsConsole.REDIRECT
+2021-06-18 10:44:13,794 INFO    Thread-4  :21678 [wandb_run.py:_redirect():1417] Redirecting console.
+2021-06-18 10:44:13,795 ERROR   Thread-4  :21678 [wandb_run.py:_redirect():1482] Failed to redirect.
+Traceback (most recent call last):
+  File "/home/naddeok/.local/lib/python3.6/site-packages/wandb/sdk/wandb_run.py", line 1475, in _redirect
+    out_redir.install()
+  File "/home/naddeok/.local/lib/python3.6/site-packages/wandb/sdk/lib/redirect.py", line 605, in install
+    _WSCH.add_fd(self._pipe_read_fd)
+  File "/home/naddeok/.local/lib/python3.6/site-packages/wandb/sdk/lib/redirect.py", line 555, in add_fd
+    self._register()
+  File "/home/naddeok/.local/lib/python3.6/site-packages/wandb/sdk/lib/redirect.py", line 540, in _register
+    old_handler = signal.signal(signal.SIGWINCH, lambda *_: None)
+  File "/usr/lib/python3.6/signal.py", line 47, in signal
+    handler = _signal.signal(_enum_to_int(signalnum), _enum_to_int(handler))
+ValueError: signal only works in main thread
+2021-06-18 10:44:13,795 INFO    Thread-4  :21678 [wandb_init.py:init():546] run started, returning control to user process
+2021-06-18 10:44:20,224 INFO    Thread-4  :21678 [wandb_run.py:finish():1208] finishing run naddeok/ECG Heartbeat Verifier/l596zg2m
