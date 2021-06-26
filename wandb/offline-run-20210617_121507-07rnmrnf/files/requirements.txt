@@ -216,7 +216,7 @@ textmagic==2.0.3
 tf-estimator-nightly==1.14.0.dev2019073001
 tf-nightly==1.15.0.dev20190730
 theano==1.0.4
-thefuck==3.29
+thefuck==3.31
 threadpoolctl==2.1.0
 torch==1.7.0
 torchaudio==0.4.0
