@@ -150,7 +150,7 @@ def train(data, save_model):
                 # Calculate loss
                 loss = criterion(outputs, labels) # Calculate loss 
                 _, predictions = torch.max(outputs, 1)
-                correct += (predictions == labels).sum()
+                correct += (predictions == labels[:,0]).sum()
                 total_tested += labels.size(0)
                 epoch_loss += loss.item()
 
@@ -226,7 +226,7 @@ def test(net, data, config):
 
         # Update running sum
         _, predictions = torch.max(outputs, 1)
-        correct += (predictions == labels).sum()
+        correct += (predictions == labels[:,0]).sum()
         total_tested += labels.size(0)
         total_loss   += loss.item()
     
@@ -241,8 +241,10 @@ def test(net, data, config):
 if __name__ == "__main__":
 
     # Hyperparameters
-    gpu          = False
+    gpu          = True
     save_model   = False
+    save_data    = False
+    preloaded_data = True
     project_name = "ECG Heartbeat Verifier"
     set_name     = '14046'
     # seed         = 100
@@ -251,7 +253,7 @@ if __name__ == "__main__":
     # Push to GPU if necessary
     if gpu:
         os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-        os.environ["CUDA_VISIBLE_DEVICES"] = "3"
+        os.environ["CUDA_VISIBLE_DEVICES"] = "5"
 
     # Declare seed and initalize network
     # torch.manual_seed(seed) 
@@ -259,8 +261,10 @@ if __name__ == "__main__":
     # Load data
     data = Data(folder_name = "data/MIT-BIH Long-Term ECG Database", # "ECG-Phono-Seismo DAQ Data 8 20 2020 2" # "1 9 2020 AH TDMS ESSENTIAL" 
                 set_name    = set_name,
-                gpu = False,
-                test_batch_size  = 100)
+                gpu = gpu,
+                test_batch_size  = 100,
+                save_data = save_data,
+                preloaded_data = preloaded_data)
     print(set_name + " is Loaded")
 
     # Run the sweep
@@ -271,5 +275,6 @@ if __name__ == "__main__":
     # config = initalize_config_defaults(sweep_config)
     # net = initalize_net(data.gpu)
     # print(test(net, data, config))
+    
 
 

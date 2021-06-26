@@ -12,7 +12,9 @@ class Data:
                         signal_length = 300,
                         gpu = False,
                         test_batch_size  = 100,
-                        train_percentage = 0.8):
+                        train_percentage = 0.8,
+                        save_data = False,
+                        preloaded_data = False):
         """
         Args:
             csv_file (string): Relative path to the csv file
@@ -37,7 +39,9 @@ class Data:
         # Pull in data
         self.dataset = MITBIHLongTermDataset(folder_name = self.folder_name,
                                             set_name    = self.set_name,
-                                            signal_length = signal_length)
+                                            signal_length = signal_length,
+                                            preloaded_data=preloaded_data,
+                                            save_data=save_data)
         print("Dataset Loaded")
 
         # Split Data

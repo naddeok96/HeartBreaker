@@ -1,0 +1,77 @@
+2021-06-24 05:11:24,745 INFO    Thread-15008:876543 [wandb_setup.py:_flush():69] setting env: {'entity': 'naddeok', 'project': 'ECG Heartbeat Verifier', 'root_dir': '/home/naddeok5/HeartBreaker', 'run_id': 'm0wtxlb8', 'sweep_param_path': '/home/naddeok5/HeartBreaker/wandb/sweep-thkjvv02/config-m0wtxlb8.yaml', 'sweep_id': 'thkjvv02'}
+2021-06-24 05:11:24,745 INFO    Thread-15008:876543 [wandb_setup.py:_flush():69] setting login settings: {}
+2021-06-24 05:11:24,745 INFO    Thread-15008:876543 [wandb_init.py:_log_setup():336] Logging user logs to /home/naddeok5/HeartBreaker/wandb/run-20210624_051124-m0wtxlb8/logs/debug.log
+2021-06-24 05:11:24,745 INFO    Thread-15008:876543 [wandb_init.py:_log_setup():337] Logging internal logs to /home/naddeok5/HeartBreaker/wandb/run-20210624_051124-m0wtxlb8/logs/debug-internal.log
+2021-06-24 05:11:24,746 INFO    Thread-15008:876543 [wandb_init.py:init():369] calling init triggers
+2021-06-24 05:11:24,746 INFO    Thread-15008:876543 [wandb_init.py:init():374] wandb.init called with sweep_config: {'batch_size': 76, 'criterion': 'binary_cross_entropy', 'epochs': 1000000, 'learning_rate': 0.024490241976594294, 'momentum': 0.9, 'optimizer': 'adam', 'scheduler': 'Cosine Annealing', 'use_SAM': False, 'weight_decay': 1e-05}
+config: {'epochs': 10000.0, 'batch_size': 1, 'momentum': 0.9, 'weight_decay': 1e-05, 'learning_rate': 1e-05, 'optimizer': 'adam', 'scheduler': 'Cosine Annealing', 'criterion': 'binary_cross_entropy', 'use_SAM': False}
+2021-06-24 05:11:24,746 INFO    Thread-15008:876543 [wandb_init.py:init():418] starting backend
+2021-06-24 05:11:24,746 INFO    Thread-15008:876543 [backend.py:_multiprocessing_setup():70] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2021-06-24 05:11:24,750 INFO    Thread-15008:876543 [backend.py:ensure_launched():132] starting backend process...
+2021-06-24 05:11:24,802 INFO    Thread-15008:876543 [backend.py:ensure_launched():136] started backend process with pid: 2247371
+2021-06-24 05:11:24,805 INFO    Thread-15008:876543 [wandb_init.py:init():423] backend started and connected
+2021-06-24 05:11:24,806 INFO    Thread-15008:876543 [wandb_run.py:_config_callback():787] config_cb None None {'batch_size': 76, 'criterion': 'binary_cross_entropy', 'epochs': 1000000, 'learning_rate': 0.024490241976594294, 'momentum': 0.9, 'optimizer': 'adam', 'scheduler': 'Cosine Annealing', 'use_SAM': False, 'weight_decay': 1e-05}
+2021-06-24 05:11:24,806 INFO    Thread-15008:876543 [wandb_init.py:init():465] updated telemetry
+2021-06-24 05:11:24,807 INFO    Thread-15008:876543 [wandb_init.py:init():484] communicating current version
+2021-06-24 05:11:26,354 INFO    Thread-15008:876543 [wandb_init.py:init():489] got version response upgrade_message: "wandb version 0.10.32 is available!  To upgrade, please run:\n $ pip install wandb --upgrade"
+
+2021-06-24 05:11:26,354 INFO    Thread-15008:876543 [wandb_init.py:init():497] communicating run to backend with 30 second timeout
+2021-06-24 05:11:26,497 INFO    Thread-15008:876543 [wandb_init.py:init():522] starting run threads in backend
+2021-06-24 05:11:29,244 INFO    Thread-15008:876543 [wandb_run.py:_console_start():1565] atexit reg
+2021-06-24 05:11:29,244 INFO    Thread-15008:876543 [wandb_run.py:_redirect():1412] redirect: SettingsConsole.REDIRECT
+2021-06-24 05:11:29,244 INFO    Thread-15008:876543 [wandb_run.py:_redirect():1417] Redirecting console.
+2021-06-24 05:11:29,245 ERROR   Thread-15008:876543 [wandb_run.py:_redirect():1482] Failed to redirect.
+Traceback (most recent call last):
+  File "/home/naddeok5/.local/lib/python3.8/site-packages/wandb/sdk/wandb_run.py", line 1475, in _redirect
+    out_redir.install()
+  File "/home/naddeok5/.local/lib/python3.8/site-packages/wandb/sdk/lib/redirect.py", line 605, in install
+    _WSCH.add_fd(self._pipe_read_fd)
+  File "/home/naddeok5/.local/lib/python3.8/site-packages/wandb/sdk/lib/redirect.py", line 555, in add_fd
+    self._register()
+  File "/home/naddeok5/.local/lib/python3.8/site-packages/wandb/sdk/lib/redirect.py", line 540, in _register
+    old_handler = signal.signal(signal.SIGWINCH, lambda *_: None)
+  File "/usr/lib/python3.8/signal.py", line 47, in signal
+    handler = _signal.signal(_enum_to_int(signalnum), _enum_to_int(handler))
+ValueError: signal only works in main thread
+2021-06-24 05:11:29,245 INFO    Thread-15008:876543 [wandb_init.py:init():546] run started, returning control to user process
+2021-06-24 05:46:40,443 ERROR   Thread-1  :876543 [internal_api.py:execute():130] 500 response executing GraphQL.
+2021-06-24 05:46:40,446 ERROR   Thread-1  :876543 [internal_api.py:execute():131] {"errors":[{"message":"Error 1040: Too many connections","path":["agentHeartbeat"]}],"data":{"agentHeartbeat":null}}
+2021-06-24 05:46:44,637 ERROR   Thread-1  :876543 [internal_api.py:execute():130] 500 response executing GraphQL.
+2021-06-24 05:46:44,639 ERROR   Thread-1  :876543 [internal_api.py:execute():131] {"error":"Error 1040: Too many connections"}
+
+2021-06-24 05:46:46,889 ERROR   Thread-1  :876543 [internal_api.py:execute():130] 500 response executing GraphQL.
+2021-06-24 05:46:46,890 ERROR   Thread-1  :876543 [internal_api.py:execute():131] {"error":"Error 1040: Too many connections"}
+
+2021-06-24 05:46:46,890 ERROR   Thread-1  :876543 [retry.py:__call__():126] Retry attempt failed:
+Traceback (most recent call last):
+  File "/home/naddeok5/.local/lib/python3.8/site-packages/wandb/sdk/lib/retry.py", line 102, in __call__
+    result = self._call_fn(*args, **kwargs)
+  File "/home/naddeok5/.local/lib/python3.8/site-packages/wandb/sdk/internal/internal_api.py", line 133, in execute
+    six.reraise(*sys.exc_info())
+  File "/usr/lib/python3/dist-packages/six.py", line 703, in reraise
+    raise value
+  File "/home/naddeok5/.local/lib/python3.8/site-packages/wandb/sdk/internal/internal_api.py", line 127, in execute
+    return self.client.execute(*args, **kwargs)
+  File "/home/naddeok5/.local/lib/python3.8/site-packages/wandb/vendor/gql-0.2.0/gql/client.py", line 52, in execute
+    result = self._get_result(document, *args, **kwargs)
+  File "/home/naddeok5/.local/lib/python3.8/site-packages/wandb/vendor/gql-0.2.0/gql/client.py", line 60, in _get_result
+    return self.transport.execute(document, *args, **kwargs)
+  File "/home/naddeok5/.local/lib/python3.8/site-packages/wandb/vendor/gql-0.2.0/gql/transport/requests.py", line 39, in execute
+    request.raise_for_status()
+  File "/usr/lib/python3/dist-packages/requests/models.py", line 940, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://api.wandb.ai/graphql
+2021-06-24 05:46:51,352 ERROR   Thread-1  :876543 [internal_api.py:execute():130] 500 response executing GraphQL.
+2021-06-24 05:46:51,353 ERROR   Thread-1  :876543 [internal_api.py:execute():131] {"errors":[{"message":"Error 1040: Too many connections","path":["agentHeartbeat"]}],"data":{"agentHeartbeat":null}}
+2021-06-24 17:13:37,743 ERROR   Thread-1  :876543 [internal_api.py:execute():130] 502 response executing GraphQL.
+2021-06-24 17:13:37,744 ERROR   Thread-1  :876543 [internal_api.py:execute():131] 
+<html><head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8">
+<title>502 Server Error</title>
+</head>
+<body text=#000000 bgcolor=#ffffff>
+<h1>Error: Server Error</h1>
+<h2>The server encountered a temporary error and could not complete your request.<p>Please try again in 30 seconds.</h2>
+<h2></h2>
+</body></html>
+

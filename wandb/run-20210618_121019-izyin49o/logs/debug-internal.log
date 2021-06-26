@@ -1,0 +1,35 @@
+2021-06-18 12:10:20,123 INFO    MainThread:2703197 [internal.py:wandb_internal():88] W&B internal server running at pid: 2703197, started at: 2021-06-18 12:10:20.122878
+2021-06-18 12:10:20,125 DEBUG   HandlerThread:2703197 [handler.py:handle_request():121] handle_request: check_version
+2021-06-18 12:10:20,125 INFO    WriterThread:2703197 [datastore.py:open_for_write():77] open: /home/naddeok5/HeartBreaker/wandb/run-20210618_121019-izyin49o/run-izyin49o.wandb
+2021-06-18 12:10:20,127 DEBUG   SenderThread:2703197 [sender.py:send():176] send: header
+2021-06-18 12:10:20,127 DEBUG   SenderThread:2703197 [sender.py:send_request():186] send_request: check_version
+2021-06-18 12:10:20,181 DEBUG   SenderThread:2703197 [sender.py:send():176] send: run
+2021-06-18 12:10:20,302 DEBUG   HandlerThread:2703197 [handler.py:handle_request():121] handle_request: run_start
+2021-06-18 12:10:20,304 INFO    SenderThread:2703197 [dir_watcher.py:__init__():168] watching files in: /home/naddeok5/HeartBreaker/wandb/run-20210618_121019-izyin49o/files
+2021-06-18 12:10:20,304 INFO    SenderThread:2703197 [sender.py:_start_run_threads():696] run started: izyin49o with start time 1624032619
+2021-06-18 12:10:20,304 DEBUG   SenderThread:2703197 [sender.py:send():176] send: summary
+2021-06-18 12:10:20,304 INFO    SenderThread:2703197 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 12:10:20,713 WARNING MainThread:2703197 [internal.py:wandb_internal():147] Internal process interrupt: 1
+2021-06-18 12:10:20,888 WARNING MainThread:2703197 [internal.py:wandb_internal():147] Internal process interrupt: 2
+2021-06-18 12:10:20,888 ERROR   MainThread:2703197 [internal.py:wandb_internal():150] Internal process interrupted.
+2021-06-18 12:10:21,182 INFO    WriterThread:2703197 [datastore.py:close():258] close: /home/naddeok5/HeartBreaker/wandb/run-20210618_121019-izyin49o/run-izyin49o.wandb
+2021-06-18 12:10:21,305 INFO    SenderThread:2703197 [sender.py:finish():925] shutting down sender
+2021-06-18 12:10:21,306 INFO    SenderThread:2703197 [dir_watcher.py:finish():282] shutting down directory watcher
+2021-06-18 12:10:21,308 INFO    Thread-8  :2703197 [dir_watcher.py:_on_file_created():216] file/dir created: /home/naddeok5/HeartBreaker/wandb/run-20210618_121019-izyin49o/files/wandb-summary.json
+2021-06-18 12:10:21,311 INFO    SenderThread:2703197 [dir_watcher.py:finish():312] scan: /home/naddeok5/HeartBreaker/wandb/run-20210618_121019-izyin49o/files
+2021-06-18 12:10:21,312 INFO    SenderThread:2703197 [dir_watcher.py:finish():318] scan save: /home/naddeok5/HeartBreaker/wandb/run-20210618_121019-izyin49o/files/wandb-summary.json wandb-summary.json
+2021-06-18 12:10:21,313 INFO    SenderThread:2703197 [dir_watcher.py:finish():318] scan save: /home/naddeok5/HeartBreaker/wandb/run-20210618_121019-izyin49o/files/config.yaml config.yaml
+2021-06-18 12:10:21,319 INFO    SenderThread:2703197 [file_pusher.py:finish():176] shutting down file pusher
+2021-06-18 12:10:21,320 INFO    SenderThread:2703197 [file_pusher.py:join():181] waiting for file pusher
+2021-06-18 12:10:21,791 INFO    Thread-11 :2703197 [upload_job.py:push():133] Uploaded file /home/naddeok5/HeartBreaker/wandb/run-20210618_121019-izyin49o/files/config.yaml
+2021-06-18 12:10:21,805 INFO    Thread-10 :2703197 [upload_job.py:push():133] Uploaded file /home/naddeok5/HeartBreaker/wandb/run-20210618_121019-izyin49o/files/wandb-summary.json
+2021-06-18 12:10:21,911 DEBUG   HandlerThread:2703197 [meta.py:__init__():39] meta init
+2021-06-18 12:10:21,911 DEBUG   HandlerThread:2703197 [meta.py:__init__():53] meta init done
+2021-06-18 12:10:21,911 DEBUG   HandlerThread:2703197 [meta.py:probe():210] probe
+2021-06-18 12:10:21,918 DEBUG   HandlerThread:2703197 [meta.py:_setup_git():200] setup git
+2021-06-18 12:10:21,957 DEBUG   HandlerThread:2703197 [meta.py:_setup_git():207] setup git done
+2021-06-18 12:10:21,957 DEBUG   HandlerThread:2703197 [meta.py:_save_pip():57] save pip
+2021-06-18 12:10:21,958 DEBUG   HandlerThread:2703197 [meta.py:_save_pip():71] save pip done
+2021-06-18 12:10:21,959 DEBUG   HandlerThread:2703197 [meta.py:probe():252] probe done
+2021-06-18 12:10:21,962 INFO    HandlerThread:2703197 [handler.py:finish():632] shutting down handler
+2021-06-18 12:10:22,446 INFO    MainThread:2703197 [internal.py:handle_exit():78] Internal process exited

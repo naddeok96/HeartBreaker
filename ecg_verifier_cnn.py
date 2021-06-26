@@ -15,6 +15,9 @@ class ECGVeriNet(nn.Module):
         # Declare GPU use
         self.gpu = gpu
 
+        # Activation Functions
+        self.activation_fn = torch.nn.ELU()
+
         # Conv1
         self.conv1 = nn.Conv1d(in_channels  = 1,
                                out_channels = 96,
@@ -58,9 +61,10 @@ class ECGVeriNet(nn.Module):
         self.dropout = nn.Dropout()
 
         # FC 3
-        self.fc3 = nn.Linear(4096, 1)
+        self.fc3 = nn.Linear(4096, 2)
 
-        # Output
+        # Possible Output
+        self.softmax = torch.nn.Softmax()
         self.sigmoid = torch.nn.Sigmoid()
 
     def forward(self, x):
@@ -68,27 +72,27 @@ class ECGVeriNet(nn.Module):
         # Feedforward
         #-------------------------------#
         # Conv Layers
-        x = torch.tanh(self.conv1(x))
+        x = self.activation_fn(self.conv1(x))
         x = self.pool(x)
 
-        x = torch.tanh(self.conv2(x))
+        x = self.activation_fn(self.conv2(x))
         x = self.pool(x)
 
-        x = torch.tanh(self.conv3(x))
+        x = self.activation_fn(self.conv3(x))
         x = self.pool(x)
 
-        x = torch.tanh(self.conv4(x))
+        x = self.activation_fn(self.conv4(x))
         x = self.pool(x)
 
         # FC Layers
         x = torch.flatten(x, start_dim=1)
-        x = torch.tanh(self.fc1(x))
-        x = torch.tanh(self.fc2(x))
+        x = self.activation_fn(self.fc1(x))
+        x = self.activation_fn(self.fc2(x))
         x = self.dropout(x)
         x = self.fc3(x)
         #-------------------------------#
 
         # Output
-        return torch.sigmoid(x)
+        return torch.softmax(x, dim = 1)
 
 

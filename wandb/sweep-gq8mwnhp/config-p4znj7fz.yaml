@@ -1,0 +1,20 @@
+wandb_version: 1
+
+batch_size:
+  value: 22
+criterion:
+  value: binary_cross_entropy
+epochs:
+  value: 207
+learning_rate:
+  value: 0.026358262291002153
+momentum:
+  value: 0.9
+optimizer:
+  value: adam
+scheduler:
+  value: Cosine Annealing
+use_SAM:
+  value: true
+weight_decay:
+  value: 1.0e-05

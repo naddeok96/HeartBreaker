@@ -13,12 +13,12 @@ sweep_config = {
   
                 'parameters': {
                     'epochs': {
-                        'values': [1]
+                        'values': [1e4, 1e5, 1e6]
                     },
                     'batch_size': {
                         # 'values': [5]
                         'min' : 1,
-                        'max' : 32
+                        'max' : 512
                     },
                     'momentum': {
                         'values': [0.9]
@@ -35,13 +35,13 @@ sweep_config = {
                         'values': ['adam']
                     },
                     'scheduler': {
-                        'values': ["Cosine Annealing"]
+                        'values': ["Cosine Annealing", None]
                     },
                     'criterion': {
                         'values': ['binary_cross_entropy']  
                     },
                     'use_SAM':{
-                        'values' : [False]
+                        'values' : [False, True]
                     }
                 }
             }

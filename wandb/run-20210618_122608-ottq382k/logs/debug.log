@@ -1,0 +1,37 @@
+2021-06-18 12:26:08,217 INFO    Thread-2  :2729038 [wandb_setup.py:_flush():69] setting env: {'entity': 'naddeok', 'project': 'ECG Heartbeat Verifier', 'root_dir': '/home/naddeok5/HeartBreaker', 'sweep_id': 'g9skdktj', 'run_id': 'ottq382k', 'sweep_param_path': '/home/naddeok5/HeartBreaker/wandb/sweep-g9skdktj/config-ottq382k.yaml'}
+2021-06-18 12:26:08,217 INFO    Thread-2  :2729038 [wandb_setup.py:_flush():69] setting login settings: {}
+2021-06-18 12:26:08,218 INFO    Thread-2  :2729038 [wandb_init.py:_log_setup():336] Logging user logs to /home/naddeok5/HeartBreaker/wandb/run-20210618_122608-ottq382k/logs/debug.log
+2021-06-18 12:26:08,218 INFO    Thread-2  :2729038 [wandb_init.py:_log_setup():337] Logging internal logs to /home/naddeok5/HeartBreaker/wandb/run-20210618_122608-ottq382k/logs/debug-internal.log
+2021-06-18 12:26:08,218 INFO    Thread-2  :2729038 [wandb_init.py:init():369] calling init triggers
+2021-06-18 12:26:08,218 INFO    Thread-2  :2729038 [wandb_init.py:init():374] wandb.init called with sweep_config: {'batch_size': 2, 'criterion': 'binary_cross_entropy', 'epochs': 66, 'learning_rate': 0.06681101554032459, 'momentum': 0.9, 'optimizer': 'adam', 'scheduler': 'Cosine Annealing', 'use_SAM': True, 'weight_decay': 1e-05}
+config: {'epochs': 20, 'batch_size': 1, 'momentum': 0.9, 'weight_decay': 1e-05, 'learning_rate': 1e-05, 'optimizer': 'adam', 'scheduler': 'Cosine Annealing', 'criterion': 'binary_cross_entropy', 'use_SAM': True}
+2021-06-18 12:26:08,218 INFO    Thread-2  :2729038 [wandb_init.py:init():418] starting backend
+2021-06-18 12:26:08,218 INFO    Thread-2  :2729038 [backend.py:_multiprocessing_setup():70] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2021-06-18 12:26:08,239 INFO    Thread-2  :2729038 [backend.py:ensure_launched():132] starting backend process...
+2021-06-18 12:26:08,251 INFO    Thread-2  :2729038 [backend.py:ensure_launched():136] started backend process with pid: 2729279
+2021-06-18 12:26:08,252 INFO    Thread-2  :2729038 [wandb_init.py:init():423] backend started and connected
+2021-06-18 12:26:08,254 INFO    Thread-2  :2729038 [wandb_run.py:_config_callback():787] config_cb None None {'batch_size': 2, 'criterion': 'binary_cross_entropy', 'epochs': 66, 'learning_rate': 0.06681101554032459, 'momentum': 0.9, 'optimizer': 'adam', 'scheduler': 'Cosine Annealing', 'use_SAM': True, 'weight_decay': 1e-05}
+2021-06-18 12:26:08,255 INFO    Thread-2  :2729038 [wandb_init.py:init():465] updated telemetry
+2021-06-18 12:26:08,255 INFO    Thread-2  :2729038 [wandb_init.py:init():484] communicating current version
+2021-06-18 12:26:09,370 INFO    Thread-2  :2729038 [wandb_init.py:init():489] got version response upgrade_message: "wandb version 0.10.32 is available!  To upgrade, please run:\n $ pip install wandb --upgrade"
+
+2021-06-18 12:26:09,371 INFO    Thread-2  :2729038 [wandb_init.py:init():497] communicating run to backend with 30 second timeout
+2021-06-18 12:26:09,492 INFO    Thread-2  :2729038 [wandb_init.py:init():522] starting run threads in backend
+2021-06-18 12:26:10,974 INFO    Thread-2  :2729038 [wandb_run.py:_console_start():1565] atexit reg
+2021-06-18 12:26:10,974 INFO    Thread-2  :2729038 [wandb_run.py:_redirect():1412] redirect: SettingsConsole.REDIRECT
+2021-06-18 12:26:10,975 INFO    Thread-2  :2729038 [wandb_run.py:_redirect():1417] Redirecting console.
+2021-06-18 12:26:10,979 ERROR   Thread-2  :2729038 [wandb_run.py:_redirect():1482] Failed to redirect.
+Traceback (most recent call last):
+  File "/home/naddeok5/.local/lib/python3.8/site-packages/wandb/sdk/wandb_run.py", line 1475, in _redirect
+    out_redir.install()
+  File "/home/naddeok5/.local/lib/python3.8/site-packages/wandb/sdk/lib/redirect.py", line 605, in install
+    _WSCH.add_fd(self._pipe_read_fd)
+  File "/home/naddeok5/.local/lib/python3.8/site-packages/wandb/sdk/lib/redirect.py", line 555, in add_fd
+    self._register()
+  File "/home/naddeok5/.local/lib/python3.8/site-packages/wandb/sdk/lib/redirect.py", line 540, in _register
+    old_handler = signal.signal(signal.SIGWINCH, lambda *_: None)
+  File "/usr/lib/python3.8/signal.py", line 47, in signal
+    handler = _signal.signal(_enum_to_int(signalnum), _enum_to_int(handler))
+ValueError: signal only works in main thread
+2021-06-18 12:26:10,980 INFO    Thread-2  :2729038 [wandb_init.py:init():546] run started, returning control to user process
+2021-06-18 13:07:35,926 INFO    Thread-2  :2729038 [wandb_run.py:finish():1208] finishing run naddeok/ECG Heartbeat Verifier/ottq382k

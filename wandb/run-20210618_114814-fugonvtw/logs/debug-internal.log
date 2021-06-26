@@ -1,0 +1,588 @@
+2021-06-18 11:48:15,957 INFO    MainThread:2667095 [internal.py:wandb_internal():88] W&B internal server running at pid: 2667095, started at: 2021-06-18 11:48:15.957656
+2021-06-18 11:48:15,959 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: check_version
+2021-06-18 11:48:15,959 INFO    WriterThread:2667095 [datastore.py:open_for_write():77] open: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/run-fugonvtw.wandb
+2021-06-18 11:48:15,961 DEBUG   SenderThread:2667095 [sender.py:send():176] send: header
+2021-06-18 11:48:15,961 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: check_version
+2021-06-18 11:48:16,022 DEBUG   SenderThread:2667095 [sender.py:send():176] send: run
+2021-06-18 11:48:16,152 INFO    SenderThread:2667095 [dir_watcher.py:__init__():168] watching files in: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files
+2021-06-18 11:48:16,152 INFO    SenderThread:2667095 [sender.py:_start_run_threads():696] run started: fugonvtw with start time 1624031295
+2021-06-18 11:48:16,152 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 11:48:16,152 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 11:48:16,153 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: run_start
+2021-06-18 11:48:17,154 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_created():216] file/dir created: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 11:48:17,623 DEBUG   HandlerThread:2667095 [meta.py:__init__():39] meta init
+2021-06-18 11:48:17,624 DEBUG   HandlerThread:2667095 [meta.py:__init__():53] meta init done
+2021-06-18 11:48:17,624 DEBUG   HandlerThread:2667095 [meta.py:probe():210] probe
+2021-06-18 11:48:17,631 DEBUG   HandlerThread:2667095 [meta.py:_setup_git():200] setup git
+2021-06-18 11:48:17,654 DEBUG   HandlerThread:2667095 [meta.py:_setup_git():207] setup git done
+2021-06-18 11:48:17,655 DEBUG   HandlerThread:2667095 [meta.py:_save_pip():57] save pip
+2021-06-18 11:48:17,655 DEBUG   HandlerThread:2667095 [meta.py:_save_pip():71] save pip done
+2021-06-18 11:48:17,655 DEBUG   HandlerThread:2667095 [meta.py:probe():252] probe done
+2021-06-18 11:48:17,658 DEBUG   SenderThread:2667095 [sender.py:send():176] send: files
+2021-06-18 11:48:17,660 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-metadata.json with policy now
+2021-06-18 11:48:17,666 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:48:17,666 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:48:18,002 INFO    Thread-11 :2667095 [upload_job.py:push():133] Uploaded file /tmp/tmpnu97z7wowandb/gr30vpw3-wandb-metadata.json
+2021-06-18 11:48:18,155 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_created():216] file/dir created: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-metadata.json
+2021-06-18 11:48:18,155 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_created():216] file/dir created: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/requirements.txt
+2021-06-18 11:48:18,155 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_created():216] file/dir created: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/output.log
+2021-06-18 11:48:32,751 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:48:32,751 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:48:44,291 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 11:48:44,291 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 11:48:44,294 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 11:48:45,166 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 11:48:47,845 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:48:47,845 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:48:48,131 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 11:49:02,936 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:49:02,937 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:49:18,022 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:49:18,023 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:49:20,682 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 11:49:29,581 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 11:49:29,582 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 11:49:29,582 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 11:49:30,183 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 11:49:33,107 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:49:33,107 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:49:48,191 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:49:48,191 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:49:53,188 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 11:50:03,276 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:50:03,276 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:50:14,984 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 11:50:14,984 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 11:50:14,988 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 11:50:15,203 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 11:50:18,365 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:50:18,366 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:50:25,824 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 11:50:33,450 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:50:33,450 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:50:48,539 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:50:48,539 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:50:58,352 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 11:51:00,760 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 11:51:00,760 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 11:51:00,761 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 11:51:01,220 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 11:51:03,625 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:51:03,625 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:51:18,710 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:51:18,711 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:51:30,931 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 11:51:33,793 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:51:33,794 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:51:46,496 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 11:51:46,497 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 11:51:46,497 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 11:51:47,235 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 11:51:48,990 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:51:48,990 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:52:03,494 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 11:52:04,072 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:52:04,073 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:52:19,161 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:52:19,161 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:52:32,316 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 11:52:32,317 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 11:52:32,317 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 11:52:33,253 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 11:52:34,247 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:52:34,247 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:52:35,839 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 11:52:49,329 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:52:49,330 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:53:04,412 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:53:04,413 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:53:08,315 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 11:53:18,074 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 11:53:18,074 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 11:53:18,075 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 11:53:18,268 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 11:53:19,496 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:53:19,497 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:53:34,586 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:53:34,587 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:53:40,710 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 11:53:49,671 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:53:49,671 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:54:03,893 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 11:54:03,894 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 11:54:03,895 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 11:54:04,282 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 11:54:04,757 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:54:04,758 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:54:13,174 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 11:54:19,846 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:54:19,846 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:54:34,929 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:54:34,930 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:54:45,526 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 11:54:49,918 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 11:54:49,919 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 11:54:49,919 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 11:54:50,033 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:54:50,033 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:54:50,296 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 11:55:05,159 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:55:05,159 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:55:18,009 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 11:55:20,245 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:55:20,245 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:55:35,331 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:55:35,331 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:55:35,788 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 11:55:35,788 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 11:55:35,788 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 11:55:36,311 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 11:55:50,420 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:55:50,420 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:55:50,572 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 11:56:05,510 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:56:05,510 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:56:20,596 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:56:20,597 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:56:21,617 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 11:56:21,617 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 11:56:21,619 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 11:56:22,327 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 11:56:23,083 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 11:56:35,685 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:56:35,686 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:56:50,773 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:56:50,774 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:56:55,575 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 11:57:05,855 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:57:05,855 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:57:07,369 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 11:57:07,370 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 11:57:07,370 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 11:57:08,341 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 11:57:20,940 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:57:20,941 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:57:28,158 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 11:57:36,027 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:57:36,028 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:57:51,111 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:57:51,112 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:57:53,296 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 11:57:53,296 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 11:57:53,297 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 11:57:53,356 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 11:58:00,788 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 11:58:06,196 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:58:06,196 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:58:21,277 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:58:21,277 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:58:33,423 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 11:58:36,371 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:58:36,372 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:58:39,186 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 11:58:39,186 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 11:58:39,187 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 11:58:39,382 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 11:58:51,462 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:58:51,463 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:59:05,991 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 11:59:06,552 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:59:06,553 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:59:21,638 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:59:21,639 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:59:25,139 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 11:59:25,140 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 11:59:25,140 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 11:59:25,405 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 11:59:36,720 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:59:36,721 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 11:59:38,588 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 11:59:51,807 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 11:59:51,808 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:00:06,893 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:00:06,894 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:00:11,032 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 12:00:11,034 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 12:00:11,038 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 12:00:11,133 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:00:11,421 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 12:00:21,988 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:00:21,988 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:00:37,083 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:00:37,083 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:00:43,452 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:00:52,164 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:00:52,164 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:00:56,905 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 12:00:56,906 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 12:00:56,906 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 12:00:57,435 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 12:01:07,245 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:01:07,246 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:01:15,828 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:01:22,328 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:01:22,329 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:01:37,414 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:01:37,415 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:01:42,757 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 12:01:42,757 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 12:01:42,758 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 12:01:43,458 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 12:01:48,245 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:01:52,499 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:01:52,500 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:02:07,587 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:02:07,587 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:02:20,643 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:02:22,673 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:02:22,674 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:02:28,702 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 12:02:28,702 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 12:02:28,703 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 12:02:29,479 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 12:02:37,767 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:02:37,767 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:02:52,851 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:02:52,852 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:02:53,108 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:03:07,943 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:03:07,944 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:03:14,610 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 12:03:14,611 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 12:03:14,612 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 12:03:15,495 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 12:03:23,026 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:03:23,026 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:03:25,576 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:03:38,109 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:03:38,109 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:03:53,199 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:03:53,200 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:03:58,028 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:04:00,452 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 12:04:00,453 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 12:04:00,453 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 12:04:00,510 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 12:04:08,285 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:04:08,286 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:04:23,375 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:04:23,376 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:04:30,317 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:04:38,457 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:04:38,457 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:04:46,322 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 12:04:46,323 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 12:04:46,323 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 12:04:46,525 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 12:04:53,550 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:04:53,550 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:05:02,679 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:05:08,631 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:05:08,632 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:05:23,717 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:05:23,718 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:05:32,164 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 12:05:32,165 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 12:05:32,165 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 12:05:32,539 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 12:05:35,188 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:05:38,803 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:05:38,803 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:05:53,887 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:05:53,888 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:06:07,733 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:06:08,994 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:06:08,994 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:06:18,007 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 12:06:18,008 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 12:06:18,008 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 12:06:18,553 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 12:06:24,080 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:06:24,080 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:06:39,160 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:06:39,161 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:06:40,184 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:06:54,254 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:06:54,254 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:07:03,980 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 12:07:03,980 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 12:07:03,980 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 12:07:04,567 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 12:07:09,335 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:07:09,336 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:07:12,674 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:07:24,418 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:07:24,419 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:07:39,501 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:07:39,501 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:07:45,010 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:07:50,059 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 12:07:50,060 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 12:07:50,060 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 12:07:50,581 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 12:07:54,577 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:07:54,578 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:08:09,653 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:08:09,654 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:08:17,384 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:08:24,736 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:08:24,737 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:08:36,121 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 12:08:36,121 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 12:08:36,122 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 12:08:36,595 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 12:08:39,815 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:08:39,816 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:08:49,859 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:08:54,894 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:08:54,895 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:09:09,973 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:09:09,973 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:09:22,104 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 12:09:22,105 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 12:09:22,108 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 12:09:22,331 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:09:22,616 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 12:09:25,049 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:09:25,049 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:09:40,126 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:09:40,126 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:09:54,809 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:09:55,199 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:09:55,200 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:10:08,169 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 12:10:08,171 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 12:10:08,171 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 12:10:08,634 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 12:10:10,282 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:10:10,283 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:10:25,365 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:10:25,366 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:10:27,128 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:10:40,454 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:10:40,455 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:10:54,242 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 12:10:54,243 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 12:10:54,244 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 12:10:54,648 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 12:10:55,536 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:10:55,536 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:10:59,527 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:11:10,620 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:11:10,620 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:11:25,697 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:11:25,697 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:11:32,047 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:11:40,288 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 12:11:40,288 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 12:11:40,289 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 12:11:40,662 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 12:11:40,774 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:11:40,774 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:11:55,854 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:11:55,855 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:12:04,543 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:12:10,933 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:12:10,934 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:12:26,008 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:12:26,008 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:12:26,415 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 12:12:26,415 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 12:12:26,416 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 12:12:26,682 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 12:12:36,948 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:12:41,098 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:12:41,098 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:12:56,174 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:12:56,175 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:13:09,314 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:13:11,250 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:13:11,251 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:13:12,372 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 12:13:12,373 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 12:13:12,373 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 12:13:12,695 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 12:13:26,331 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:13:26,332 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:13:41,416 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:13:41,416 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:13:41,670 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:13:56,494 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:13:56,495 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:13:58,379 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 12:13:58,379 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 12:13:58,380 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 12:13:58,713 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 12:14:11,570 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:14:11,571 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:14:14,102 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:14:26,651 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:14:26,651 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:14:41,726 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:14:41,726 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:14:44,437 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 12:14:44,438 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 12:14:44,439 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 12:14:44,728 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 12:14:46,448 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:14:56,802 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:14:56,803 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:15:11,878 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:15:11,878 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:15:18,886 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:15:26,963 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:15:26,963 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:15:30,457 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 12:15:30,458 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 12:15:30,458 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 12:15:30,747 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 12:15:42,039 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:15:42,040 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:15:51,382 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:15:57,118 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:15:57,119 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:16:12,193 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:16:12,194 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:16:16,452 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 12:16:16,452 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 12:16:16,453 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 12:16:16,764 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 12:16:23,760 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:16:27,277 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:16:27,278 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:16:42,355 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:16:42,356 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:16:56,153 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:16:57,436 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:16:57,436 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:17:02,515 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 12:17:02,515 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 12:17:02,516 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 12:17:02,779 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 12:17:12,511 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:17:12,512 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:17:27,591 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:17:27,592 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:17:28,526 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:17:42,669 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:17:42,669 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:17:48,625 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 12:17:48,626 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 12:17:48,626 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 12:17:48,799 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 12:17:57,745 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:17:57,747 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:18:01,036 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:18:12,823 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:18:12,823 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:18:27,898 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:18:27,899 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:18:33,402 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:18:34,563 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 12:18:34,564 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 12:18:34,565 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 12:18:34,814 INFO    Thread-8  :2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 12:18:42,981 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: stop_status
+2021-06-18 12:18:42,982 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: stop_status
+2021-06-18 12:18:58,051 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: poll_exit
+2021-06-18 12:18:58,052 DEBUG   SenderThread:2667095 [sender.py:send():176] send: history
+2021-06-18 12:18:58,052 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 12:18:58,053 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 12:18:58,053 DEBUG   SenderThread:2667095 [sender.py:send():176] send: telemetry
+2021-06-18 12:18:58,053 DEBUG   SenderThread:2667095 [sender.py:send():176] send: exit
+2021-06-18 12:18:58,053 INFO    SenderThread:2667095 [sender.py:send_exit():281] handling exit code: 0
+2021-06-18 12:18:58,054 INFO    SenderThread:2667095 [sender.py:send_exit():289] send defer
+2021-06-18 12:18:58,054 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: poll_exit
+2021-06-18 12:18:58,055 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: defer
+2021-06-18 12:18:58,055 INFO    HandlerThread:2667095 [handler.py:handle_request_defer():138] handle defer: 0
+2021-06-18 12:18:58,056 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: defer
+2021-06-18 12:18:58,056 INFO    SenderThread:2667095 [sender.py:send_request_defer():298] handle sender defer: 0
+2021-06-18 12:18:58,056 INFO    SenderThread:2667095 [sender.py:send_request_defer():336] send defer: 1
+2021-06-18 12:18:58,056 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: defer
+2021-06-18 12:18:58,056 INFO    HandlerThread:2667095 [handler.py:handle_request_defer():138] handle defer: 1
+2021-06-18 12:18:58,266 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: defer
+2021-06-18 12:18:58,266 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: poll_exit
+2021-06-18 12:18:58,266 INFO    SenderThread:2667095 [sender.py:send_request_defer():298] handle sender defer: 1
+2021-06-18 12:18:58,267 INFO    SenderThread:2667095 [sender.py:send_request_defer():336] send defer: 2
+2021-06-18 12:18:58,267 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: poll_exit
+2021-06-18 12:18:58,267 DEBUG   SenderThread:2667095 [sender.py:send():176] send: stats
+2021-06-18 12:18:58,268 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: defer
+2021-06-18 12:18:58,268 INFO    HandlerThread:2667095 [handler.py:handle_request_defer():138] handle defer: 2
+2021-06-18 12:18:58,269 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: defer
+2021-06-18 12:18:58,269 INFO    SenderThread:2667095 [sender.py:send_request_defer():298] handle sender defer: 2
+2021-06-18 12:18:58,269 INFO    SenderThread:2667095 [sender.py:send_request_defer():336] send defer: 3
+2021-06-18 12:18:58,269 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: defer
+2021-06-18 12:18:58,269 INFO    HandlerThread:2667095 [handler.py:handle_request_defer():138] handle defer: 3
+2021-06-18 12:18:58,269 DEBUG   SenderThread:2667095 [sender.py:send():176] send: summary
+2021-06-18 12:18:58,270 INFO    SenderThread:2667095 [sender.py:_save_file():821] saving file wandb-summary.json with policy end
+2021-06-18 12:18:58,270 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: defer
+2021-06-18 12:18:58,270 INFO    SenderThread:2667095 [sender.py:send_request_defer():298] handle sender defer: 3
+2021-06-18 12:18:58,270 INFO    SenderThread:2667095 [sender.py:send_request_defer():336] send defer: 4
+2021-06-18 12:18:58,271 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: defer
+2021-06-18 12:18:58,271 INFO    HandlerThread:2667095 [handler.py:handle_request_defer():138] handle defer: 4
+2021-06-18 12:18:58,271 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: defer
+2021-06-18 12:18:58,271 INFO    SenderThread:2667095 [sender.py:send_request_defer():298] handle sender defer: 4
+2021-06-18 12:18:58,369 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: poll_exit
+2021-06-18 12:18:58,374 INFO    SenderThread:2667095 [sender.py:send_request_defer():336] send defer: 5
+2021-06-18 12:18:58,374 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: poll_exit
+2021-06-18 12:18:58,375 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: defer
+2021-06-18 12:18:58,375 INFO    HandlerThread:2667095 [handler.py:handle_request_defer():138] handle defer: 5
+2021-06-18 12:18:58,375 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: defer
+2021-06-18 12:18:58,376 INFO    SenderThread:2667095 [sender.py:send_request_defer():298] handle sender defer: 5
+2021-06-18 12:18:58,376 INFO    SenderThread:2667095 [dir_watcher.py:finish():282] shutting down directory watcher
+2021-06-18 12:18:58,476 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: poll_exit
+2021-06-18 12:18:58,819 INFO    SenderThread:2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/config.yaml
+2021-06-18 12:18:58,819 INFO    SenderThread:2667095 [dir_watcher.py:_on_file_modified():229] file/dir modified: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 12:18:58,819 INFO    SenderThread:2667095 [dir_watcher.py:finish():312] scan: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files
+2021-06-18 12:18:58,819 INFO    SenderThread:2667095 [dir_watcher.py:finish():318] scan save: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json wandb-summary.json
+2021-06-18 12:18:58,819 INFO    SenderThread:2667095 [dir_watcher.py:finish():318] scan save: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/config.yaml config.yaml
+2021-06-18 12:18:58,819 INFO    SenderThread:2667095 [dir_watcher.py:finish():318] scan save: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-metadata.json wandb-metadata.json
+2021-06-18 12:18:58,820 INFO    SenderThread:2667095 [dir_watcher.py:finish():318] scan save: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/requirements.txt requirements.txt
+2021-06-18 12:18:58,820 INFO    SenderThread:2667095 [dir_watcher.py:finish():318] scan save: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/output.log output.log
+2021-06-18 12:18:58,825 INFO    SenderThread:2667095 [sender.py:send_request_defer():336] send defer: 6
+2021-06-18 12:18:58,826 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: poll_exit
+2021-06-18 12:18:58,830 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: defer
+2021-06-18 12:18:58,830 INFO    HandlerThread:2667095 [handler.py:handle_request_defer():138] handle defer: 6
+2021-06-18 12:18:58,830 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: defer
+2021-06-18 12:18:58,831 INFO    SenderThread:2667095 [sender.py:send_request_defer():298] handle sender defer: 6
+2021-06-18 12:18:58,831 INFO    SenderThread:2667095 [file_pusher.py:finish():176] shutting down file pusher
+2021-06-18 12:18:58,831 INFO    SenderThread:2667095 [sender.py:send_request_defer():336] send defer: 7
+2021-06-18 12:18:58,831 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: defer
+2021-06-18 12:18:58,831 INFO    HandlerThread:2667095 [handler.py:handle_request_defer():138] handle defer: 7
+2021-06-18 12:18:58,832 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: defer
+2021-06-18 12:18:58,832 INFO    SenderThread:2667095 [sender.py:send_request_defer():298] handle sender defer: 7
+2021-06-18 12:18:58,931 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: poll_exit
+2021-06-18 12:18:58,962 INFO    SenderThread:2667095 [sender.py:send_request_defer():336] send defer: 8
+2021-06-18 12:18:58,963 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: poll_exit
+2021-06-18 12:18:58,963 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: defer
+2021-06-18 12:18:58,963 INFO    HandlerThread:2667095 [handler.py:handle_request_defer():138] handle defer: 8
+2021-06-18 12:18:58,964 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: defer
+2021-06-18 12:18:58,964 INFO    SenderThread:2667095 [sender.py:send_request_defer():298] handle sender defer: 8
+2021-06-18 12:18:58,964 INFO    SenderThread:2667095 [sender.py:send_request_defer():336] send defer: 9
+2021-06-18 12:18:58,964 DEBUG   SenderThread:2667095 [sender.py:send():176] send: final
+2021-06-18 12:18:58,964 DEBUG   SenderThread:2667095 [sender.py:send():176] send: footer
+2021-06-18 12:18:58,965 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: defer
+2021-06-18 12:18:58,965 INFO    HandlerThread:2667095 [handler.py:handle_request_defer():138] handle defer: 9
+2021-06-18 12:18:58,965 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: defer
+2021-06-18 12:18:58,965 INFO    SenderThread:2667095 [sender.py:send_request_defer():298] handle sender defer: 9
+2021-06-18 12:18:59,064 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: poll_exit
+2021-06-18 12:18:59,065 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: poll_exit
+2021-06-18 12:18:59,149 INFO    Thread-14 :2667095 [upload_job.py:push():133] Uploaded file /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/requirements.txt
+2021-06-18 12:18:59,157 INFO    Thread-12 :2667095 [upload_job.py:push():133] Uploaded file /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/wandb-summary.json
+2021-06-18 12:18:59,158 INFO    Thread-13 :2667095 [upload_job.py:push():133] Uploaded file /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/files/config.yaml
+2021-06-18 12:18:59,167 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: poll_exit
+2021-06-18 12:18:59,167 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: poll_exit
+2021-06-18 12:18:59,269 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: poll_exit
+2021-06-18 12:18:59,269 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: poll_exit
+2021-06-18 12:18:59,371 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: poll_exit
+2021-06-18 12:18:59,371 DEBUG   SenderThread:2667095 [sender.py:send_request():186] send_request: poll_exit
+2021-06-18 12:18:59,372 INFO    SenderThread:2667095 [file_pusher.py:join():181] waiting for file pusher
+2021-06-18 12:18:59,373 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: get_summary
+2021-06-18 12:18:59,374 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: sampled_history
+2021-06-18 12:18:59,375 DEBUG   HandlerThread:2667095 [handler.py:handle_request():121] handle_request: shutdown
+2021-06-18 12:18:59,376 INFO    HandlerThread:2667095 [handler.py:finish():632] shutting down handler
+2021-06-18 12:18:59,965 INFO    WriterThread:2667095 [datastore.py:close():258] close: /home/naddeok5/HeartBreaker/wandb/run-20210618_114814-fugonvtw/run-fugonvtw.wandb
+2021-06-18 12:19:00,372 INFO    SenderThread:2667095 [sender.py:finish():925] shutting down sender
+2021-06-18 12:19:00,372 INFO    SenderThread:2667095 [file_pusher.py:finish():176] shutting down file pusher
+2021-06-18 12:19:00,372 INFO    SenderThread:2667095 [file_pusher.py:join():181] waiting for file pusher
+2021-06-18 12:19:00,373 INFO    MainThread:2667095 [internal.py:handle_exit():78] Internal process exited
