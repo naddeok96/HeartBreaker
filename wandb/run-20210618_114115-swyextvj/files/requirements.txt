@@ -183,7 +183,7 @@ typing-extensions==3.7.4.1
 ubuntu-advantage-tools==20.3
 ubuntu-drivers-common==0.0.0
 ufw==0.36
-urllib3==1.25.8
+urllib3==1.26.5
 virtualenv-clone==0.5.4
 virtualenv==20.0.17
 virtualenvwrapper==4.8.4
