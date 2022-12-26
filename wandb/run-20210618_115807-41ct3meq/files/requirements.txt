@@ -194,7 +194,7 @@ wcwidth==0.1.8
 webencodings==0.5.1
 werkzeug==0.16.1
 wfdb==3.4.0
-wheel==0.34.2
+wheel==0.38.1
 wrapt==1.11.2
 xkit==0.0.0
 xlrd==1.1.0
